@@ -9,7 +9,7 @@
     --bg: #000000;
     --bg-elevated: #1c1c1e;
     --bg-glass: rgba(28, 28, 30, 0.72);
-    --bg-glass-strong: rgba(28, 28, 30, 0.9);
+    --bg-glass-strong: rgba(28, 28, 30, 0.95);
     --border: rgba(255, 255, 255, 0.1);
     --border-strong: rgba(255, 255, 255, 0.2);
     --text: #f5f5f7;
@@ -21,6 +21,7 @@
     --red: #ff453a;
     --green: #30d158;
     --orange: #ff9f0a;
+    --purple: #bf5af2;
     --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
   }
 
@@ -71,7 +72,7 @@
     position: relative;
     height: 100vh;
     display: grid;
-    grid-template-rows: 52px 1fr 220px;
+    grid-template-rows: 56px 1fr 240px;
     grid-template-columns: 260px 1fr 320px;
     grid-template-areas:
       "topbar topbar topbar"
@@ -98,6 +99,10 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .topbar-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+  .topbar-center { display: flex; align-items: center; justify-content: center; flex: 0; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: flex-end; }
+
   .traffic-lights { display: flex; gap: 8px; margin-right: 8px; }
   .traffic-light { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: transform 0.15s ease; }
   .traffic-light:hover { transform: scale(1.15); }
@@ -109,11 +114,10 @@
   .brand-title { font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
   .brand-sub { color: var(--text-tertiary); font-weight: 400; margin-left: 4px; font-size: 13px; }
 
-  .topbar-history { display: flex; gap: 4px; margin-left: 12px; }
+  .topbar-history { display: flex; gap: 4px; margin-left: 8px; }
 
   .playback-controls {
     display: flex; align-items: center; gap: 4px;
-    margin-left: auto; margin-right: auto;
     background: rgba(255, 255, 255, 0.05);
     padding: 5px; border-radius: 12px; border: 1px solid var(--border);
   }
@@ -136,10 +140,9 @@
     50% { box-shadow: 0 0 0 8px rgba(255, 159, 10, 0); }
   }
 
-  .time-display { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-tertiary); padding: 0 12px; min-width: 100px; text-align: center; }
+  .time-display { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-tertiary); padding: 0 12px; min-width: 110px; text-align: center; }
   .time-display .current { color: var(--text); font-weight: 600; }
 
-  .topbar-right { display: flex; gap: 10px; align-items: center; }
   .btn-primary {
     background: var(--accent); color: white; border: none;
     padding: 7px 16px; border-radius: 9px; font-size: 13px; font-weight: 500;
@@ -230,7 +233,7 @@
 
   .canvas-wrapper { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; }
 
-  .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0, 0, 0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 36px; }
+  .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0,0,0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 36px; }
   .canvas-bg { position: absolute; inset: 0; border-radius: 36px; pointer-events: none; z-index: 0; }
   .canvas-stage::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 20px 20px; pointer-events: none; z-index: 1; }
   :root.light .canvas-stage::before { background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px); }
@@ -263,7 +266,7 @@
   .inspector-section-title { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
   .field-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
   .field-input { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; width: 100%; transition: all 0.15s ease; font-variant-numeric: tabular-nums; }
   :root.light .field-input { background: rgba(0, 0, 0, 0.05); }
@@ -319,27 +322,38 @@
   :root.light .timeline-header { background: rgba(0, 0, 0, 0.03); }
   .timeline-controls { display: flex; align-items: center; gap: 12px; }
   .timeline-controls label { font-size: 12px; color: var(--text-tertiary); }
-  .timeline-controls .slider { width: 120px; }
+  .timeline-controls .slider { width: 160px; }
+  
+  .timeline-zoom { display: flex; align-items: center; gap: 8px; }
+  .zoom-btn { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
+  :root.light .zoom-btn { background: rgba(0,0,0,0.05); }
+  .zoom-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+  :root.light .zoom-btn:hover { background: rgba(0,0,0,0.1); }
 
-  .timeline-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-  .timeline-ruler { height: 24px; position: relative; border-bottom: 1px solid var(--border); flex-shrink: 0; margin-left: 120px; }
-  .ruler-mark { position: absolute; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.06); font-size: 10px; color: var(--text-tertiary); padding-left: 6px; padding-top: 6px; font-variant-numeric: tabular-nums; }
+  .timeline-scroll { flex: 1; overflow: auto; position: relative; }
+  .timeline-content { position: relative; min-width: 100%; display: flex; flex-direction: column; }
+
+  .timeline-ruler { height: 28px; position: sticky; top: 0; z-index: 10; background: var(--bg-glass-strong); border-bottom: 1px solid var(--border); }
+  .ruler-mark { position: absolute; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.06); font-size: 10px; color: var(--text-tertiary); padding-left: 6px; padding-top: 8px; font-variant-numeric: tabular-nums; pointer-events: none; }
   :root.light .ruler-mark { border-left-color: rgba(0, 0, 0, 0.1); }
   .ruler-mark.major { border-left-color: rgba(255, 255, 255, 0.12); }
   :root.light .ruler-mark.major { border-left-color: rgba(0, 0, 0, 0.2); }
 
-  .timeline-tracks { flex: 1; overflow-y: auto; position: relative; }
-  .timeline-track { height: 36px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); position: relative; display: flex; align-items: center; }
+  .timeline-track { height: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); position: relative; }
   :root.light .timeline-track { border-bottom-color: rgba(0, 0, 0, 0.05); }
-  .track-label { position: absolute; left: 0; width: 120px; height: 100%; padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 2; }
+  
+  .track-label { position: sticky; left: 0; width: 120px; height: 100%; padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 5; box-shadow: 4px 0 8px rgba(0,0,0,0.1); }
   .track-label .layer-icon { width: 18px; height: 18px; border-radius: 4px; }
   .track-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .track-area { position: absolute; left: 120px; right: 0; height: 100%; }
-  .track-bar { position: absolute; height: 24px; top: 6px; border-radius: 6px; cursor: grab; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: white; font-weight: 500; overflow: hidden; white-space: nowrap; transition: filter 0.15s ease, box-shadow 0.15s ease; user-select: none; }
+  
+  .track-area { position: absolute; top: 0; height: 100%; }
+  .track-bar { position: absolute; height: 28px; top: 6px; border-radius: 6px; cursor: grab; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: white; font-weight: 500; overflow: hidden; white-space: nowrap; transition: filter 0.15s ease, box-shadow 0.15s ease; user-select: none; }
   .track-bar:hover { filter: brightness(1.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
   .track-bar.dragging { cursor: grabbing; filter: brightness(1.25); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); z-index: 10; }
   .track-bar::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: rgba(255, 255, 255, 0.4); }
   .track-bar .bar-label { pointer-events: none; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+  .track-bar.exit-bar { opacity: 0.6; border: 1px dashed rgba(255,255,255,0.3); }
+  .track-bar.exit-bar::before { background: rgba(255, 255, 255, 0.7); }
   .trim-handle { position: absolute; right: 0; top: 0; bottom: 0; width: 10px; cursor: ew-resize; background: rgba(255, 255, 255, 0.15); border-radius: 0 6px 6px 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease; }
   .trim-handle:hover { background: rgba(255, 255, 255, 0.35); }
   .trim-handle::after { content: ''; width: 2px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 1px; }
@@ -348,7 +362,7 @@
   .track-bar .delete-btn:hover { background: var(--red); transform: translateY(-50%) scale(1.15); }
 
   .playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); pointer-events: none; z-index: 10; box-shadow: 0 0 8px rgba(10, 132, 255, 0.6); }
-  .playhead::before { content: ''; position: absolute; top: -1px; left: -6px; width: 14px; height: 14px; background: var(--accent); border-radius: 50% 50% 2px 2px; box-shadow: 0 2px 8px rgba(10, 132, 255, 0.6); }
+  .playhead::before { content: ''; position: absolute; top: 0px; left: -6px; width: 14px; height: 14px; background: var(--accent); border-radius: 50% 50% 2px 2px; box-shadow: 0 2px 8px rgba(10, 132, 255, 0.6); }
 
   /* ====== MODAL ====== */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; z-index: 100; }
@@ -383,7 +397,7 @@
   .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; }
   .progress-text { text-align: center; margin-top: 10px; font-size: 13px; color: var(--text-secondary); }
 
-  .toast { position: fixed; bottom: 240px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); padding: 12px 20px; border-radius: 12px; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+  .toast { position: fixed; bottom: 260px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); padding: 12px 20px; border-radius: 12px; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -398,10 +412,18 @@
   .code-block { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: "SF Mono", Menlo, Monaco, monospace; font-size: 12px; color: #a1a1a6; white-space: pre; overflow-x: auto; line-height: 1.65; max-height: 400px; overflow-y: auto; }
   :root.light .code-block { background: rgba(0, 0, 0, 0.05); color: #333; }
 
+  /* Text Animations */
+  @keyframes text-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes text-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+  @keyframes text-shake { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } 100% { transform: translateX(0); } }
+  .text-anim-bounce { animation: text-bounce 0.8s ease-in-out infinite; display: inline-block; }
+  .text-anim-blink { animation: text-blink 0.6s ease-in-out infinite; display: inline-block; }
+  .text-anim-shake { animation: text-shake 0.2s linear infinite; display: inline-block; }
+
   /* Responsive Design */
   @media (max-width: 1024px) {
     .app {
-      grid-template-rows: 52px 1fr 1fr 200px;
+      grid-template-rows: 56px 1fr 1fr 240px;
       grid-template-columns: 1fr 1fr;
       grid-template-areas:
         "topbar topbar"
@@ -414,7 +436,7 @@
 
   @media (max-width: 768px) {
     .app {
-      grid-template-rows: 52px 400px 1fr 200px;
+      grid-template-rows: 56px 400px 1fr 240px;
       grid-template-columns: 1fr;
       grid-template-areas:
         "topbar"
@@ -432,57 +454,65 @@
 <body>
 <div class="app">
   <header class="topbar">
-    <div class="traffic-lights">
-      <div class="traffic-light close"></div>
-      <div class="traffic-light minimize"></div>
-      <div class="traffic-light maximize"></div>
-    </div>
-    <div class="brand">
-      <div class="brand-logo">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <defs>
-            <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="0">
-              <stop offset="0" stop-color="#0a84ff"/>
-              <stop offset="1" stop-color="#bf5af2"/>
-            </linearGradient>
-          </defs>
-          <circle cx="5" cy="12" r="3" fill="url(#logoGrad)"/>
-          <circle cx="12" cy="12" r="3" fill="url(#logoGrad)" opacity="0.55"/>
-          <circle cx="19" cy="12" r="3" fill="url(#logoGrad)" opacity="0.22"/>
-        </svg>
+    <div class="topbar-left">
+      <div class="traffic-lights">
+        <div class="traffic-light close"></div>
+        <div class="traffic-light minimize"></div>
+        <div class="traffic-light maximize"></div>
       </div>
-      <div class="brand-title">Transition Studio<span class="brand-sub">— Motion Editor</span></div>
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="24" y2="0">
+                <stop offset="0" stop-color="#0a84ff"/>
+                <stop offset="1" stop-color="#bf5af2"/>
+              </linearGradient>
+            </defs>
+            <circle cx="5" cy="12" r="3" fill="url(#logoGrad)"/>
+            <circle cx="12" cy="12" r="3" fill="url(#logoGrad)" opacity="0.55"/>
+            <circle cx="19" cy="12" r="3" fill="url(#logoGrad)" opacity="0.22"/>
+          </svg>
+        </div>
+        <div class="brand-title">Transition Studio<span class="brand-sub">— Motion Editor</span></div>
+      </div>
+      <div class="topbar-history">
+        <button class="ctrl-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.7 3L3 13"/></svg>
+        </button>
+        <button class="ctrl-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.7 3L21 13"/></svg>
+        </button>
+      </div>
+      <select class="tool-select" id="sceneSelect">
+        <optgroup label="Templates">
+          <option value="default">Default (4)</option>
+          <option value="onboarding">Onboarding Flow (5)</option>
+          <option value="hero">Hero Banner (6)</option>
+          <option value="icon-grid">App Icon Grid (12)</option>
+          <option value="card-deck">Card Deck (6)</option>
+          <option value="feed">Notification Feed (8)</option>
+          <option value="dashboard">Dashboard (20)</option>
+        </optgroup>
+      </select>
     </div>
 
-    <div class="topbar-history">
-      <button class="ctrl-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.7 3L3 13"/></svg>
-      </button>
-      <button class="ctrl-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.7 3L21 13"/></svg>
-      </button>
-    </div>
-
-    <select class="tool-select" id="sceneSelect" style="margin-left: 8px;">
-      <optgroup label="Templates">
-        <option value="default">Default (4)</option>
-        <option value="onboarding">Onboarding Flow (5)</option>
-        <option value="hero">Hero Banner (6)</option>
-        <option value="icon-grid">App Icon Grid (12)</option>
-        <option value="card-deck">Card Deck (6)</option>
-        <option value="feed">Notification Feed (8)</option>
-        <option value="dashboard">Dashboard (20)</option>
-      </optgroup>
-    </select>
-
-    <div class="playback-controls">
-      <button class="ctrl-btn" id="restartBtn" title="Restart">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-      </button>
-      <button class="ctrl-btn play" id="playBtn" title="Play">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      </button>
-      <div class="time-display"><span class="current" id="currentTime">0.00s</span> / <span id="totalTime">2.00s</span></div>
+    <div class="topbar-center">
+      <div class="playback-controls">
+        <button class="ctrl-btn" id="restartBtn" title="Restart">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="prevBtn" title="Previous Frame">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn play" id="playBtn" title="Play">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="nextBtn" title="Next Frame">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+        <div class="time-display"><span class="current" id="currentTime">0.00s</span> / <span id="totalTime">3.00s</span></div>
+      </div>
     </div>
 
     <div class="topbar-right">
@@ -536,9 +566,11 @@
       <button class="add-btn" data-type="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Avatar</button>
       <button class="add-btn upload" id="uploadBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Upload Image</button>
       <button class="add-btn upload" id="uploadVideoBtn" style="margin-top: 6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Upload Video</button>
+      <button class="add-btn upload" id="uploadAudioBtn" style="margin-top: 6px; background: rgba(191, 90, 242, 0.1); border-color: rgba(191, 90, 242, 0.3); color: var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zm12-3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Upload Audio</button>
     </div>
     <input type="file" id="fileInput" class="hidden-file-input" accept="image/*" multiple>
     <input type="file" id="videoInput" class="hidden-file-input" accept="video/*" multiple>
+    <input type="file" id="audioInput" class="hidden-file-input" accept="audio/*">
     <div class="layers-list" id="layersList"></div>
   </aside>
 
@@ -546,6 +578,7 @@
     <div class="canvas-toolbar">
       <div class="canvas-info">
         <span id="canvasSizeLabel">360 × 640</span>
+        <span id="audioLabel" style="color: var(--purple); display: none;">Audio: <span id="audioName"></span></span>
       </div>
       <div class="canvas-tools">
         <select class="tool-select" id="deviceSelect">
@@ -583,16 +616,24 @@
 
   <footer class="timeline">
     <div class="timeline-header">
-      <span class="panel-title">Timeline</span>
       <div class="timeline-controls">
-        <label>Duration</label>
-        <input type="range" class="slider" id="totalDurationSlider" min="1000" max="6000" step="500" value="2000">
-        <span style="font-size: 12px; color: var(--text); min-width: 40px; font-variant-numeric: tabular-nums;" id="totalDurationLabel">2.0s</span>
+        <span class="panel-title">Timeline</span>
+        <label style="margin-left: 16px;">Duration</label>
+        <input type="range" class="slider" id="totalDurationSlider" min="1000" max="30000" step="500" value="3000">
+        <span style="font-size: 12px; color: var(--text); min-width: 40px; font-variant-numeric: tabular-nums;" id="totalDurationLabel">3.0s</span>
+      </div>
+      <div class="timeline-zoom">
+        <button class="zoom-btn" id="tlZoomOutBtn">-</button>
+        <span style="font-size: 12px; color: var(--text-secondary); min-width: 40px; text-align: center;" id="tlZoomLabel">100%</span>
+        <button class="zoom-btn" id="tlZoomInBtn">+</button>
       </div>
     </div>
-    <div class="timeline-body">
-      <div class="timeline-ruler" id="timelineRuler"></div>
-      <div class="timeline-tracks" id="timelineTracks"></div>
+    <div class="timeline-scroll" id="timelineScroll">
+      <div class="timeline-content" id="timelineContent">
+        <div class="timeline-ruler" id="timelineRuler"></div>
+        <div id="timelineTracks"></div>
+        <div class="playhead" id="playhead" style="left: 120px;"></div>
+      </div>
     </div>
   </footer>
 </div>
@@ -660,15 +701,17 @@
     activeTab: 'element',
     isPlaying: false,
     currentTime: 0,
-    totalDuration: 2000,
+    totalDuration: 3000,
     playStartTime: 0,
     animationFrame: null,
     scene: { bgType: 'solid', bgColor0: '#1a1a1f', bgColor1: '#0e0e12', bgAngle: 180 },
     snapEnabled: false,
     snapGrid: 10,
     zoom: 1,
+    timelineZoom: 1,
     canvasSize: { w: 360, h: 640 },
     exportSettings: { res: 720, fps: 30 },
+    audio: { src: null, name: '' },
     undoStack: [],
     redoStack: []
   };
@@ -699,6 +742,7 @@
   };
 
   const PRESETS = {
+    'none': { name: 'None', desc: 'Static element', type: 'none', duration: 0, easing: 'linear' },
     'fade-in': { name: 'Fade In', desc: 'Opacity 0 → 1', type: 'fade-in', duration: 600, easing: 'ease-out' },
     'slide-up': { name: 'Slide Up', desc: 'From below', type: 'slide-up', duration: 500, easing: 'spring' },
     'slide-down': { name: 'Slide Down', desc: 'From above', type: 'slide-down', duration: 500, easing: 'spring' },
@@ -708,8 +752,44 @@
     'spring-pop': { name: 'Spring Pop', desc: 'Bouncy scale', type: 'spring-pop', duration: 700, easing: 'spring' },
     'blur-in': { name: 'Blur In', desc: 'Defocus to sharp', type: 'blur-in', duration: 600, easing: 'ease-out' },
     'rotate-in': { name: 'Rotate In', desc: 'Spin & scale', type: 'rotate-in', duration: 600, easing: 'spring' },
-    'flip-in': { name: 'Flip In', desc: '3D flip', type: 'flip-in', duration: 600, easing: 'ease-out' }
+    'flip-in': { name: 'Flip In', desc: '3D flip', type: 'flip-in', duration: 600, easing: 'ease-out' },
+    'fly-in-left': { name: 'Fly In Left', desc: 'Cross from left', type: 'fly-in-left', duration: 1000, easing: 'linear' },
+    'fly-in-right': { name: 'Fly In Right', desc: 'Cross from right', type: 'fly-in-right', duration: 1000, easing: 'linear' },
+    'fly-in-top': { name: 'Fly In Top', desc: 'Cross from top', type: 'fly-in-top', duration: 1000, easing: 'linear' },
+    'fly-in-bottom': { name: 'Fly In Bottom', desc: 'Cross from bottom', type: 'fly-in-bottom', duration: 1000, easing: 'linear' }
   };
+
+  const EXIT_PRESETS = {
+    'none': { name: 'None', desc: 'Stays visible', type: 'none', duration: 0, easing: 'ease-in' },
+    'fade-out': { name: 'Fade Out', desc: 'Opacity 1 → 0', type: 'fade-out', duration: 400, easing: 'ease-in' },
+    'slide-down-out': { name: 'Slide Down', desc: 'To below', type: 'slide-down-out', duration: 400, easing: 'ease-in' },
+    'slide-up-out': { name: 'Slide Up', desc: 'To above', type: 'slide-up-out', duration: 400, easing: 'ease-in' },
+    'scale-out': { name: 'Scale Out', desc: 'Shrink to 0.5x', type: 'scale-out', duration: 400, easing: 'ease-in' },
+    'collapse': { name: 'Collapse', desc: 'Shrink & fade', type: 'collapse', duration: 400, easing: 'ease-in' },
+    'fly-out-left': { name: 'Fly Out Left', desc: 'Exit to left', type: 'fly-out-left', duration: 1000, easing: 'linear' },
+    'fly-out-right': { name: 'Fly Out Right', desc: 'Exit to right', type: 'fly-out-right', duration: 1000, easing: 'linear' },
+    'fly-out-top': { name: 'Fly Out Top', desc: 'Exit to top', type: 'fly-out-top', duration: 1000, easing: 'linear' },
+    'fly-out-bottom': { name: 'Fly Out Bottom', desc: 'Exit to bottom', type: 'fly-out-bottom', duration: 1000, easing: 'linear' }
+  };
+
+  const TEXT_FONTS = [
+    { value: '-apple-system, BlinkMacSystemFont, sans-serif', label: 'System (SF Pro)' },
+    { value: 'Arial, sans-serif', label: 'Arial' },
+    { value: 'Helvetica, sans-serif', label: 'Helvetica' },
+    { value: 'Georgia, serif', label: 'Georgia' },
+    { value: 'Times New Roman, serif', label: 'Times New Roman' },
+    { value: 'Courier New, monospace', label: 'Courier New' },
+    { value: 'Impact, sans-serif', label: 'Impact' },
+    { value: 'Comic Sans MS, cursive', label: 'Comic Sans MS' }
+  ];
+
+  const TEXT_ANIMATIONS = [
+    { value: 'none', label: 'None' },
+    { value: 'typewriter', label: 'Typewriter' },
+    { value: 'bounce', label: 'Bounce' },
+    { value: 'blink', label: 'Blink' },
+    { value: 'shake', label: 'Shake' }
+  ];
 
   const TYPE_COLORS = { card: '#0a84ff', text: '#bf5af2', button: '#30d158', circle: '#ff9f0a', image: '#ff375f', video: '#5e5ce6' };
   let idCounter = 1;
@@ -721,7 +801,8 @@
       elements: state.elements,
       scene: state.scene,
       totalDuration: state.totalDuration,
-      canvasSize: state.canvasSize
+      canvasSize: state.canvasSize,
+      audio: state.audio
     }));
     state.undoStack.push(snapshot);
     if (state.undoStack.length > 50) state.undoStack.shift();
@@ -731,18 +812,18 @@
 
   function undo() {
     if (state.undoStack.length === 0) return;
-    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize }));
+    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize, audio: state.audio }));
     state.redoStack.push(current);
-    
     const prev = state.undoStack.pop();
     state.elements = prev.elements;
     state.scene = prev.scene;
     state.totalDuration = prev.totalDuration;
     state.canvasSize = prev.canvasSize;
-    
+    state.audio = prev.audio || { src: null, name: '' };
     state.selectedId = null;
     applyCanvasSize();
     renderScene();
+    renderAudio();
     renderAll();
     renderTimeline();
     updateUndoRedoButtons();
@@ -750,18 +831,18 @@
 
   function redo() {
     if (state.redoStack.length === 0) return;
-    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize }));
+    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize, audio: state.audio }));
     state.undoStack.push(current);
-    
     const next = state.redoStack.pop();
     state.elements = next.elements;
     state.scene = next.scene;
     state.totalDuration = next.totalDuration;
     state.canvasSize = next.canvasSize;
-    
+    state.audio = next.audio || { src: null, name: '' };
     state.selectedId = null;
     applyCanvasSize();
     renderScene();
+    renderAudio();
     renderAll();
     renderTimeline();
     updateUndoRedoButtons();
@@ -784,13 +865,18 @@
       state.scene = { bgType: type, bgColor0: bg0, bgColor1: bg1 || bg0, bgAngle: 180 };
     };
     
-    const add = (type, x, y, w, h, color, text, anim, props={}) => {
+    const add = (type, x, y, w, h, color, text, anim, exit = { type: 'none', start: 0 }, props={}) => {
       state.elements.push({
         id: nextId(), type, name: text || (type.charAt(0).toUpperCase() + type.slice(1)),
         x, y, width: w, height: h, color, text, opacity: 100, 
         borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : type === 'image' ? 12 : 0,
         rotation: 0, shadow: type !== 'text', src: null,
+        transformOrigin: 'center center',
+        motionBlur: false,
+        fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+        textAnimation: 'none',
         animation: { duration: 500, delay: 0, easing: 'ease-out', intensity: 50, ...anim },
+        exit: { duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50, ...exit },
         ...props
       });
     };
@@ -814,7 +900,7 @@
       setup(640, 360, '#1c1c1e', '#000000');
       add('text', 40, 80, 400, 50, '#ffffff', 'New Product', { type: 'slide-right', duration: 600, delay: 0, easing: 'smooth', intensity: 40 });
       add('text', 40, 130, 400, 30, '#86868b', 'Available Now', { type: 'slide-right', duration: 600, delay: 150, easing: 'smooth', intensity: 40 });
-      add('card', 40, 190, 200, 120, '#0a84ff', '', { type: 'scale-in', duration: 500, delay: 400, easing: 'spring', intensity: 50 });
+      add('card', 40, 190, 200, 120, '#0a84ff', '', { type: 'scale-in', duration: 500, delay: 400, easing: 'spring', intensity: 50 }, { type: 'slide-left', duration: 400, start: 2500 });
       add('button', 260, 190, 160, 48, '#0a84ff', 'Buy Now', { type: 'fade-in', duration: 500, delay: 600, easing: 'ease-out', intensity: 40 });
       add('circle', 500, 50, 80, 80, '#bf5af2', '', { type: 'rotate-in', duration: 800, delay: 800, easing: 'spring', intensity: 60 });
       add('text', 500, 150, 120, 20, '#ffffff', '$99/mo', { type: 'slide-up', duration: 400, delay: 1000, easing: 'ease-out', intensity: 30 });
@@ -925,6 +1011,16 @@
     applySceneBackground();
   }
 
+  function renderAudio() {
+    const audioLabel = document.getElementById('audioLabel');
+    if (state.audio.src) {
+      audioLabel.style.display = 'flex';
+      document.getElementById('audioName').textContent = state.audio.name;
+    } else {
+      audioLabel.style.display = 'none';
+    }
+  }
+
   function renderLayers() {
     const list = document.getElementById('layersList');
     document.getElementById('layerCount').textContent = state.elements.length;
@@ -1012,6 +1108,7 @@
       div.style.height = el.height + 'px';
       div.style.opacity = el.opacity / 100;
       div.style.transform = `rotate(${el.rotation}deg)`;
+      div.style.transformOrigin = el.transformOrigin || 'center center';
 
       if (el.type === 'card') {
         div.style.background = `linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.4)})`;
@@ -1028,7 +1125,9 @@
       } else if (el.type === 'text') {
         div.style.color = el.color;
         div.style.fontSize = Math.min(el.height * 0.75, 26) + 'px';
-        div.textContent = el.text || 'Text';
+        div.style.fontFamily = el.fontFamily || '-apple-system, BlinkMacSystemFont, sans-serif';
+        const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
+        div.innerHTML = `<span class="${textAnimClass}">${el.text || 'Text'}</span>`;
       } else if (el.type === 'image') {
         div.style.borderRadius = el.borderRadius + 'px';
         if (el.shadow) div.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
@@ -1038,7 +1137,11 @@
         if (el.shadow) div.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
         if (el.src) div.innerHTML = `<video src="${el.src}" autoplay muted loop playsinline></video>`;
       }
-      if (el.type === 'button') div.textContent = el.text || 'Button';
+      if (el.type === 'button') {
+        div.style.fontFamily = el.fontFamily || '-apple-system, BlinkMacSystemFont, sans-serif';
+        const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
+        div.innerHTML = `<span class="${textAnimClass}">${el.text || 'Button'}</span>`;
+      }
 
       stage.appendChild(div);
 
@@ -1075,7 +1178,7 @@
     }
     function onUp() {
       if (hasMoved) {
-        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)) });
+        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)), audio: JSON.parse(JSON.stringify(state.audio)) });
         if (state.undoStack.length > 50) state.undoStack.shift();
         state.redoStack = [];
         updateUndoRedoButtons();
@@ -1102,14 +1205,20 @@
           <input type="text" class="field-input" id="elName" value="${el.name.replace(/"/g, '&quot;')}">
         </div>
         <div class="inspector-section">
-          <div class="inspector-section-title">Position</div>
+          <div class="inspector-section-title">Arrange</div>
+          <div class="preset-grid" style="grid-template-columns: 1fr 1fr;">
+            <button class="preset-btn" id="bringForward"><div class="preset-name">Bring Forward</div></button>
+            <button class="preset-btn" id="sendBackward"><div class="preset-name">Send Backward</div></button>
+            <button class="preset-btn" id="bringToFront"><div class="preset-name">Bring to Front</div></button>
+            <button class="preset-btn" id="sendToBack"><div class="preset-name">Send to Back</div></button>
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Position & Size</div>
           <div class="field-row">
             <div class="field"><label class="field-label">X</label><input type="number" class="field-input" id="posX" value="${el.x}"></div>
             <div class="field"><label class="field-label">Y</label><input type="number" class="field-input" id="posY" value="${el.y}"></div>
           </div>
-        </div>
-        <div class="inspector-section">
-          <div class="inspector-section-title">Size</div>
           <div class="field-row">
             <div class="field"><label class="field-label">Width</label><input type="number" class="field-input" id="sizeW" value="${el.width}" min="10"></div>
             <div class="field"><label class="field-label">Height</label><input type="number" class="field-input" id="sizeH" value="${el.height}" min="10"></div>
@@ -1132,6 +1241,18 @@
               <label class="field-label">Text Content</label>
               <input type="text" class="field-input" id="elText" value="${(el.text || '').replace(/"/g, '&quot;')}">
             </div>
+            <div class="field" style="margin-bottom: 12px;">
+              <label class="field-label">Font Family</label>
+              <select class="field-input" id="fontSelect">
+                ${TEXT_FONTS.map(f => `<option value="${f.value}" ${el.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
+              </select>
+            </div>
+            <div class="field" style="margin-bottom: 12px;">
+              <label class="field-label">Text Animation</label>
+              <select class="field-input" id="textAnimSelect">
+                ${TEXT_ANIMATIONS.map(t => `<option value="${t.value}" ${el.textAnimation === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
+              </select>
+            </div>
           ` : ''}
           <div class="slider-row">
             <div class="slider-header"><span class="slider-label">Opacity</span><span class="slider-value">${el.opacity}%</span></div>
@@ -1147,9 +1268,27 @@
             <div class="slider-header"><span class="slider-label">Rotation</span><span class="slider-value">${el.rotation}°</span></div>
             <input type="range" class="slider" id="rotationSlider" min="-180" max="180" step="1" value="${el.rotation}" style="--p: ${((el.rotation+180)/360)*100}%">
           </div>
+          <div class="field" style="margin-bottom: 12px;">
+            <label class="field-label">Transform Origin</label>
+            <select class="field-input" id="originSelect">
+              <option value="center center" ${el.transformOrigin === 'center center' ? 'selected' : ''}>Center</option>
+              <option value="top center" ${el.transformOrigin === 'top center' ? 'selected' : ''}>Top</option>
+              <option value="bottom center" ${el.transformOrigin === 'bottom center' ? 'selected' : ''}>Bottom</option>
+              <option value="left center" ${el.transformOrigin === 'left center' ? 'selected' : ''}>Left</option>
+              <option value="right center" ${el.transformOrigin === 'right center' ? 'selected' : ''}>Right</option>
+              <option value="top left" ${el.transformOrigin === 'top left' ? 'selected' : ''}>Top Left</option>
+              <option value="top right" ${el.transformOrigin === 'top right' ? 'selected' : ''}>Top Right</option>
+              <option value="bottom left" ${el.transformOrigin === 'bottom left' ? 'selected' : ''}>Bottom Left</option>
+              <option value="bottom right" ${el.transformOrigin === 'bottom right' ? 'selected' : ''}>Bottom Right</option>
+            </select>
+          </div>
           <div class="toggle-row">
             <span class="slider-label">Drop Shadow</span>
             <div class="toggle-switch ${el.shadow ? 'active' : ''}" id="shadowToggle"></div>
+          </div>
+          <div class="toggle-row">
+            <span class="slider-label">Motion Blur (on move)</span>
+            <div class="toggle-switch ${el.motionBlur ? 'active' : ''}" id="motionBlurToggle"></div>
           </div>
         </div>
       `;
@@ -1158,6 +1297,11 @@
       nameInput.addEventListener('input', e => { el.name = e.target.value; renderLayers(); renderTimeline(); });
       nameInput.addEventListener('change', pushHistory);
       
+      document.getElementById('bringForward').addEventListener('click', () => bringForward(el.id));
+      document.getElementById('sendBackward').addEventListener('click', () => sendBackward(el.id));
+      document.getElementById('bringToFront').addEventListener('click', () => bringToFront(el.id));
+      document.getElementById('sendToBack').addEventListener('click', () => sendToBack(el.id));
+
       document.getElementById('posX').addEventListener('input', e => { el.x = +e.target.value; renderCanvas(); });
       document.getElementById('posX').addEventListener('change', pushHistory);
       document.getElementById('posY').addEventListener('input', e => { el.y = +e.target.value; renderCanvas(); });
@@ -1178,6 +1322,14 @@
         textInput.addEventListener('input', e => { el.text = e.target.value; renderCanvas(); });
         textInput.addEventListener('change', pushHistory);
       }
+      const fontSelect = document.getElementById('fontSelect');
+      if (fontSelect) {
+        fontSelect.addEventListener('change', e => { pushHistory(); el.fontFamily = e.target.value; renderCanvas(); });
+      }
+      const textAnimSelect = document.getElementById('textAnimSelect');
+      if (textAnimSelect) {
+        textAnimSelect.addEventListener('change', e => { pushHistory(); el.textAnimation = e.target.value; renderCanvas(); });
+      }
       
       const opSlider = document.getElementById('opacitySlider');
       opSlider.addEventListener('input', e => { el.opacity = +e.target.value; e.target.style.setProperty('--p', el.opacity + '%'); renderCanvas(); renderInspector(); });
@@ -1191,24 +1343,33 @@
       const rotSlider = document.getElementById('rotationSlider');
       rotSlider.addEventListener('input', e => { el.rotation = +e.target.value; e.target.style.setProperty('--p', ((el.rotation+180)/360)*100 + '%'); renderCanvas(); renderInspector(); });
       rotSlider.addEventListener('change', pushHistory);
-      
+
+      document.getElementById('originSelect').addEventListener('change', e => { pushHistory(); el.transformOrigin = e.target.value; renderCanvas(); });
+
       document.getElementById('shadowToggle').addEventListener('click', (e) => { 
         pushHistory(); 
         el.shadow = !el.shadow; 
         e.currentTarget.classList.toggle('active'); 
         renderCanvas(); 
       });
+      document.getElementById('motionBlurToggle').addEventListener('click', (e) => { 
+        pushHistory(); 
+        el.motionBlur = !el.motionBlur; 
+        e.currentTarget.classList.toggle('active'); 
+      });
     } else {
       const anim = el.animation;
+      const exit = el.exit;
       content.innerHTML = `
         <div class="inspector-section">
-          <div class="inspector-section-title">Animation Preset</div>
+          <div class="inspector-section-title">Entrance Preset</div>
           <div class="preset-grid">
             ${Object.entries(PRESETS).map(([key, p]) => `<button class="preset-btn ${anim.type === p.type ? 'active' : ''}" data-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
           </div>
         </div>
+        ${anim.type !== 'none' ? `
         <div class="inspector-section">
-          <div class="inspector-section-title">Timing</div>
+          <div class="inspector-section-title">Entrance Timing</div>
           <div class="slider-row">
             <div class="slider-header"><span class="slider-label">Duration</span><span class="slider-value">${(anim.duration/1000).toFixed(2)}s</span></div>
             <input type="range" class="slider" id="durationSlider" min="100" max="2000" step="50" value="${anim.duration}" style="--p: ${(anim.duration/2000)*100}%">
@@ -1223,14 +1384,44 @@
           </div>
         </div>
         <div class="inspector-section">
-          <div class="inspector-section-title">Easing Curve</div>
+          <div class="inspector-section-title">Entrance Easing</div>
           <div class="easing-grid">
             ${Object.entries(EASINGS_CSS).map(([key]) => `<button class="easing-btn ${anim.easing === key ? 'active' : ''}" data-easing="${key}"><svg class="easing-curve" viewBox="0 0 28 20"><path d="${EASING_CURVES_PATH[key]}"/></svg><span class="easing-name">${key}</span></button>`).join('')}
           </div>
         </div>
+        ` : ''}
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Preset</div>
+          <div class="preset-grid">
+            ${Object.entries(EXIT_PRESETS).map(([key, p]) => `<button class="preset-btn ${exit.type === p.type ? 'active' : ''}" data-exit-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
+          </div>
+        </div>
+        ${exit.type !== 'none' ? `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Timing</div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Duration</span><span class="slider-value">${(exit.duration/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="exitDurationSlider" min="100" max="2000" step="50" value="${exit.duration}" style="--p: ${(exit.duration/2000)*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Start Time</span><span class="slider-value">${(exit.start/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="exitStartSlider" min="0" max="${state.totalDuration}" step="50" value="${exit.start}" style="--p: ${(exit.start/state.totalDuration)*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Intensity</span><span class="slider-value">${exit.intensity}%</span></div>
+            <input type="range" class="slider" id="exitIntensitySlider" min="0" max="100" step="5" value="${exit.intensity}" style="--p: ${exit.intensity}%">
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Easing</div>
+          <div class="easing-grid">
+            ${Object.entries(EASINGS_CSS).map(([key]) => `<button class="easing-btn ${exit.easing === key ? 'active' : ''}" data-exit-easing="${key}"><svg class="easing-curve" viewBox="0 0 28 20"><path d="${EASING_CURVES_PATH[key]}"/></svg><span class="easing-name">${key}</span></button>`).join('')}
+          </div>
+        </div>
+        ` : ''}
       `;
 
-      content.querySelectorAll('.preset-btn').forEach(btn => {
+      content.querySelectorAll('.preset-btn[data-preset]').forEach(btn => {
         btn.addEventListener('click', () => {
           pushHistory();
           const preset = PRESETS[btn.dataset.preset];
@@ -1239,50 +1430,106 @@
         });
       });
       const durSlider = document.getElementById('durationSlider');
-      durSlider.addEventListener('input', e => { anim.duration = +e.target.value; e.target.style.setProperty('--p', (anim.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
-      durSlider.addEventListener('change', pushHistory);
+      if (durSlider) {
+        durSlider.addEventListener('input', e => { anim.duration = +e.target.value; e.target.style.setProperty('--p', (anim.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
+        durSlider.addEventListener('change', pushHistory);
+      }
       const delSlider = document.getElementById('delaySlider');
-      delSlider.addEventListener('input', e => { anim.delay = +e.target.value; e.target.style.setProperty('--p', (anim.delay/3000)*100 + '%'); renderInspector(); renderTimeline(); });
-      delSlider.addEventListener('change', pushHistory);
+      if (delSlider) {
+        delSlider.addEventListener('input', e => { anim.delay = +e.target.value; e.target.style.setProperty('--p', (anim.delay/3000)*100 + '%'); renderInspector(); renderTimeline(); });
+        delSlider.addEventListener('change', pushHistory);
+      }
       const intSlider = document.getElementById('intensitySlider');
-      intSlider.addEventListener('input', e => { anim.intensity = +e.target.value; e.target.style.setProperty('--p', anim.intensity + '%'); renderInspector(); });
-      intSlider.addEventListener('change', pushHistory);
-      content.querySelectorAll('.easing-btn').forEach(btn => {
+      if (intSlider) {
+        intSlider.addEventListener('input', e => { anim.intensity = +e.target.value; e.target.style.setProperty('--p', anim.intensity + '%'); renderInspector(); });
+        intSlider.addEventListener('change', pushHistory);
+      }
+      content.querySelectorAll('.easing-btn[data-easing]').forEach(btn => {
         btn.addEventListener('click', () => { pushHistory(); anim.easing = btn.dataset.easing; renderInspector(); });
+      });
+
+      content.querySelectorAll('.preset-btn[data-exit-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          pushHistory();
+          const preset = EXIT_PRESETS[btn.dataset.exitPreset];
+          exit.type = preset.type; exit.duration = preset.duration; exit.easing = preset.easing;
+          if (exit.type !== 'none' && exit.start === 0) {
+            exit.start = state.totalDuration - exit.duration;
+          }
+          renderAll(); renderTimeline();
+        });
+      });
+      const exDurSlider = document.getElementById('exitDurationSlider');
+      if (exDurSlider) {
+        exDurSlider.addEventListener('input', e => { exit.duration = +e.target.value; e.target.style.setProperty('--p', (exit.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
+        exDurSlider.addEventListener('change', pushHistory);
+      }
+      const exStartSlider = document.getElementById('exitStartSlider');
+      if (exStartSlider) {
+        exStartSlider.addEventListener('input', e => { exit.start = +e.target.value; e.target.style.setProperty('--p', (exit.start/state.totalDuration)*100 + '%'); renderInspector(); renderTimeline(); });
+        exStartSlider.addEventListener('change', pushHistory);
+      }
+      const exIntSlider = document.getElementById('exitIntensitySlider');
+      if (exIntSlider) {
+        exIntSlider.addEventListener('input', e => { exit.intensity = +e.target.value; e.target.style.setProperty('--p', exit.intensity + '%'); renderInspector(); });
+        exIntSlider.addEventListener('change', pushHistory);
+      }
+      content.querySelectorAll('.easing-btn[data-exit-easing]').forEach(btn => {
+        btn.addEventListener('click', () => { pushHistory(); exit.easing = btn.dataset.exitEasing; renderInspector(); });
       });
     }
   }
 
   function renderTimeline() {
     const ruler = document.getElementById('timelineRuler');
-    const tracks = document.getElementById('timelineTracks');
+    const tracksContainer = document.getElementById('timelineTracks');
+    const content = document.getElementById('timelineContent');
+    
     const totalSec = state.totalDuration / 1000;
-    const rulerWidth = Math.max(100, ruler.offsetWidth);
+    const pxPerSec = 100 * state.timelineZoom;
+    const rulerWidth = totalSec * pxPerSec;
+    
+    content.style.width = `calc(120px + ${rulerWidth}px)`;
+    ruler.style.width = `calc(120px + ${rulerWidth}px)`;
 
     let rulerHtml = '';
-    const step = 0.25;
+    const step = totalSec > 10 ? 1 : 0.25;
     for (let i = 0; i <= Math.ceil(totalSec / step); i++) {
       const sec = i * step;
       if (sec > totalSec + 0.01) break;
-      const left = (sec / totalSec) * rulerWidth;
-      const isMajor = i % 2 === 0;
-      rulerHtml += `<div class="ruler-mark ${isMajor ? 'major' : ''}" style="left: ${left}px;">${isMajor ? sec.toFixed(1) + 's' : ''}</div>`;
+      const left = 120 + (sec * pxPerSec);
+      const isMajor = step === 1 ? true : i % 2 === 0;
+      rulerHtml += `<div class="ruler-mark ${isMajor ? 'major' : ''}" style="left: ${left}px;">${isMajor ? sec.toFixed(step === 1 ? 0 : 1) + 's' : ''}</div>`;
     }
     ruler.innerHTML = rulerHtml;
 
-    let tracksHtml = '<div class="playhead" id="playhead" style="left: 120px;"></div>';
+    let tracksHtml = '';
     if (state.elements.length === 0) {
-      tracksHtml += `<div style="padding-left: 130px; padding-top: 20px; color: var(--text-tertiary); font-size: 12px;">No animations. Add elements to see them here.</div>`;
+      tracksHtml = `<div style="position: absolute; left: 130px; top: 20px; color: var(--text-tertiary); font-size: 12px;">No animations. Add elements to see them here.</div>`;
     } else {
       state.elements.forEach(el => {
         const anim = el.animation;
-        const left = (anim.delay / state.totalDuration) * rulerWidth;
-        const width = Math.max(24, (anim.duration / state.totalDuration) * rulerWidth);
+        const exit = el.exit;
+        const left = 120 + (anim.delay / 1000) * pxPerSec;
+        const width = Math.max(24, (anim.duration / 1000) * pxPerSec);
         const color = TYPE_COLORS[el.type];
         const presetName = Object.values(PRESETS).find(p => p.type === anim.type)?.name || anim.type;
         let iconHTML = getLayerIcon(el.type);
         if (el.type === 'image' && el.src) iconHTML = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`;
         if (el.type === 'video' && el.src) iconHTML = `<video src="${el.src}" muted style="width:100%;height:100%;object-fit:cover;border-radius:4px;"></video>`;
+        
+        let exitBarHtml = '';
+        if (exit && exit.type !== 'none') {
+          const exitLeft = 120 + (exit.start / 1000) * pxPerSec;
+          const exitWidth = Math.max(24, (exit.duration / 1000) * pxPerSec);
+          const exitPresetName = Object.values(EXIT_PRESETS).find(p => p.type === exit.type)?.name || exit.type;
+          exitBarHtml = `
+            <div class="track-bar exit-bar" data-id="${el.id}" data-mode="exit" style="left: ${exitLeft - 120}px; width: ${exitWidth}px; background: linear-gradient(90deg, ${color}88, ${color});">
+              <span class="bar-label">${exitPresetName}</span>
+              <div class="trim-handle" data-id="${el.id}" data-mode="exit"></div>
+            </div>
+          `;
+        }
         
         tracksHtml += `
           <div class="timeline-track">
@@ -1292,56 +1539,66 @@
               </div>
               <span>${el.name}</span>
             </div>
-            <div class="track-area">
-              <div class="track-bar" data-id="${el.id}" style="left: ${left}px; width: ${width}px; background: linear-gradient(90deg, ${color}, ${color}aa);">
+            <div class="track-area" style="left: 120px; width: ${rulerWidth}px; height: 100%;">
+              ${anim.type !== 'none' ? `
+              <div class="track-bar" data-id="${el.id}" data-mode="enter" style="left: ${left - 120}px; width: ${width}px; background: linear-gradient(90deg, ${color}, ${color}aa);">
                 <span class="bar-label">${presetName}</span>
                 <button class="delete-btn" data-id="${el.id}" title="Delete"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-                <div class="trim-handle" data-id="${el.id}"></div>
-              </div>
+                <div class="trim-handle" data-id="${el.id}" data-mode="enter"></div>
+              </div>` : `<div style="color: var(--text-tertiary); font-size: 10px; padding: 10px;">Static Element</div>`}
+              ${exitBarHtml}
             </div>
           </div>
         `;
       });
     }
-    tracks.innerHTML = tracksHtml;
+    tracksContainer.innerHTML = tracksHtml;
 
-    tracks.querySelectorAll('.track-bar').forEach(bar => {
+    tracksContainer.querySelectorAll('.track-bar').forEach(bar => {
       const elId = bar.dataset.id;
       bar.addEventListener('click', (e) => {
         if (e.target.closest('.delete-btn') || e.target.closest('.trim-handle')) return;
         if (!bar._hasMoved) { state.selectedId = elId; renderAll(); }
       });
-      bar.querySelector('.delete-btn').addEventListener('click', (e) => { e.stopPropagation(); deleteElement(elId); });
+      const delBtn = bar.querySelector('.delete-btn');
+      if (delBtn) delBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteElement(elId); });
       bar.addEventListener('mousedown', (e) => {
         if (e.target.closest('.delete-btn') || e.target.closest('.trim-handle')) return;
-        startBarDrag(e, elId, 'move');
+        startBarDrag(e, elId, 'move', bar.dataset.mode);
       });
-      bar.querySelector('.trim-handle').addEventListener('mousedown', (e) => { e.stopPropagation(); startBarDrag(e, elId, 'trim'); });
+      bar.querySelector('.trim-handle').addEventListener('mousedown', (e) => { 
+        e.stopPropagation(); 
+        startBarDrag(e, elId, 'trim', bar.dataset.mode); 
+      });
     });
 
-    tracks.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('timeline-tracks') || e.target.classList.contains('timeline-track') || e.target.classList.contains('track-area')) {
-        const rect = tracks.getBoundingClientRect();
-        const x = e.clientX - rect.left - 120;
-        state.currentTime = Math.max(0, Math.min(state.totalDuration, (x / rulerWidth) * state.totalDuration));
-        updatePlayhead();
+    document.getElementById('timelineScroll').addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('timeline-scroll') || e.target.classList.contains('timeline-ruler') || e.target.classList.contains('timeline-content')) {
+        const rect = document.getElementById('timelineScroll').getBoundingClientRect();
+        const scrollLeft = document.getElementById('timelineScroll').scrollLeft;
+        const x = e.clientX - rect.left - 120 + scrollLeft;
+        if (x > 0) {
+          state.currentTime = Math.max(0, Math.min(state.totalDuration, (x / pxPerSec) * 1000));
+          updatePlayhead();
+        }
       }
     });
 
     updatePlayhead();
   }
 
-  function startBarDrag(e, elId, mode) {
+  function startBarDrag(e, elId, mode, animMode) {
     e.preventDefault();
     const el = state.elements.find(x => x.id === elId);
     if (!el) return;
+    const target = animMode === 'exit' ? el.exit : el.animation;
     const startX = e.clientX;
-    const startDelay = el.animation.delay;
-    const startDuration = el.animation.duration;
-    const ruler = document.getElementById('timelineRuler');
-    const rulerWidth = Math.max(100, ruler.offsetWidth);
-    const msPerPx = state.totalDuration / rulerWidth;
-    const bar = document.querySelector(`.track-bar[data-id="${elId}"]`);
+    const startDelay = target.delay || 0;
+    const startStart = target.start || 0;
+    const startDuration = target.duration;
+    const pxPerSec = 100 * state.timelineZoom;
+    const msPerPx = 1000 / pxPerSec;
+    const bar = e.target.closest('.track-bar');
     bar.classList.add('dragging');
     bar._hasMoved = false;
     const snapshot = JSON.parse(JSON.stringify(state.elements));
@@ -1350,22 +1607,39 @@
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 3) bar._hasMoved = true;
       const dMs = dx * msPerPx;
-      if (mode === 'move') {
-        let newDelay = startDelay + dMs;
-        newDelay = Math.max(0, Math.min(state.totalDuration - el.animation.duration, newDelay));
-        el.animation.delay = Math.round(newDelay);
-      } else if (mode === 'trim') {
-        let newDuration = startDuration + dMs;
-        newDuration = Math.max(100, Math.min(state.totalDuration - el.animation.delay, newDuration));
-        el.animation.duration = Math.round(newDuration);
+      
+      if (animMode === 'exit') {
+        if (mode === 'move') {
+          let newStart = startStart + dMs;
+          newStart = Math.max(0, Math.min(state.totalDuration - el.exit.duration, newStart));
+          el.exit.start = Math.round(newStart);
+        } else if (mode === 'trim') {
+          let newDuration = startDuration + dMs;
+          newDuration = Math.max(100, Math.min(state.totalDuration - el.exit.start, newDuration));
+          el.exit.duration = Math.round(newDuration);
+        }
+      } else {
+        if (mode === 'move') {
+          let newDelay = startDelay + dMs;
+          newDelay = Math.max(0, Math.min(state.totalDuration - el.animation.duration, newDelay));
+          el.animation.delay = Math.round(newDelay);
+        } else if (mode === 'trim') {
+          let newDuration = startDuration + dMs;
+          newDuration = Math.max(100, Math.min(state.totalDuration - el.animation.delay, newDuration));
+          el.animation.duration = Math.round(newDuration);
+        }
       }
-      const left = (el.animation.delay / state.totalDuration) * rulerWidth;
-      const width = Math.max(24, (el.animation.duration / state.totalDuration) * rulerWidth);
-      bar.style.left = left + 'px'; bar.style.width = width + 'px';
+      
+      const left = animMode === 'exit' 
+        ? 120 + (el.exit.start / 1000) * pxPerSec
+        : 120 + (el.animation.delay / 1000) * pxPerSec;
+      const width = Math.max(24, ((animMode === 'exit' ? el.exit.duration : el.animation.duration) / 1000) * pxPerSec);
+      bar.style.left = (left - 120) + 'px'; 
+      bar.style.width = width + 'px';
     }
     function onUp() {
       if (bar._hasMoved) {
-        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)) });
+        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)), audio: JSON.parse(JSON.stringify(state.audio)) });
         if (state.undoStack.length > 50) state.undoStack.shift();
         state.redoStack = [];
         updateUndoRedoButtons();
@@ -1381,14 +1655,46 @@
   }
 
   function updatePlayhead() {
-    const ruler = document.getElementById('timelineRuler');
     const playhead = document.getElementById('playhead');
-    const rulerWidth = Math.max(100, ruler.offsetWidth);
-    if (playhead) playhead.style.left = (120 + (state.currentTime / state.totalDuration) * rulerWidth) + 'px';
+    const pxPerSec = 100 * state.timelineZoom;
+    const left = 120 + (state.currentTime / 1000) * pxPerSec;
+    if (playhead) playhead.style.left = left + 'px';
     document.getElementById('currentTime').textContent = (state.currentTime / 1000).toFixed(2) + 's';
   }
 
   function renderAll() { renderLayers(); renderCanvas(); renderInspector(); }
+
+  // ========== Z-INDEX ARRANGE ==========
+  function bringForward(id) {
+    pushHistory();
+    const idx = state.elements.findIndex(e => e.id === id);
+    if (idx < state.elements.length - 1) {
+      [state.elements[idx], state.elements[idx+1]] = [state.elements[idx+1], state.elements[idx]];
+      renderAll();
+    }
+  }
+  function sendBackward(id) {
+    pushHistory();
+    const idx = state.elements.findIndex(e => e.id === id);
+    if (idx > 0) {
+      [state.elements[idx], state.elements[idx-1]] = [state.elements[idx-1], state.elements[idx]];
+      renderAll();
+    }
+  }
+  function bringToFront(id) {
+    pushHistory();
+    const idx = state.elements.findIndex(e => e.id === id);
+    const [el] = state.elements.splice(idx, 1);
+    state.elements.push(el);
+    renderAll();
+  }
+  function sendToBack(id) {
+    pushHistory();
+    const idx = state.elements.findIndex(e => e.id === id);
+    const [el] = state.elements.splice(idx, 1);
+    state.elements.unshift(el);
+    renderAll();
+  }
 
   function addElement(type) {
     pushHistory();
@@ -1404,7 +1710,12 @@
       text: type === 'text' ? 'New Text' : type === 'button' ? 'Tap Me' : '',
       opacity: 100, borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : (type === 'image' || type === 'video') ? 12 : 0,
       rotation: 0, shadow: type !== 'text', src: null,
-      animation: { type: 'fade-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 }
+      transformOrigin: 'center center',
+      motionBlur: false,
+      fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+      textAnimation: 'none',
+      animation: { type: type === 'card' ? 'none' : 'fade-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 },
+      exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
     };
     state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
   }
@@ -1446,11 +1757,38 @@
 
   function togglePlay() { if (state.isPlaying) stopPlayback(); else play(); }
 
+  function stepTime(direction) {
+    if (state.isPlaying) return;
+    const step = 100; // 100ms steps
+    state.currentTime = Math.max(0, Math.min(state.totalDuration, state.currentTime + (direction * step)));
+    updatePlayhead();
+  }
+
+  let audioCtx, audioSource, audioEl;
   function play() {
     if (state.elements.length === 0) { showToast('Add elements first', '#ff9f0a'); return; }
     state.isPlaying = true; state.currentTime = 0; state.playStartTime = performance.now();
     applyInitialStates();
-    requestAnimationFrame(() => { triggerAnimations(); animatePlayhead(); });
+    requestAnimationFrame(() => { 
+      triggerAnimations(); 
+      animatePlayhead(); 
+      state.elements.forEach(el => {
+        if (el.exit && el.exit.type !== 'none') {
+          setTimeout(() => triggerExit(el), el.exit.start);
+        }
+      });
+    });
+
+    if (state.audio.src) {
+      try {
+        audioEl = new Audio(state.audio.src);
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioSource = audioCtx.createMediaElementSource(audioEl);
+        audioSource.connect(audioCtx.destination);
+        audioEl.play();
+      } catch(e) { console.error("Audio play error", e); }
+    }
+
     const btn = document.getElementById('playBtn');
     btn.classList.add('playing');
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
@@ -1459,6 +1797,12 @@
   function stopPlayback() {
     state.isPlaying = false;
     if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
+    const highestTimeoutId = setTimeout(() => {}, 0);
+    for (let i = 0; i < highestTimeoutId; i++) clearTimeout(i);
+    
+    if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+
     const btn = document.getElementById('playBtn');
     btn.classList.remove('playing');
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
@@ -1467,7 +1811,7 @@
       if (dom) {
         dom.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         dom.style.opacity = el.opacity / 100;
-        dom.style.transform = `rotate(${el.rotation}deg)`;
+        dom.style.transform = `translate(0,0) rotate(${el.rotation}deg)`;
         dom.style.filter = 'none';
       }
     });
@@ -1481,18 +1825,24 @@
       const intensity = anim.intensity / 100;
       dom.style.transition = 'none';
       const baseTransform = `translate(0, 0) scale(1) rotate(${el.rotation}deg)`;
+      const cw = state.canvasSize.w, ch = state.canvasSize.h;
 
       switch(anim.type) {
+        case 'none': dom.style.opacity = el.opacity / 100; dom.style.transform = baseTransform; dom.style.filter = 'none'; break;
         case 'fade-in': dom.style.opacity = '0'; dom.style.transform = baseTransform; dom.style.filter = 'none'; break;
-        case 'slide-up': dom.style.opacity = '0'; dom.style.transform = `translateY(${60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
-        case 'slide-down': dom.style.opacity = '0'; dom.style.transform = `translateY(${-60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
-        case 'slide-left': dom.style.opacity = '0'; dom.style.transform = `translateX(${80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
-        case 'slide-right': dom.style.opacity = '0'; dom.style.transform = `translateX(${-80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'slide-up': dom.style.opacity = '0'; dom.style.transform = `translateY(${60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'slide-down': dom.style.opacity = '0'; dom.style.transform = `translateY(${-60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'slide-left': dom.style.opacity = '0'; dom.style.transform = `translateX(${80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'slide-right': dom.style.opacity = '0'; dom.style.transform = `translateX(${-80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
         case 'scale-in': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.6 * intensity)}) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
         case 'spring-pop': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.8 * intensity)}) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
         case 'blur-in': dom.style.opacity = '0'; dom.style.transform = baseTransform; dom.style.filter = `blur(${12 * intensity}px)`; break;
         case 'rotate-in': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.4 * intensity)}) rotate(${360 * intensity + el.rotation}deg)`; dom.style.filter = 'none'; break;
         case 'flip-in': dom.style.opacity = '0'; dom.style.transform = `perspective(800px) rotateX(${90 * intensity}deg)`; dom.style.filter = 'none'; break;
+        case 'fly-in-left': dom.style.opacity = '1'; dom.style.transform = `translateX(${-cw}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'fly-in-right': dom.style.opacity = '1'; dom.style.transform = `translateX(${cw}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'fly-in-top': dom.style.opacity = '1'; dom.style.transform = `translateY(${-ch}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+        case 'fly-in-bottom': dom.style.opacity = '1'; dom.style.transform = `translateY(${ch}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
       }
       void dom.offsetHeight;
     });
@@ -1503,12 +1853,36 @@
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
       if (!dom) return;
       const anim = el.animation;
+      if (anim.type === 'none') return;
       const easing = EASINGS_CSS[anim.easing] || 'ease';
       dom.style.transition = `all ${anim.duration}ms ${easing} ${anim.delay}ms`;
       dom.style.opacity = el.opacity / 100;
-      dom.style.transform = `rotate(${el.rotation}deg)`;
+      dom.style.transform = `translate(0,0) rotate(${el.rotation}deg)`;
       dom.style.filter = 'none';
     });
+  }
+
+  function triggerExit(el) {
+    const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
+    if (!dom) return;
+    const exit = el.exit;
+    const easing = EASINGS_CSS[exit.easing] || 'ease-in';
+    dom.style.transition = `all ${exit.duration}ms ${easing}`;
+    const intensity = exit.intensity / 100;
+    const baseTransform = `translate(0, 0) scale(1) rotate(${el.rotation}deg)`;
+    const cw = state.canvasSize.w, ch = state.canvasSize.h;
+
+    switch(exit.type) {
+      case 'fade-out': dom.style.opacity = '0'; dom.style.transform = baseTransform; break;
+      case 'slide-down-out': dom.style.opacity = '0'; dom.style.transform = `translateY(${60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+      case 'slide-up-out': dom.style.opacity = '0'; dom.style.transform = `translateY(${-60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+      case 'scale-out': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.6 * intensity)}) rotate(${el.rotation}deg)`; break;
+      case 'collapse': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.8 * intensity)}) rotate(${el.rotation}deg)`; break;
+      case 'fly-out-left': dom.style.opacity = '1'; dom.style.transform = `translateX(${-cw}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+      case 'fly-out-right': dom.style.opacity = '1'; dom.style.transform = `translateX(${cw}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+      case 'fly-out-top': dom.style.opacity = '1'; dom.style.transform = `translateY(${-ch}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+      case 'fly-out-bottom': dom.style.opacity = '1'; dom.style.transform = `translateY(${ch}px) rotate(${el.rotation}deg)`; dom.style.filter = el.motionBlur ? `blur(${4 * intensity}px)` : 'none'; break;
+    }
   }
 
   function animatePlayhead() {
@@ -1516,7 +1890,10 @@
     const elapsed = performance.now() - state.playStartTime;
     state.currentTime = Math.min(elapsed, state.totalDuration);
     updatePlayhead();
-    if (elapsed >= state.totalDuration + 100) { setTimeout(() => stopPlayback(), 200); return; }
+    if (elapsed >= state.totalDuration + 500) { 
+      setTimeout(() => stopPlayback(), 200); 
+      return; 
+    }
     state.animationFrame = requestAnimationFrame(animatePlayhead);
   }
 
@@ -1542,7 +1919,9 @@
             id: nextId(), type: 'image', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Image ${counts}`,
             x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
             width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
-            animation: { type: 'scale-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'spring', intensity: 50 }
+            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', textAnimation: 'none',
+            animation: { type: 'scale-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'spring', intensity: 50 },
+            exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
           };
           state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
         };
@@ -1572,7 +1951,9 @@
             id: nextId(), type: 'video', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Video ${counts}`,
             x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
             width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
-            animation: { type: 'fade-in', duration: 600, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 }
+            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', textAnimation: 'none',
+            animation: { type: 'fade-in', duration: 600, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 },
+            exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
           };
           state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
         };
@@ -1583,14 +1964,30 @@
     showToast(`${files.length} video${files.length > 1 ? 's' : ''} uploaded`);
   }
 
+  function handleAudioUpload(file) {
+    if (!file.type.startsWith('audio/')) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      pushHistory();
+      state.audio = { src: e.target.result, name: file.name };
+      renderAudio();
+      showToast('Audio uploaded');
+    };
+    reader.readAsDataURL(file);
+  }
+
   // ========== JSON IMPORT / EXPORT ==========
   function exportJSON() {
     const projectData = {
-      version: "1.0",
-      elements: state.elements,
-      scene: state.scene,
+      version: "5.0",
+      canvasSize: state.canvasSize,
       totalDuration: state.totalDuration,
-      canvasSize: state.canvasSize
+      scene: state.scene,
+      audio: state.audio,
+      elements: state.elements.map(el => {
+        const { _img, _vid, ...cleanEl } = el;
+        return cleanEl;
+      })
     };
     const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -1607,10 +2004,26 @@
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        state.elements = data.elements || [];
+        if (!data.elements || !Array.isArray(data.elements)) throw new Error("Invalid JSON");
+        
+        state.elements = data.elements.map(el => {
+          if (!el.exit) el.exit = { type: 'none', duration: 400, start: 0, easing: 'ease-in', intensity: 50 };
+          if (el.exit.offset !== undefined && el.exit.start === undefined) {
+            el.exit.start = data.totalDuration - el.exit.duration - el.exit.offset;
+            delete el.exit.offset;
+          }
+          if (!el.transformOrigin) el.transformOrigin = 'center center';
+          if (el.motionBlur === undefined) el.motionBlur = false;
+          if (!el.animation) el.animation = { type: 'fade-in', duration: 500, delay: 0, easing: 'ease-out', intensity: 50 };
+          if (!el.fontFamily) el.fontFamily = '-apple-system, BlinkMacSystemFont, sans-serif';
+          if (!el.textAnimation) el.textAnimation = 'none';
+          return el;
+        });
+        
         state.scene = data.scene || { bgType: 'solid', bgColor0: '#000000', bgColor1: '#000000', bgAngle: 180 };
-        state.totalDuration = data.totalDuration || 2000;
+        state.totalDuration = data.totalDuration || 3000;
         state.canvasSize = data.canvasSize || { w: 360, h: 640 };
+        state.audio = data.audio || { src: null, name: '' };
         
         document.getElementById('totalDurationSlider').value = state.totalDuration;
         document.getElementById('totalDurationLabel').textContent = (state.totalDuration/1000).toFixed(1) + 's';
@@ -1618,7 +2031,7 @@
         
         let maxId = 0;
         state.elements.forEach(el => {
-          const idNum = parseInt(el.id.replace('el-', ''));
+          const idNum = parseInt(el.id.replace('el-', '')) || 0;
           if (idNum > maxId) maxId = idNum;
         });
         idCounter = maxId + 1;
@@ -1629,12 +2042,14 @@
         
         applyCanvasSize();
         renderScene();
+        renderAudio();
         renderAll();
         renderTimeline();
         updateUndoRedoButtons();
         showToast('Project imported successfully');
       } catch (err) {
         showToast('Invalid JSON file', '#ff453a');
+        console.error(err);
       }
     };
     reader.readAsText(file);
@@ -1643,6 +2058,38 @@
   // ========== VIDEO EXPORT ==========
   function getElementStateAtTime(el, time) {
     const anim = el.animation;
+    const exit = el.exit;
+    const cw = state.canvasSize.w, ch = state.canvasSize.h;
+    const st = { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100, blur: 0, flipX: 0 };
+    
+    // Text animations modify state
+    if (el.type === 'text' && el.textAnimation !== 'none') {
+      if (el.textAnimation === 'bounce') st.y -= Math.abs(Math.sin(time / 200) * 8);
+      if (el.textAnimation === 'blink') st.opacity *= (0.5 + 0.5 * Math.sin(time / 100));
+      if (el.textAnimation === 'shake') st.x += (Math.random() - 0.5) * 4;
+    }
+
+    if (exit && exit.type !== 'none' && time >= exit.start) {
+      const progress = Math.min(1, (time - exit.start) / exit.duration);
+      const eased = EASING_FN[exit.easing] ? EASING_FN[exit.easing](progress) : progress;
+      const intensity = exit.intensity / 100;
+      
+      switch(exit.type) {
+        case 'fade-out': st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
+        case 'slide-down-out': st.y = el.y + (60 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+        case 'slide-up-out': st.y = el.y - (60 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+        case 'scale-out': st.scale = 1 - (0.6 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
+        case 'collapse': st.scale = 1 - (0.8 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
+        case 'fly-out-left': st.x = el.x - (cw) * eased; st.opacity = 1; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+        case 'fly-out-right': st.x = el.x + (cw) * eased; st.opacity = 1; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+        case 'fly-out-top': st.y = el.y - (ch) * eased; st.opacity = 1; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+        case 'fly-out-bottom': st.y = el.y + (ch) * eased; st.opacity = 1; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
+      }
+      return st;
+    }
+
+    if (anim.type === 'none') return st;
+
     const elapsed = time - anim.delay;
     let progress = 0;
     if (elapsed >= anim.duration) progress = 1;
@@ -1651,21 +2098,23 @@
     const eased = EASING_FN[anim.easing] ? EASING_FN[anim.easing](progress) : progress;
     const intensity = anim.intensity / 100;
 
-    const state = { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100, blur: 0, flipX: 0 };
-
     switch(anim.type) {
-      case 'fade-in': state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'slide-up': state.y = (el.y + 60 * intensity) + (el.y - (el.y + 60 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'slide-down': state.y = (el.y - 60 * intensity) + (el.y - (el.y - 60 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'slide-left': state.x = (el.x + 80 * intensity) + (el.x - (el.x + 80 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'slide-right': state.x = (el.x - 80 * intensity) + (el.x - (el.x - 80 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'scale-in': state.scale = (1 - 0.6 * intensity) + (1 - (1 - 0.6 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'spring-pop': state.scale = (1 - 0.8 * intensity) + (1 - (1 - 0.8 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'blur-in': state.blur = (12 * intensity) - (12 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'rotate-in': state.scale = (1 - 0.4 * intensity) + (1 - (1 - 0.4 * intensity)) * eased; state.rotation = (360 * intensity + el.rotation) - (360 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
-      case 'flip-in': state.flipX = (90 * intensity) - (90 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'fade-in': st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'slide-up': st.y = (el.y + 60 * intensity) + (el.y - (el.y + 60 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'slide-down': st.y = (el.y - 60 * intensity) + (el.y - (el.y - 60 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'slide-left': st.x = (el.x + 80 * intensity) + (el.x - (el.x + 80 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'slide-right': st.x = (el.x - 80 * intensity) + (el.x - (el.x - 80 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'scale-in': st.scale = (1 - 0.6 * intensity) + (1 - (1 - 0.6 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'spring-pop': st.scale = (1 - 0.8 * intensity) + (1 - (1 - 0.8 * intensity)) * eased; st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'blur-in': st.blur = (12 * intensity) - (12 * intensity) * eased; st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'rotate-in': st.scale = (1 - 0.4 * intensity) + (1 - (1 - 0.4 * intensity)) * eased; st.rotation = (360 * intensity + el.rotation) - (360 * intensity) * eased; st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'flip-in': st.flipX = (90 * intensity) - (90 * intensity) * eased; st.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'fly-in-left': st.x = (el.x - cw) + (cw) * eased; st.opacity = 1; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'fly-in-right': st.x = (el.x + cw) - (cw) * eased; st.opacity = 1; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'fly-in-top': st.y = (el.y - ch) + (ch) * eased; st.opacity = 1; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
+      case 'fly-in-bottom': st.y = (el.y + ch) - (ch) * eased; st.opacity = 1; if(el.motionBlur) st.blur = (4 * intensity) * (1 - eased); break;
     }
-    return state;
+    return st;
   }
 
   function drawElementOnCanvas(ctx, el, st, scale) {
@@ -1674,10 +2123,15 @@
 
     const w = el.width * scale;
     const h = el.height * scale;
-    const cx = st.x * scale + (el.width * scale) / 2;
-    const cy = st.y * scale + (el.height * scale) / 2;
+    
+    let originX = st.x * scale + (el.width * scale) / 2;
+    let originY = st.y * scale + (el.height * scale) / 2;
+    if (el.transformOrigin.includes('left')) originX = st.x * scale;
+    if (el.transformOrigin.includes('right')) originX = st.x * scale + el.width * scale;
+    if (el.transformOrigin.includes('top')) originY = st.y * scale;
+    if (el.transformOrigin.includes('bottom')) originY = st.y * scale + el.height * scale;
 
-    ctx.translate(cx, cy);
+    ctx.translate(originX, originY);
     ctx.rotate(st.rotation * Math.PI / 180);
     if (st.flipX > 0) ctx.transform(1, 0, 0, Math.cos(st.flipX * Math.PI / 180), 0, 0);
     ctx.scale(st.scale, st.scale);
@@ -1707,14 +2161,22 @@
       ctx.fillStyle = el.color;
       if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.fill(); } else { ctx.fillRect(0, 0, w, h); }
       ctx.fillStyle = 'white';
-      ctx.font = `600 ${15 * scale}px -apple-system, sans-serif`;
+      ctx.font = `600 ${15 * scale}px ${el.fontFamily}`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(el.text || 'Button', w/2, h/2);
     } else if (el.type === 'text') {
       ctx.fillStyle = el.color;
-      ctx.font = `700 ${Math.min(el.height * 0.75, 26) * scale}px -apple-system, sans-serif`;
+      ctx.font = `700 ${Math.min(el.height * 0.75, 26) * scale}px ${el.fontFamily}`;
       ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-      ctx.fillText(el.text || 'Text', 4 * scale, 0);
+      
+      let displayText = el.text || 'Text';
+      if (el.textAnimation === 'typewriter') {
+        let typeDuration = 2000;
+        let progress = Math.min(1, state.currentTime / typeDuration);
+        let chars = Math.ceil(displayText.length * progress);
+        displayText = displayText.substring(0, chars);
+      }
+      ctx.fillText(displayText, 4 * scale, 0);
     } else if (el.type === 'image' && el._img) {
       if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.clip(); }
       ctx.drawImage(el._img, 0, 0, w, h);
@@ -1768,6 +2230,20 @@
     const stream = canvas.captureStream(0);
     const track = stream.getVideoTracks()[0];
     
+    // Audio Mixing
+    let audioCtx, audioDest, audioEl;
+    if (state.audio.src) {
+      try {
+        audioCtx = new AudioContext();
+        audioDest = audioCtx.createMediaStreamDestination();
+        audioEl = new Audio(state.audio.src);
+        const sourceNode = audioCtx.createMediaElementSource(audioEl);
+        sourceNode.connect(audioDest);
+        audioDest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+        audioEl.play();
+      } catch(e) { console.error("Audio mix error", e); }
+    }
+
     let mimeType = 'video/mp4;codecs=h264';
     if (!MediaRecorder.isTypeSupported(mimeType)) {
       mimeType = 'video/webm;codecs=vp9';
@@ -1778,7 +2254,8 @@
     const chunks = [];
     recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
 
-    const totalFrames = Math.ceil((state.totalDuration / 1000) * fps);
+    const exportDuration = state.totalDuration + 500;
+    const totalFrames = Math.ceil((exportDuration / 1000) * fps);
     const frameDuration = 1000 / fps;
 
     document.getElementById('progressContainer').classList.add('active');
@@ -1790,6 +2267,7 @@
 
     for (let i = 0; i < totalFrames; i++) {
       const time = i * frameDuration;
+      state.currentTime = time; // For typewriter simulation
 
       if (state.scene.bgType === 'gradient') {
         const grad = ctx.createLinearGradient(0, 0, 0, outH);
@@ -1817,6 +2295,8 @@
 
     await new Promise(r => setTimeout(r, 500));
     recorder.stop();
+    if (audioEl) audioEl.pause();
+    if (audioCtx) audioCtx.close();
 
     recorder.onstop = () => {
       state.elements.forEach(el => { if (el._vid) { el._vid.pause(); delete el._vid; } });
@@ -1847,14 +2327,16 @@
       : state.scene.bgColor0;
 
     let elementsCSS = '', keyframes = '', elementsHTML = '';
+    const cw = state.canvasSize.w, ch = state.canvasSize.h;
+    
     state.elements.forEach(el => {
       const anim = el.animation;
-      const easing = EASINGS_CSS[anim.easing] || 'ease';
+      const exit = el.exit;
       const className = 'el-' + el.id;
       const animName = 'anim-' + el.id;
-      const baseTransform = el.rotation ? `rotate(${el.rotation}deg)` : 'none';
+      const totalDur = state.totalDuration;
 
-      let elStyles = `  position: absolute;\n  left: ${el.x}px;\n  top: ${el.y}px;\n  width: ${el.width}px;\n  height: ${el.height}px;\n  opacity: ${el.opacity / 100};`;
+      let elStyles = `  position: absolute;\n  left: ${el.x}px;\n  top: ${el.y}px;\n  width: ${el.width}px;\n  height: ${el.height}px;\n  opacity: ${el.opacity / 100};\n  transform-origin: ${el.transformOrigin};`;
       if (el.type === 'card') {
         elStyles += `\n  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.4)});\n  border-radius: ${el.borderRadius}px;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 8px 24px rgba(0,0,0,0.3);`;
@@ -1862,40 +2344,99 @@
         elStyles += `\n  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.5)});\n  border-radius: 50%;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 20px rgba(0,0,0,0.4);`;
       } else if (el.type === 'button') {
-        elStyles += `\n  background: ${el.color};\n  border-radius: ${el.borderRadius}px;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: 600;\n  font-size: 15px;`;
+        elStyles += `\n  background: ${el.color};\n  border-radius: ${el.borderRadius}px;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: 600;\n  font-size: 15px;\n  font-family: ${el.fontFamily};`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 16px ${el.color}59;`;
       } else if (el.type === 'text') {
-        elStyles += `\n  color: ${el.color};\n  font-size: ${Math.min(el.height * 0.75, 26)}px;\n  font-weight: 700;\n  display: flex;\n  align-items: center;\n  padding-left: 4px;`;
+        elStyles += `\n  color: ${el.color};\n  font-size: ${Math.min(el.height * 0.75, 26)}px;\n  font-weight: 700;\n  font-family: ${el.fontFamily};\n  display: flex;\n  align-items: center;\n  padding-left: 4px;`;
       } else if (el.type === 'image' || el.type === 'video') {
         elStyles += `\n  border-radius: ${el.borderRadius}px;\n  overflow: hidden;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 8px 24px rgba(0,0,0,0.3);`;
       }
-      elementsCSS += `.${className} {${elStyles}\n  animation: ${animName} ${(anim.duration/1000).toFixed(2)}s ${easing} ${(anim.delay/1000).toFixed(2)}s both;\n}\n\n`;
-
-      let fromState = '', toState = '';
-      const intensity = anim.intensity / 100;
-      switch(anim.type) {
-        case 'fade-in': fromState = `opacity: 0; transform: ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: ${baseTransform};`; break;
-        case 'slide-up': fromState = `opacity: 0; transform: translateY(${(60*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`; break;
-        case 'slide-down': fromState = `opacity: 0; transform: translateY(${(-60*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`; break;
-        case 'slide-left': fromState = `opacity: 0; transform: translateX(${(80*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`; break;
-        case 'slide-right': fromState = `opacity: 0; transform: translateX(${(-80*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`; break;
-        case 'scale-in': fromState = `opacity: 0; transform: scale(${(1-0.6*intensity).toFixed(2)}) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`; break;
-        case 'spring-pop': fromState = `opacity: 0; transform: scale(${(1-0.8*intensity).toFixed(2)}) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`; break;
-        case 'blur-in': fromState = `opacity: 0; filter: blur(${(12*intensity).toFixed(0)}px); transform: ${baseTransform};`; toState = `opacity: ${el.opacity/100}; filter: blur(0); transform: ${baseTransform};`; break;
-        case 'rotate-in': fromState = `opacity: 0; transform: scale(${(1-0.4*intensity).toFixed(2)}) rotate(${(360*intensity + el.rotation).toFixed(0)}deg);`; toState = `opacity: ${el.opacity/100}; transform: scale(1) rotate(${el.rotation}deg);`; break;
-        case 'flip-in': fromState = `opacity: 0; transform: perspective(800px) rotateX(${(90*intensity).toFixed(0)}deg);`; toState = `opacity: ${el.opacity/100}; transform: perspective(800px) rotateX(0);`; break;
+      
+      const easing = EASINGS_CSS[anim.easing] || 'ease';
+      if (anim.type !== 'none') {
+        elementsCSS += `.${className} {${elStyles}\n  animation: ${animName} ${totalDur}ms ${easing} both;\n}\n\n`;
+      } else {
+        elementsCSS += `.${className} {${elStyles}\n}\n\n`;
       }
-      keyframes += `@keyframes ${animName} {\n  from { ${fromState} }\n  to   { ${toState} }\n}\n\n`;
+
+      if (anim.type !== 'none') {
+        const enterEnd = ((anim.delay + anim.duration) / totalDur) * 100;
+        const exitStart = exit.type !== 'none' ? (exit.start / totalDur) * 100 : 100;
+
+        const intensity = anim.intensity / 100;
+        const exitIntensity = exit.intensity / 100;
+        const baseTransform = `rotate(${el.rotation}deg)`;
+        let blurStr = el.motionBlur ? `blur(${4 * intensity}px)` : 'none';
+        let exitBlurStr = el.motionBlur ? `blur(${4 * exitIntensity}px)` : 'none';
+
+        let kf = `@keyframes ${animName} {\n`;
+        
+        switch(anim.type) {
+          case 'fade-in': kf += `  0% { opacity: 0; transform: ${baseTransform}; filter: none; }\n`; break;
+          case 'slide-up': kf += `  0% { opacity: 0; transform: translateY(${60 * intensity}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'slide-down': kf += `  0% { opacity: 0; transform: translateY(${-60 * intensity}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'slide-left': kf += `  0% { opacity: 0; transform: translateX(${80 * intensity}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'slide-right': kf += `  0% { opacity: 0; transform: translateX(${-80 * intensity}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'scale-in': kf += `  0% { opacity: 0; transform: scale(${1 - 0.6 * intensity}) ${baseTransform}; filter: none; }\n`; break;
+          case 'spring-pop': kf += `  0% { opacity: 0; transform: scale(${1 - 0.8 * intensity}) ${baseTransform}; filter: none; }\n`; break;
+          case 'blur-in': kf += `  0% { opacity: 0; transform: ${baseTransform}; filter: blur(${12 * intensity}px); }\n`; break;
+          case 'rotate-in': kf += `  0% { opacity: 0; transform: scale(${1 - 0.4 * intensity}) rotate(${360 * intensity + el.rotation}deg); filter: none; }\n`; break;
+          case 'flip-in': kf += `  0% { opacity: 0; transform: perspective(800px) rotateX(${90 * intensity}deg); filter: none; }\n`; break;
+          case 'fly-in-left': kf += `  0% { opacity: 1; transform: translateX(${-cw}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'fly-in-right': kf += `  0% { opacity: 1; transform: translateX(${cw}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'fly-in-top': kf += `  0% { opacity: 1; transform: translateY(${-ch}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+          case 'fly-in-bottom': kf += `  0% { opacity: 1; transform: translateY(${ch}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
+        }
+
+        kf += `  ${enterEnd.toFixed(2)}% { opacity: ${el.opacity / 100}; transform: ${baseTransform}; filter: none; }\n`;
+
+        if (exit.type !== 'none') {
+          kf += `  ${exitStart.toFixed(2)}% { opacity: ${el.opacity / 100}; transform: ${baseTransform}; filter: none; }\n`;
+          switch(exit.type) {
+            case 'fade-out': kf += `  100% { opacity: 0; transform: ${baseTransform}; filter: none; }\n`; break;
+            case 'slide-down-out': kf += `  100% { opacity: 0; transform: translateY(${60 * exitIntensity}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+            case 'slide-up-out': kf += `  100% { opacity: 0; transform: translateY(${-60 * exitIntensity}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+            case 'scale-out': kf += `  100% { opacity: 0; transform: scale(${1 - 0.6 * exitIntensity}) ${baseTransform}; filter: none; }\n`; break;
+            case 'collapse': kf += `  100% { opacity: 0; transform: scale(${1 - 0.8 * exitIntensity}) ${baseTransform}; filter: none; }\n`; break;
+            case 'fly-out-left': kf += `  100% { opacity: 1; transform: translateX(${-cw}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+            case 'fly-out-right': kf += `  100% { opacity: 1; transform: translateX(${cw}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+            case 'fly-out-top': kf += `  100% { opacity: 1; transform: translateY(${-ch}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+            case 'fly-out-bottom': kf += `  100% { opacity: 1; transform: translateY(${ch}px) ${baseTransform}; filter: ${exitBlurStr}; }\n`; break;
+          }
+        } else {
+          if (enterEnd < 100) {
+            kf += `  100% { opacity: ${el.opacity / 100}; transform: ${baseTransform}; filter: none; }\n`;
+          }
+        }
+
+        kf += `}\n\n`;
+        keyframes += kf;
+      }
 
       let innerContent = '';
-      if (el.type === 'text') innerContent = el.text || 'Text';
-      else if (el.type === 'button') innerContent = el.text || 'Button';
-      else if (el.type === 'image' && el.src) innerContent = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;">`;
-      else if (el.type === 'video' && el.src) innerContent = `<video src="${el.src}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>`;
+      if (el.type === 'text' || el.type === 'button') {
+        const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
+        innerContent = `<span class="${textAnimClass}">${el.text || (el.type === 'text' ? 'Text' : 'Button')}</span>`;
+      } else if (el.type === 'image' && el.src) {
+        innerContent = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;">`;
+      } else if (el.type === 'video' && el.src) {
+        innerContent = `<video src="${el.src}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>`;
+      }
       
       elementsHTML += `    <div class="${className}">${innerContent}</div>\n`;
     });
+
+    let textAnimCSS = `
+  @keyframes text-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes text-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+  @keyframes text-shake { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } 100% { transform: translateX(0); } }
+  .text-anim-bounce { animation: text-bounce 0.8s ease-in-out infinite; display: inline-block; }
+  .text-anim-blink { animation: text-blink 0.6s ease-in-out infinite; display: inline-block; }
+  .text-anim-shake { animation: text-shake 0.2s linear infinite; display: inline-block; }
+`;
+
+    const audioHTML = state.audio.src ? `<audio src="${state.audio.src}" autoplay loop></audio>` : '';
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -1909,6 +2450,7 @@
   .stage { width: ${state.canvasSize.w}px; height: ${state.canvasSize.h}px; background: ${bgCSS}; border-radius: 36px; position: relative; overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px rgba(0,0,0,0.6); }
  ${elementsCSS}
  ${keyframes}
+ ${textAnimCSS}
   .replay-btn { position: fixed; top: 20px; right: 20px; background: #0a84ff; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(10,132,255,0.4); }
   .replay-btn:hover { background: #409cff; transform: translateY(-1px); }
 </style>
@@ -1917,6 +2459,7 @@
   <button class="replay-btn" onclick="replay()">Replay Animation</button>
   <div class="stage">
  ${elementsHTML}  </div>
+  ${audioHTML}
 <script>
   function replay() {
     const els = document.querySelectorAll('.stage > div');
@@ -1959,23 +2502,30 @@
     state.selectedId = null;
     state.scene = { bgType: 'solid', bgColor0: '#ffffff', bgColor1: '#f5f5f7', bgAngle: 180 };
     state.canvasSize = { w: 360, h: 640 };
-    state.totalDuration = 2000;
+    state.totalDuration = 3000;
+    state.audio = { src: null, name: '' };
     
-    document.getElementById('totalDurationSlider').value = 2000;
-    document.getElementById('totalDurationLabel').textContent = '2.0s';
-    document.getElementById('totalTime').textContent = '2.00s';
+    document.getElementById('totalDurationSlider').value = 3000;
+    document.getElementById('totalDurationLabel').textContent = '3.0s';
+    document.getElementById('totalTime').textContent = '3.00s';
     document.getElementById('sceneSelect').value = '';
     
     applyCanvasSize();
     renderScene();
+    renderAudio();
     renderAll();
     renderTimeline();
     showToast('New blank project created');
   }
 
+  function updateTimelineZoomUI() {
+    document.getElementById('tlZoomLabel').textContent = Math.round(state.timelineZoom * 100) + '%';
+  }
+
   function init() {
     loadDemoScene('default');
     updateUndoRedoButtons();
+    updateTimelineZoomUI();
     applyTheme(localStorage.getItem('theme') || 'dark');
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -2012,6 +2562,7 @@
     document.querySelectorAll('.add-btn').forEach(btn => {
       if (btn.id === 'uploadBtn') btn.addEventListener('click', () => document.getElementById('fileInput').click());
       else if (btn.id === 'uploadVideoBtn') btn.addEventListener('click', () => document.getElementById('videoInput').click());
+      else if (btn.id === 'uploadAudioBtn') btn.addEventListener('click', () => document.getElementById('audioInput').click());
       else btn.addEventListener('click', () => addElement(btn.dataset.type));
     });
 
@@ -2025,8 +2576,15 @@
       e.target.value = '';
     });
 
+    document.getElementById('audioInput').addEventListener('change', (e) => {
+      if (e.target.files.length > 0) handleAudioUpload(e.target.files[0]);
+      e.target.value = '';
+    });
+
     document.getElementById('playBtn').addEventListener('click', togglePlay);
     document.getElementById('restartBtn').addEventListener('click', restart);
+    document.getElementById('prevBtn').addEventListener('click', () => stepTime(-1));
+    document.getElementById('nextBtn').addEventListener('click', () => stepTime(1));
 
     document.getElementById('exportHtmlBtn').addEventListener('click', exportHTML);
     document.getElementById('closeHtmlExport').addEventListener('click', () => document.getElementById('htmlExportModal').classList.remove('active'));
@@ -2065,6 +2623,7 @@
       applyCanvasSize();
       renderTimeline();
     });
+    
     document.getElementById('zoomSelect').addEventListener('change', (e) => {
       state.zoom = parseFloat(e.target.value);
       applyZoom();
@@ -2093,6 +2652,17 @@
       showToast(`Snap to grid ${state.snapEnabled ? 'enabled' : 'disabled'}`);
     });
 
+    document.getElementById('tlZoomInBtn').addEventListener('click', () => {
+      state.timelineZoom = Math.min(5, state.timelineZoom + 0.25);
+      updateTimelineZoomUI();
+      renderTimeline();
+    });
+    document.getElementById('tlZoomOutBtn').addEventListener('click', () => {
+      state.timelineZoom = Math.max(0.5, state.timelineZoom - 0.25);
+      updateTimelineZoomUI();
+      renderTimeline();
+    });
+
     document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
       btn.addEventListener('click', () => { 
         pushHistory();
@@ -2113,13 +2683,20 @@
     });
 
     const tdSlider = document.getElementById('totalDurationSlider');
-    tdSlider.style.setProperty('--p', ((state.totalDuration - 1000) / 5000) * 100 + '%');
+    tdSlider.style.setProperty('--p', ((state.totalDuration - 1000) / 29000) * 100 + '%');
     tdSlider.addEventListener('input', e => {
       state.totalDuration = +e.target.value;
-      const p = ((state.totalDuration - 1000) / 5000) * 100;
+      const p = ((state.totalDuration - 1000) / 29000) * 100;
       e.target.style.setProperty('--p', p + '%');
       document.getElementById('totalDurationLabel').textContent = (state.totalDuration/1000).toFixed(1) + 's';
       document.getElementById('totalTime').textContent = (state.totalDuration/1000).toFixed(2) + 's';
+      state.elements.forEach(el => {
+        if (el.exit && el.exit.type !== 'none') {
+          if (el.exit.start + el.exit.duration > state.totalDuration) {
+            el.exit.start = Math.max(0, state.totalDuration - el.exit.duration);
+          }
+        }
+      });
       renderTimeline();
     });
     tdSlider.addEventListener('change', pushHistory);
@@ -2136,14 +2713,57 @@
         e.preventDefault();
         if (e.shiftKey) redo();
         else undo();
+      } else if ((e.metaKey || e.ctrlKey) && e.code === 'KeyD') {
+        e.preventDefault();
+        if (state.selectedId) duplicateElement(state.selectedId);
       } else if (e.code === 'Space') {
         e.preventDefault(); togglePlay();
       } else if (e.code === 'KeyR') {
         restart();
+      } else if (e.code === 'ArrowLeft') {
+        if (state.selectedId) {
+          e.preventDefault();
+          const el = state.elements.find(x => x.id === state.selectedId);
+          if (el) {
+            el.x -= e.shiftKey ? 10 : 1;
+            renderCanvas(); renderInspector();
+          }
+        } else { stepTime(-1); }
+      } else if (e.code === 'ArrowRight') {
+        if (state.selectedId) {
+          e.preventDefault();
+          const el = state.elements.find(x => x.id === state.selectedId);
+          if (el) {
+            el.x += e.shiftKey ? 10 : 1;
+            renderCanvas(); renderInspector();
+          }
+        } else { stepTime(1); }
+      } else if (e.code === 'ArrowUp') {
+        if (state.selectedId) {
+          e.preventDefault();
+          const el = state.elements.find(x => x.id === state.selectedId);
+          if (el) {
+            el.y -= e.shiftKey ? 10 : 1;
+            renderCanvas(); renderInspector();
+          }
+        }
+      } else if (e.code === 'ArrowDown') {
+        if (state.selectedId) {
+          e.preventDefault();
+          const el = state.elements.find(x => x.id === state.selectedId);
+          if (el) {
+            el.y += e.shiftKey ? 10 : 1;
+            renderCanvas(); renderInspector();
+          }
+        }
       } else if (e.code === 'Escape') {
         document.getElementById('htmlExportModal').classList.remove('active');
         document.getElementById('videoExportModal').classList.remove('active');
         state.selectedId = null; renderAll();
+      } else if (e.code === 'BracketRight') {
+        if (state.selectedId) bringForward(state.selectedId);
+      } else if (e.code === 'BracketLeft') {
+        if (state.selectedId) sendBackward(state.selectedId);
       }
     });
 
