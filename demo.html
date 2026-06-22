@@ -3,29 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transition Studio — UI Motion Editor</title>
+<title>Transition Studio — Motion & Video Editor</title>
 <style>
   :root {
     --bg: #000000;
     --bg-elevated: #1c1c1e;
-    --bg-glass: rgba(22, 22, 26, 0.72);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.16);
+    --bg-glass: rgba(28, 28, 30, 0.72);
+    --bg-glass-strong: rgba(28, 28, 30, 0.9);
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.2);
     --text: #f5f5f7;
     --text-secondary: #a1a1a6;
     --text-tertiary: #6e6e73;
     --accent: #0a84ff;
     --accent-hover: #409cff;
-    --accent-soft: rgba(10, 132, 255, 0.15);
-    --purple: #bf5af2;
-    --orange: #ff9f0a;
-    --green: #30d158;
-    --pink: #ff375f;
+    --accent-soft: rgba(10, 132, 255, 0.2);
     --red: #ff453a;
+    --green: #30d158;
+    --orange: #ff9f0a;
     --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
+  }
+
+  :root.light {
+    --bg: #f5f5f7;
+    --bg-elevated: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.8);
+    --bg-glass-strong: rgba(255, 255, 255, 0.95);
+    --border: rgba(0, 0, 0, 0.1);
+    --border-strong: rgba(0, 0, 0, 0.2);
+    --text: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #86868b;
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.1);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,7 +45,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     -webkit-font-smoothing: antialiased;
     letter-spacing: -0.01em;
   }
@@ -46,18 +55,24 @@
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(10, 132, 255, 0.10), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(10, 132, 255, 0.1), transparent 60%),
       radial-gradient(ellipse 60% 50% at 85% 100%, rgba(191, 90, 242, 0.08), transparent 60%);
     pointer-events: none;
     z-index: 0;
+  }
+
+  :root.light body::before {
+    background:
+      radial-gradient(ellipse 80% 50% at 15% 0%, rgba(10, 132, 255, 0.15), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 85% 100%, rgba(191, 90, 242, 0.12), transparent 60%);
   }
 
   .app {
     position: relative;
     height: 100vh;
     display: grid;
-    grid-template-rows: 48px 1fr 220px;
-    grid-template-columns: 250px 1fr 320px;
+    grid-template-rows: 52px 1fr 220px;
+    grid-template-columns: 260px 1fr 320px;
     grid-template-areas:
       "topbar topbar topbar"
       "left   canvas right"
@@ -68,7 +83,7 @@
   }
 
   .topbar, .sidebar-left, .sidebar-right, .canvas-area, .timeline {
-    background: rgba(18, 18, 22, 0.85);
+    background: var(--bg-glass);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
   }
@@ -78,1256 +93,344 @@
     grid-area: topbar;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 20px;
     gap: 16px;
     border-bottom: 1px solid var(--border);
   }
 
-  .traffic-lights {
-    display: flex;
-    gap: 8px;
-    margin-right: 4px;
-  }
-  .traffic-light {
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.15s ease;
-  }
+  .traffic-lights { display: flex; gap: 8px; margin-right: 8px; }
+  .traffic-light { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: transform 0.15s ease; }
   .traffic-light:hover { transform: scale(1.15); }
   .traffic-light.close { background: #ff5f57; }
   .traffic-light.minimize { background: #febc2e; }
   .traffic-light.maximize { background: #28c840; }
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .brand-logo {
-    width: 22px; height: 22px;
-    display: flex;
-    align-items: center;
-  }
-  .brand-title {
-    font-weight: 600;
-    font-size: 13px;
-    letter-spacing: -0.02em;
-  }
-  .brand-sub {
-    color: var(--text-tertiary);
-    font-weight: 400;
-    margin-left: 4px;
-  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-title { font-weight: 600; font-size: 15px; letter-spacing: -0.02em; }
+  .brand-sub { color: var(--text-tertiary); font-weight: 400; margin-left: 4px; font-size: 13px; }
+
+  .topbar-history { display: flex; gap: 4px; margin-left: 12px; }
 
   .playback-controls {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    margin-left: auto;
-    margin-right: auto;
-    background: rgba(255, 255, 255, 0.04);
-    padding: 4px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 4px;
+    margin-left: auto; margin-right: auto;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 5px; border-radius: 12px; border: 1px solid var(--border);
   }
+  :root.light .playback-controls { background: rgba(0, 0, 0, 0.05); }
+
   .ctrl-btn {
-    width: 30px; height: 28px;
-    border-radius: 7px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
+    width: 34px; height: 30px; border-radius: 8px; background: transparent;
+    border: none; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s ease;
   }
-  .ctrl-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text);
-  }
-  .ctrl-btn.play {
-    background: var(--accent);
-    color: white;
-    width: 36px;
-  }
+  .ctrl-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+  :root.light .ctrl-btn:hover { background: rgba(0, 0, 0, 0.1); }
+  .ctrl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .ctrl-btn:disabled:hover { background: transparent; color: var(--text-secondary); }
+  .ctrl-btn.play { background: var(--accent); color: white; width: 40px; }
   .ctrl-btn.play:hover { background: var(--accent-hover); }
-  .ctrl-btn.play.playing {
-    background: var(--orange);
-    animation: pulse-glow 1.5s ease-in-out infinite;
-  }
+  .ctrl-btn.play.playing { background: var(--orange); animation: pulse-glow 1.5s ease-in-out infinite; }
   @keyframes pulse-glow {
     0%, 100% { box-shadow: 0 0 0 0 rgba(255, 159, 10, 0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(255, 159, 10, 0); }
+    50% { box-shadow: 0 0 0 8px rgba(255, 159, 10, 0); }
   }
 
-  .time-display {
-    font-variant-numeric: tabular-nums;
-    font-size: 11px;
-    color: var(--text-tertiary);
-    padding: 0 10px;
-    min-width: 90px;
-    text-align: center;
-  }
+  .time-display { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--text-tertiary); padding: 0 12px; min-width: 100px; text-align: center; }
   .time-display .current { color: var(--text); font-weight: 600; }
 
-  .topbar-right {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .topbar-right { display: flex; gap: 10px; align-items: center; }
   .btn-primary {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    background: var(--accent); color: white; border: none;
+    padding: 7px 16px; border-radius: 9px; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 6px;
   }
-  .btn-primary:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-  }
-  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
   .btn-ghost {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--text);
-    border: 1px solid var(--border);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    background: rgba(255, 255, 255, 0.06); color: var(--text); border: 1px solid var(--border);
+    padding: 7px 14px; border-radius: 9px; font-size: 13px; cursor: pointer;
+    transition: all 0.15s ease; display: flex; align-items: center; gap: 6px;
   }
-  .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--border-strong);
+  :root.light .btn-ghost { background: rgba(0, 0, 0, 0.05); }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--border-strong); }
+  :root.light .btn-ghost:hover { background: rgba(0, 0, 0, 0.1); }
+  .btn-primary svg, .btn-ghost svg { width: 14px; height: 14px; }
+
+  .tool-select {
+    background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); color: var(--text);
+    padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; outline: none; font-family: inherit;
   }
+  :root.light .tool-select { background: rgba(0, 0, 0, 0.05); }
 
   /* ====== LEFT SIDEBAR ====== */
-  .sidebar-left {
-    grid-area: left;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-right: 1px solid var(--border);
-  }
+  .sidebar-left { grid-area: left; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
 
-  .scene-section {
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .scene-bg-toggle {
-    display: flex;
-    gap: 4px;
-    background: rgba(255, 255, 255, 0.04);
-    padding: 3px;
-    border-radius: 7px;
-    margin-bottom: 10px;
-  }
-  .scene-bg-toggle button {
-    flex: 1;
-    padding: 4px 8px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 11px;
-    font-weight: 500;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .scene-bg-toggle button.active {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text);
-  }
-  .scene-colors {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .scene-color-swatch {
-    flex: 1;
-    height: 30px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    gap: 6px;
-    transition: all 0.15s ease;
-    position: relative;
-    overflow: hidden;
-  }
+  .scene-section { padding: 16px; border-bottom: 1px solid var(--border); }
+  .scene-bg-toggle { display: flex; gap: 4px; background: rgba(255, 255, 255, 0.05); padding: 3px; border-radius: 9px; margin-bottom: 12px; }
+  :root.light .scene-bg-toggle { background: rgba(0, 0, 0, 0.05); }
+  .scene-bg-toggle button { flex: 1; padding: 5px 8px; background: transparent; border: none; color: var(--text-secondary); font-size: 12px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
+  .scene-bg-toggle button.active { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+  :root.light .scene-bg-toggle button.active { background: rgba(0, 0, 0, 0.1); }
+  
+  .scene-colors { display: flex; gap: 10px; align-items: center; }
+  .scene-color-swatch { flex: 1; height: 36px; border-radius: 9px; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; padding: 5px; gap: 8px; transition: all 0.15s ease; position: relative; overflow: hidden; }
   .scene-color-swatch:hover { border-color: var(--border-strong); }
-  .scene-color-swatch .preview {
-    width: 20px; height: 20px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-  }
-  .scene-color-swatch .label {
-    font-size: 10px;
-    color: var(--text-secondary);
-    font-family: "SF Mono", Menlo, monospace;
-    text-transform: uppercase;
-  }
+  .scene-color-swatch .preview { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); flex-shrink: 0; }
+  .scene-color-swatch .label { font-size: 11px; color: var(--text-secondary); font-family: "SF Mono", Menlo, monospace; text-transform: uppercase; }
 
-  .panel-header {
-    padding: 14px 16px 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .panel-title {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .panel-count {
-    font-size: 10px;
-    color: var(--text-tertiary);
-    background: rgba(255, 255, 255, 0.06);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-variant-numeric: tabular-nums;
-  }
+  .panel-header { padding: 16px 16px 8px; display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.08em; }
+  .panel-count { font-size: 11px; color: var(--text-tertiary); background: rgba(255, 255, 255, 0.08); padding: 2px 7px; border-radius: 5px; font-variant-numeric: tabular-nums; }
+  :root.light .panel-count { background: rgba(0, 0, 0, 0.08); }
 
-  .add-elements {
-    padding: 0 12px 12px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
+  .add-elements { padding: 0 12px 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .add-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    padding: 8px 6px;
-    border-radius: 8px;
-    font-size: 11px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    transition: all 0.15s ease;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: var(--text-secondary);
+    padding: 10px 6px; border-radius: 9px; font-size: 12px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s ease;
   }
-  .add-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text);
-    border-color: var(--border-strong);
-    transform: translateY(-1px);
-  }
-  .add-btn svg { width: 13px; height: 13px; }
-  .add-btn.upload {
-    grid-column: span 2;
-    background: rgba(10, 132, 255, 0.08);
-    border-color: rgba(10, 132, 255, 0.2);
-    color: var(--accent);
-  }
-  .add-btn.upload:hover {
-    background: rgba(10, 132, 255, 0.15);
-  }
+  :root.light .add-btn { background: rgba(0, 0, 0, 0.04); }
+  .add-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); border-color: var(--border-strong); transform: translateY(-1px); }
+  :root.light .add-btn:hover { background: rgba(0, 0, 0, 0.08); }
+  .add-btn svg { width: 14px; height: 14px; }
+  .add-btn.upload { grid-column: span 2; background: rgba(10, 132, 255, 0.1); border-color: rgba(10, 132, 255, 0.3); color: var(--accent); }
+  .add-btn.upload:hover { background: rgba(10, 132, 255, 0.2); }
 
-  .layers-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 8px 12px;
-  }
-  .layer-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 8px;
-    border-radius: 7px;
-    cursor: pointer;
-    transition: background 0.12s ease;
-    margin-bottom: 2px;
-    border: 1px solid transparent;
-    position: relative;
-  }
-  .layer-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-  }
-  .layer-item.selected {
-    background: var(--accent-soft);
-    border-color: rgba(10, 132, 255, 0.3);
-  }
-  .layer-item.dragging {
-    opacity: 0.4;
-  }
-  .layer-item.drag-over {
-    border-top: 2px solid var(--accent);
-  }
-  .layer-icon {
-    width: 22px; height: 22px;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    overflow: hidden;
-  }
-  .layer-icon img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-  }
-  .layer-name {
-    flex: 1;
-    font-size: 12px;
-    color: var(--text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  .layers-list { flex: 1; overflow-y: auto; padding: 0 8px 12px; }
+  .layer-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.12s ease; margin-bottom: 3px; border: 1px solid transparent; position: relative; }
+  .layer-item:hover { background: rgba(255, 255, 255, 0.05); }
+  :root.light .layer-item:hover { background: rgba(0, 0, 0, 0.05); }
+  .layer-item.selected { background: var(--accent-soft); border-color: rgba(10, 132, 255, 0.4); }
+  .layer-item.dragging { opacity: 0.4; }
+  .layer-item.drag-over { border-top: 2px solid var(--accent); }
+  .layer-icon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+  .layer-icon img, .layer-icon video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .layer-name { flex: 1; font-size: 13px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .layer-item.selected .layer-name { font-weight: 500; }
-  .layer-anim-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .layer-actions {
-    display: none;
-    position: absolute;
-    right: 6px;
-    gap: 2px;
-    background: rgba(28, 28, 32, 0.95);
-    padding: 2px;
-    border-radius: 5px;
-  }
-  .layer-item:hover .layer-actions {
-    display: flex;
-  }
-  .layer-item:hover .layer-anim-dot {
-    display: none;
-  }
-  .layer-action-btn {
-    width: 20px; height: 20px;
-    border: none;
-    background: transparent;
-    color: var(--text-tertiary);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.12s ease;
-  }
-  .layer-action-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text);
-  }
-  .layer-action-btn.delete:hover {
-    color: var(--red);
-    background: rgba(255, 69, 58, 0.15);
-  }
+  .layer-anim-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .layer-actions { display: none; position: absolute; right: 6px; gap: 2px; background: var(--bg-elevated); padding: 3px; border-radius: 6px; }
+  .layer-item:hover .layer-actions { display: flex; }
+  .layer-item:hover .layer-anim-dot { display: none; }
+  .layer-action-btn { width: 22px; height: 22px; border: none; background: transparent; color: var(--text-tertiary); border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s ease; }
+  .layer-action-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+  :root.light .layer-action-btn:hover { background: rgba(0, 0, 0, 0.1); }
+  .layer-action-btn.delete:hover { color: var(--red); background: rgba(255, 69, 58, 0.15); }
 
   /* ====== CANVAS ====== */
-  .canvas-area {
-    grid-area: canvas;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
-  .canvas-toolbar {
-    height: 36px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.2);
-  }
-  .canvas-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    color: var(--text-tertiary);
-  }
-  .canvas-info .dot {
-    width: 3px; height: 3px;
-    border-radius: 50%;
-    background: var(--text-tertiary);
-  }
-  .canvas-info .live {
-    color: var(--green);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .canvas-info .live::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green);
-    animation: live-pulse 2s ease-in-out infinite;
-  }
-  @keyframes live-pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-  .canvas-tools {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
-  .tool-btn {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: all 0.15s ease;
-  }
-  .tool-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text);
-  }
-  .tool-btn.active {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .canvas-area { grid-area: canvas; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .canvas-toolbar { height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); }
+  :root.light .canvas-toolbar { background: rgba(0, 0, 0, 0.03); }
+  .canvas-info { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text-tertiary); }
+  .canvas-tools { display: flex; gap: 8px; align-items: center; }
+  .tool-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text-secondary); padding: 5px 12px; border-radius: 7px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: all 0.15s ease; }
+  :root.light .tool-btn { background: rgba(0, 0, 0, 0.05); }
+  .tool-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+  :root.light .tool-btn:hover { background: rgba(0, 0, 0, 0.1); }
+  .tool-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 
-  .canvas-wrapper {
-    flex: 1;
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 32px;
-    position: relative;
-  }
+  .canvas-wrapper { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; }
 
-  .canvas-stage {
-    width: 360px;
-    height: 640px;
-    border-radius: 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.06),
-      0 0 0 8px rgba(0, 0, 0, 0.4),
-      0 0 0 9px rgba(255, 255, 255, 0.04),
-      0 30px 80px rgba(0, 0, 0, 0.6);
-    transition: background 0.3s ease;
-  }
-  .canvas-stage::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-    z-index: 0;
-  }
+  .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0, 0, 0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 36px; }
+  .canvas-bg { position: absolute; inset: 0; border-radius: 36px; pointer-events: none; z-index: 0; }
+  .canvas-stage::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 20px 20px; pointer-events: none; z-index: 1; }
+  :root.light .canvas-stage::before { background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px); }
 
-  .phone-status-bar {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    font-size: 13px;
-    font-weight: 600;
-    color: white;
-    z-index: 5;
-    pointer-events: none;
-    mix-blend-mode: difference;
-  }
-  .phone-status-bar .status-icons {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .phone-home-indicator {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 134px;
-    height: 5px;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 3px;
-    z-index: 5;
-    pointer-events: none;
-    mix-blend-mode: difference;
-  }
+  .canvas-element { position: absolute; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: move; user-select: none; z-index: 2; }
+  .canvas-element.selected { outline: 2px solid var(--accent); outline-offset: 3px; z-index: 10; }
+  .canvas-element.hovered:not(.selected) { outline: 1px solid rgba(255, 255, 255, 0.4); outline-offset: 2px; }
+  :root.light .canvas-element.hovered:not(.selected) { outline: 1px solid rgba(0, 0, 0, 0.4); }
+  .canvas-element img, .canvas-element video { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; pointer-events: none; }
 
-  .canvas-element {
-    position: absolute;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: move;
-    user-select: none;
-    z-index: 1;
-  }
-  .canvas-element.selected {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-    z-index: 3;
-  }
-  .canvas-element.hovered:not(.selected) {
-    outline: 1px solid rgba(255, 255, 255, 0.3);
-    outline-offset: 2px;
-  }
-  .canvas-element img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-    pointer-events: none;
-  }
-
-  .el-card {
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-  }
-  .el-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-  }
-  .el-text {
-    color: white;
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: -0.03em;
-    display: flex;
-    align-items: center;
-    padding-left: 4px;
-  }
-  .el-button {
-    color: white;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-    box-shadow: 0 6px 16px rgba(10, 132, 255, 0.35);
-  }
-  .el-circle {
-    border-radius: 50%;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  }
-  .el-circle::after {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%);
-  }
-  .el-image {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
+  .el-card { border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); overflow: hidden; }
+  .el-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent); }
+  .el-text { color: white; font-weight: 700; font-size: 22px; letter-spacing: -0.03em; display: flex; align-items: center; padding-left: 4px; }
+  .el-button { color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; box-shadow: 0 6px 16px rgba(10, 132, 255, 0.35); }
+  .el-circle { border-radius: 50%; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
+  .el-circle::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%); }
+  .el-image, .el-video { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
 
   /* ====== RIGHT SIDEBAR ====== */
-  .sidebar-right {
-    grid-area: right;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-left: 1px solid var(--border);
-  }
-  .inspector-tabs {
-    display: flex;
-    padding: 8px;
-    gap: 2px;
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 1px solid var(--border);
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 6px 10px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.15s ease;
-  }
+  .sidebar-right { grid-area: right; display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid var(--border); }
+  .inspector-tabs { display: flex; padding: 10px; gap: 4px; background: rgba(0, 0, 0, 0.2); border-bottom: 1px solid var(--border); }
+  :root.light .inspector-tabs { background: rgba(0, 0, 0, 0.03); }
+  .tab-btn { flex: 1; padding: 7px 10px; background: transparent; border: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; border-radius: 7px; transition: all 0.15s ease; }
   .tab-btn:hover { color: var(--text); }
-  .tab-btn.active {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text);
-  }
+  .tab-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+  :root.light .tab-btn.active { background: rgba(0, 0, 0, 0.1); }
 
-  .inspector-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-  }
-  .inspector-section {
-    margin-bottom: 22px;
-  }
-  .inspector-section-title {
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 10px;
-  }
+  .inspector-content { flex: 1; overflow-y: auto; padding: 20px; }
+  .inspector-section { margin-bottom: 24px; }
+  .inspector-section-title { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
 
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .field-row-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .field-label {
-    font-size: 10px;
-    color: var(--text-tertiary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .field-input {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 7px 9px;
-    border-radius: 7px;
-    font-size: 12px;
-    font-family: inherit;
-    width: 100%;
-    transition: all 0.15s ease;
-    font-variant-numeric: tabular-nums;
-  }
-  .field-input:focus {
-    outline: none;
-    border-color: var(--accent);
-    background: rgba(10, 132, 255, 0.05);
-  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 11px; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+  .field-input { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 8px 10px; border-radius: 8px; font-size: 13px; font-family: inherit; width: 100%; transition: all 0.15s ease; font-variant-numeric: tabular-nums; }
+  :root.light .field-input { background: rgba(0, 0, 0, 0.05); }
+  .field-input:focus { outline: none; border-color: var(--accent); background: rgba(10, 132, 255, 0.05); }
 
-  .slider-row {
-    margin-bottom: 14px;
-  }
-  .slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-  .slider-label {
-    font-size: 12px;
-    color: var(--text);
-  }
-  .slider-value {
-    font-size: 11px;
-    color: var(--text);
-    font-variant-numeric: tabular-nums;
-    background: rgba(255, 255, 255, 0.06);
-    padding: 2px 7px;
-    border-radius: 4px;
-  }
-  .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--p, 50%), rgba(255, 255, 255, 0.1) var(--p, 50%));
-    border-radius: 2px;
-    outline: none;
-  }
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 16px; height: 16px;
-    background: white;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    transition: transform 0.1s ease;
-  }
+  .slider-row { margin-bottom: 16px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-label { font-size: 13px; color: var(--text); }
+  .slider-value { font-size: 12px; color: var(--text); font-variant-numeric: tabular-nums; background: rgba(255, 255, 255, 0.08); padding: 2px 8px; border-radius: 5px; }
+  :root.light .slider-value { background: rgba(0, 0, 0, 0.08); }
+  .slider { -webkit-appearance: none; width: 100%; height: 5px; background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--p, 50%), rgba(255, 255, 255, 0.1) var(--p, 50%)); border-radius: 3px; outline: none; }
+  :root.light .slider { background: linear-gradient(90deg, var(--accent) 0%, var(--accent) var(--p, 50%), rgba(0, 0, 0, 0.1) var(--p, 50%)); }
+  .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: white; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5); transition: transform 0.1s ease; }
   .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
   .slider::-webkit-slider-thumb:active { transform: scale(0.95); }
 
-  .easing-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 6px;
-  }
-  .easing-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    padding: 6px 4px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    transition: all 0.15s ease;
-  }
-  .easing-btn:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: var(--border-strong);
-  }
-  .easing-btn.active {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-  }
-  .easing-curve {
-    width: 32px; height: 18px;
-    stroke: var(--text-secondary);
-    stroke-width: 1.5;
-    fill: none;
-  }
+  .easing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+  .easing-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); padding: 8px 4px; border-radius: 9px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: all 0.15s ease; }
+  :root.light .easing-btn { background: rgba(0, 0, 0, 0.04); }
+  .easing-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-strong); }
+  :root.light .easing-btn:hover { background: rgba(0, 0, 0, 0.08); }
+  .easing-btn.active { background: var(--accent-soft); border-color: var(--accent); }
+  .easing-curve { width: 32px; height: 18px; stroke: var(--text-secondary); stroke-width: 1.5; fill: none; }
   .easing-btn.active .easing-curve { stroke: var(--accent); }
-  .easing-name {
-    font-size: 9px;
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
+  .easing-name { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
   .easing-btn.active .easing-name { color: var(--text); }
 
-  .preset-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
-  .preset-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.15s ease;
-  }
-  .preset-btn:hover {
-    background: rgba(255, 255, 255, 0.07);
-    border-color: var(--border-strong);
-  }
-  .preset-btn.active {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-  }
-  .preset-name {
-    font-size: 11px;
-    color: var(--text);
-    font-weight: 500;
-  }
-  .preset-desc {
-    font-size: 10px;
-    color: var(--text-tertiary);
-    margin-top: 2px;
-  }
+  .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .preset-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); padding: 10px; border-radius: 9px; cursor: pointer; text-align: left; transition: all 0.15s ease; }
+  :root.light .preset-btn { background: rgba(0, 0, 0, 0.04); }
+  .preset-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--border-strong); }
+  :root.light .preset-btn:hover { background: rgba(0, 0, 0, 0.08); }
+  .preset-btn.active { background: var(--accent-soft); border-color: var(--accent); }
+  .preset-name { font-size: 12px; color: var(--text); font-weight: 500; }
+  .preset-desc { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
 
-  .color-swatch {
-    width: 100%;
-    height: 30px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.04);
-    display: flex;
-    align-items: center;
-    padding: 4px;
-    gap: 8px;
-    transition: all 0.15s ease;
-  }
+  .color-swatch { width: 100%; height: 36px; border-radius: 8px; border: 1px solid var(--border); cursor: pointer; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; padding: 5px; gap: 10px; transition: all 0.15s ease; }
+  :root.light .color-swatch { background: rgba(0, 0, 0, 0.05); }
   .color-swatch:hover { border-color: var(--border-strong); }
-  .color-preview {
-    width: 20px; height: 20px;
-    border-radius: 5px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-  }
-  .color-text {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-family: "SF Mono", Menlo, monospace;
-    text-transform: uppercase;
-  }
+  .color-preview { width: 24px; height: 24px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1); flex-shrink: 0; }
+  .color-text { font-size: 12px; color: var(--text-secondary); font-family: "SF Mono", Menlo, monospace; text-transform: uppercase; }
 
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  .toggle-switch {
-    width: 36px;
-    height: 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    cursor: pointer;
-    position: relative;
-    transition: background 0.2s ease;
-  }
-  .toggle-switch::after {
-    content: '';
-    position: absolute;
-    top: 2px; left: 2px;
-    width: 16px; height: 16px;
-    background: white;
-    border-radius: 50%;
-    transition: transform 0.2s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-  .toggle-switch.active {
-    background: var(--accent);
-  }
-  .toggle-switch.active::after {
-    transform: translateX(16px);
-  }
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .toggle-switch { width: 40px; height: 24px; background: rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer; position: relative; transition: background 0.2s ease; }
+  :root.light .toggle-switch { background: rgba(0, 0, 0, 0.1); }
+  .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: transform 0.2s ease; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3); }
+  .toggle-switch.active { background: var(--accent); }
+  .toggle-switch.active::after { transform: translateX(16px); }
 
   /* ====== TIMELINE ====== */
-  .timeline {
-    grid-area: timeline;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border-top: 1px solid var(--border);
-    position: relative;
-  }
-  .timeline-header {
-    height: 34px;
-    padding: 0 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    background: rgba(0, 0, 0, 0.2);
-  }
-  .timeline-controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .timeline-controls label {
-    font-size: 11px;
-    color: var(--text-tertiary);
-  }
-  .timeline-controls .slider {
-    width: 100px;
-  }
+  .timeline { grid-area: timeline; display: flex; flex-direction: column; overflow: hidden; border-top: 1px solid var(--border); position: relative; }
+  .timeline-header { height: 40px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); }
+  :root.light .timeline-header { background: rgba(0, 0, 0, 0.03); }
+  .timeline-controls { display: flex; align-items: center; gap: 12px; }
+  .timeline-controls label { font-size: 12px; color: var(--text-tertiary); }
+  .timeline-controls .slider { width: 120px; }
 
-  .timeline-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-  }
-  .timeline-ruler {
-    height: 22px;
-    position: relative;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-    margin-left: 120px;
-  }
-  .ruler-mark {
-    position: absolute;
-    top: 0; bottom: 0;
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
-    font-size: 9px;
-    color: var(--text-tertiary);
-    padding-left: 5px;
-    padding-top: 5px;
-    font-variant-numeric: tabular-nums;
-  }
-  .ruler-mark.major {
-    border-left-color: rgba(255, 255, 255, 0.12);
-  }
+  .timeline-body { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+  .timeline-ruler { height: 24px; position: relative; border-bottom: 1px solid var(--border); flex-shrink: 0; margin-left: 120px; }
+  .ruler-mark { position: absolute; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.06); font-size: 10px; color: var(--text-tertiary); padding-left: 6px; padding-top: 6px; font-variant-numeric: tabular-nums; }
+  :root.light .ruler-mark { border-left-color: rgba(0, 0, 0, 0.1); }
+  .ruler-mark.major { border-left-color: rgba(255, 255, 255, 0.12); }
+  :root.light .ruler-mark.major { border-left-color: rgba(0, 0, 0, 0.2); }
 
-  .timeline-tracks {
-    flex: 1;
-    overflow-y: auto;
-    position: relative;
-  }
-  .timeline-track {
-    height: 32px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .track-label {
-    position: absolute;
-    left: 0;
-    width: 120px;
-    height: 100%;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text-secondary);
-    border-right: 1px solid var(--border);
-    background: rgba(18, 18, 22, 0.95);
-    backdrop-filter: blur(20px);
-    z-index: 2;
-  }
-  .track-label .layer-icon {
-    width: 16px; height: 16px;
-    border-radius: 4px;
-  }
-  .track-label span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .track-area {
-    position: absolute;
-    left: 120px;
-    right: 0;
-    height: 100%;
-  }
-  .track-bar {
-    position: absolute;
-    height: 22px;
-    top: 5px;
-    border-radius: 5px;
-    cursor: grab;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    font-size: 10px;
-    color: white;
-    font-weight: 500;
-    overflow: hidden;
-    white-space: nowrap;
-    transition: filter 0.15s ease, box-shadow 0.15s ease;
-    user-select: none;
-  }
-  .track-bar:hover {
-    filter: brightness(1.15);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  .track-bar.dragging {
-    cursor: grabbing;
-    filter: brightness(1.25);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    z-index: 10;
-  }
-  .track-bar::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: rgba(255, 255, 255, 0.4);
-  }
-  .track-bar .bar-label {
-    pointer-events: none;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  .trim-handle {
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 8px;
-    cursor: ew-resize;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 0 5px 5px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.15s ease;
-  }
-  .trim-handle:hover {
-    background: rgba(255, 255, 255, 0.35);
-  }
-  .trim-handle::after {
-    content: '';
-    width: 2px;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 1px;
-  }
-  .track-bar .delete-btn {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px; height: 16px;
-    border: none;
-    background: rgba(0, 0, 0, 0.4);
-    color: white;
-    border-radius: 50%;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
-  }
-  .track-bar:hover .delete-btn {
-    display: flex;
-  }
-  .track-bar .delete-btn:hover {
-    background: var(--red);
-    transform: translateY(-50%) scale(1.15);
-  }
+  .timeline-tracks { flex: 1; overflow-y: auto; position: relative; }
+  .timeline-track { height: 36px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); position: relative; display: flex; align-items: center; }
+  :root.light .timeline-track { border-bottom-color: rgba(0, 0, 0, 0.05); }
+  .track-label { position: absolute; left: 0; width: 120px; height: 100%; padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 2; }
+  .track-label .layer-icon { width: 18px; height: 18px; border-radius: 4px; }
+  .track-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track-area { position: absolute; left: 120px; right: 0; height: 100%; }
+  .track-bar { position: absolute; height: 24px; top: 6px; border-radius: 6px; cursor: grab; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: white; font-weight: 500; overflow: hidden; white-space: nowrap; transition: filter 0.15s ease, box-shadow 0.15s ease; user-select: none; }
+  .track-bar:hover { filter: brightness(1.15); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
+  .track-bar.dragging { cursor: grabbing; filter: brightness(1.25); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); z-index: 10; }
+  .track-bar::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: rgba(255, 255, 255, 0.4); }
+  .track-bar .bar-label { pointer-events: none; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+  .trim-handle { position: absolute; right: 0; top: 0; bottom: 0; width: 10px; cursor: ew-resize; background: rgba(255, 255, 255, 0.15); border-radius: 0 6px 6px 0; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease; }
+  .trim-handle:hover { background: rgba(255, 255, 255, 0.35); }
+  .trim-handle::after { content: ''; width: 2px; height: 12px; background: rgba(255, 255, 255, 0.5); border-radius: 1px; }
+  .track-bar .delete-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border: none; background: rgba(0, 0, 0, 0.4); color: white; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; transition: all 0.15s ease; }
+  .track-bar:hover .delete-btn { display: flex; }
+  .track-bar .delete-btn:hover { background: var(--red); transform: translateY(-50%) scale(1.15); }
 
-  .playhead {
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    pointer-events: none;
-    z-index: 10;
-    box-shadow: 0 0 8px rgba(10, 132, 255, 0.6);
-  }
-  .playhead::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    left: -5px;
-    width: 12px; height: 12px;
-    background: var(--accent);
-    border-radius: 50% 50% 2px 2px;
-    box-shadow: 0 2px 8px rgba(10, 132, 255, 0.6);
-  }
-
-  /* ====== CONTEXT MENU ====== */
-  .context-menu {
-    position: fixed;
-    background: rgba(28, 28, 32, 0.95);
-    backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid var(--border-strong);
-    border-radius: 10px;
-    padding: 4px;
-    min-width: 160px;
-    z-index: 1000;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    display: none;
-    animation: ctxIn 0.12s ease;
-  }
-  @keyframes ctxIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  .context-menu.show { display: block; }
-  .ctx-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    color: var(--text);
-    transition: background 0.1s ease;
-  }
-  .ctx-item:hover {
-    background: rgba(255, 255, 255, 0.08);
-  }
-  .ctx-item.danger { color: var(--red); }
-  .ctx-item.danger:hover { background: rgba(255, 69, 58, 0.15); }
-  .ctx-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 4px 0;
-  }
+  .playhead { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); pointer-events: none; z-index: 10; box-shadow: 0 0 8px rgba(10, 132, 255, 0.6); }
+  .playhead::before { content: ''; position: absolute; top: -1px; left: -6px; width: 14px; height: 14px; background: var(--accent); border-radius: 50% 50% 2px 2px; box-shadow: 0 2px 8px rgba(10, 132, 255, 0.6); }
 
   /* ====== MODAL ====== */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-  }
-  .modal-overlay.active {
-    display: flex;
-    animation: fadeIn 0.2s ease;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  .modal {
-    background: rgba(28, 28, 32, 0.95);
-    backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid var(--border-strong);
-    border-radius: 16px;
-    width: 760px;
-    max-width: 90vw;
-    max-height: 80vh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: var(--shadow-lg);
-    animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  @keyframes modalIn {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-  }
-  .modal-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .modal-title {
-    font-size: 15px;
-    font-weight: 600;
-  }
-  .modal-close {
-    background: rgba(255, 255, 255, 0.06);
-    border: none;
-    color: var(--text-secondary);
-    width: 24px; height: 24px;
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
-  }
-  .modal-close:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text);
-  }
-  .modal-body {
-    padding: 16px 20px;
-    overflow-y: auto;
-    flex: 1;
-  }
-  .code-block {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    font-family: "SF Mono", Menlo, Monaco, monospace;
-    font-size: 11px;
-    color: #a1a1a6;
-    white-space: pre;
-    overflow-x: auto;
-    line-height: 1.65;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  .code-block .sel { color: #d2a8ff; }
-  .code-block .prop { color: #79c0ff; }
-  .code-block .val { color: #a5d6ff; }
-  .code-block .kw { color: #ff7ab2; }
-  .code-block .num { color: #ffa657; }
-  .code-block .com { color: #6e6e73; font-style: italic; }
-  .code-block .str { color: #7ee787; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal { background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: 18px; width: 760px; max-width: 90vw; max-height: 80vh; display: flex; flex-direction: column; box-shadow: var(--shadow-lg); animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .modal-title { font-size: 16px; font-weight: 600; }
+  .modal-close { background: rgba(255, 255, 255, 0.08); border: none; color: var(--text-secondary); width: 26px; height: 26px; border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
+  :root.light .modal-close { background: rgba(0, 0, 0, 0.08); }
+  .modal-close:hover { background: rgba(255, 255, 255, 0.12); color: var(--text); }
+  :root.light .modal-close:hover { background: rgba(0, 0, 0, 0.12); }
+  .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
 
-  .modal-footer {
-    padding: 12px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
+  .export-options { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 20px; }
+  .export-option-group h4 { font-size: 12px; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.05em; }
+  .resolution-grid, .fps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .opt-btn { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; cursor: pointer; text-align: center; transition: all 0.15s ease; }
+  :root.light .opt-btn { background: rgba(0, 0, 0, 0.04); }
+  .opt-btn:hover { background: rgba(255, 255, 255, 0.08); }
+  :root.light .opt-btn:hover { background: rgba(0, 0, 0, 0.08); }
+  .opt-btn.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .opt-btn .opt-title { font-weight: 600; font-size: 14px; display: block; }
+  .opt-btn .opt-sub { font-size: 11px; opacity: 0.7; margin-top: 2px; }
 
-  /* ====== TOAST ====== */
-  .toast {
-    position: fixed;
-    bottom: 240px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: rgba(28, 28, 32, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--border-strong);
-    color: var(--text);
-    padding: 10px 16px;
-    border-radius: 10px;
-    font-size: 12px;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 200;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  .progress-container { margin-top: 20px; display: none; }
+  .progress-container.active { display: block; }
+  .progress-bar { width: 100%; height: 8px; background: rgba(255, 255, 255, 0.1); border-radius: 4px; overflow: hidden; }
+  :root.light .progress-bar { background: rgba(0, 0, 0, 0.1); }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; }
+  .progress-text { text-align: center; margin-top: 10px; font-size: 13px; color: var(--text-secondary); }
 
-  /* ====== SCROLLBARS ====== */
+  .toast { position: fixed; bottom: 240px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--bg-elevated); border: 1px solid var(--border-strong); color: var(--text); padding: 12px 20px; border-radius: 12px; font-size: 13px; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 200; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.15);
+  ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+  :root.light ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); }
+
+  .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 16px; color: var(--text-tertiary); text-align: center; font-size: 13px; line-height: 1.6; }
+  .empty-state svg { margin-bottom: 10px; opacity: 0.4; }
+  .hidden-file-input { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+  .code-block { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 12px; padding: 20px; font-family: "SF Mono", Menlo, Monaco, monospace; font-size: 12px; color: #a1a1a6; white-space: pre; overflow-x: auto; line-height: 1.65; max-height: 400px; overflow-y: auto; }
+  :root.light .code-block { background: rgba(0, 0, 0, 0.05); color: #333; }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .app {
+      grid-template-rows: 52px 1fr 1fr 200px;
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "topbar topbar"
+        "canvas canvas"
+        "left right"
+        "timeline timeline";
+    }
+    .topbar-right .btn-ghost { display: none; }
   }
 
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 16px;
-    color: var(--text-tertiary);
-    text-align: center;
-    font-size: 12px;
-    line-height: 1.6;
-  }
-  .empty-state svg {
-    margin-bottom: 10px;
-    opacity: 0.4;
-  }
-
-  .hidden-file-input {
-    position: absolute;
-    width: 0; height: 0;
-    opacity: 0;
-    pointer-events: none;
+  @media (max-width: 768px) {
+    .app {
+      grid-template-rows: 52px 400px 1fr 200px;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "topbar"
+        "canvas"
+        "right"
+        "timeline";
+    }
+    .sidebar-left { display: none; }
+    .brand-sub { display: none; }
+    .topbar-history { display: none; }
+    #sceneSelect { display: none; }
   }
 </style>
 </head>
 <body>
 <div class="app">
-  <!-- TOPBAR -->
   <header class="topbar">
     <div class="traffic-lights">
       <div class="traffic-light close"></div>
@@ -1351,38 +454,61 @@
       <div class="brand-title">Transition Studio<span class="brand-sub">— Motion Editor</span></div>
     </div>
 
+    <div class="topbar-history">
+      <button class="ctrl-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.7 3L3 13"/></svg>
+      </button>
+      <button class="ctrl-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.7 3L21 13"/></svg>
+      </button>
+    </div>
+
+    <select class="tool-select" id="sceneSelect" style="margin-left: 8px;">
+      <optgroup label="Templates">
+        <option value="default">Default (4)</option>
+        <option value="onboarding">Onboarding Flow (5)</option>
+        <option value="hero">Hero Banner (6)</option>
+        <option value="icon-grid">App Icon Grid (12)</option>
+        <option value="card-deck">Card Deck (6)</option>
+        <option value="feed">Notification Feed (8)</option>
+        <option value="dashboard">Dashboard (20)</option>
+      </optgroup>
+    </select>
+
     <div class="playback-controls">
       <button class="ctrl-btn" id="restartBtn" title="Restart">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
       </button>
       <button class="ctrl-btn play" id="playBtn" title="Play">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M8 5v14l11-7z"/>
-        </svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       </button>
-      <div class="time-display">
-        <span class="current" id="currentTime">0.00s</span> / <span id="totalTime">2.00s</span>
-      </div>
+      <div class="time-display"><span class="current" id="currentTime">0.00s</span> / <span id="totalTime">2.00s</span></div>
     </div>
 
     <div class="topbar-right">
-      <button class="btn-ghost" id="resetBtn">Reset Demo</button>
-      <button class="btn-primary" id="exportBtn">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/>
+      <button class="btn-ghost" id="newProjectBtn">New</button>
+      <button class="btn-ghost" id="importJsonBtn">Import</button>
+      <button class="btn-ghost" id="exportJsonBtn">Export JSON</button>
+      <input type="file" id="jsonInput" class="hidden-file-input" accept=".json">
+      <button class="ctrl-btn" id="themeToggleBtn" title="Toggle Theme">
+        <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
         </svg>
-        Export HTML
+      </button>
+      <button class="btn-ghost" id="exportHtmlBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8"/></svg>
+        HTML
+      </button>
+      <button class="btn-primary" id="exportVideoBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+        Export Video
       </button>
     </div>
   </header>
 
-  <!-- LEFT SIDEBAR -->
   <aside class="sidebar-left">
-    <!-- Scene Background -->
     <div class="scene-section">
-      <div class="panel-title" style="margin-bottom: 10px;">Scene Background</div>
+      <div class="panel-title" style="margin-bottom: 12px;">Scene Background</div>
       <div class="scene-bg-toggle" id="bgTypeToggle">
         <button data-type="solid" class="active">Solid</button>
         <button data-type="gradient">Gradient</button>
@@ -1404,84 +530,49 @@
       <span class="panel-count" id="layerCount">0</span>
     </div>
     <div class="add-elements">
-      <button class="add-btn" data-type="card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
-        Card
-      </button>
-      <button class="add-btn" data-type="text">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
-        Text
-      </button>
-      <button class="add-btn" data-type="button">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="20" height="8" rx="4"/></svg>
-        Button
-      </button>
-      <button class="add-btn" data-type="circle">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
-        Avatar
-      </button>
-      <button class="add-btn upload" id="uploadBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
-        Upload Image
-      </button>
+      <button class="add-btn" data-type="card"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>Card</button>
+      <button class="add-btn" data-type="text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Text</button>
+      <button class="add-btn" data-type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="8" width="20" height="8" rx="4"/></svg>Button</button>
+      <button class="add-btn" data-type="circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Avatar</button>
+      <button class="add-btn upload" id="uploadBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Upload Image</button>
+      <button class="add-btn upload" id="uploadVideoBtn" style="margin-top: 6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Upload Video</button>
     </div>
     <input type="file" id="fileInput" class="hidden-file-input" accept="image/*" multiple>
+    <input type="file" id="videoInput" class="hidden-file-input" accept="video/*" multiple>
     <div class="layers-list" id="layersList"></div>
   </aside>
 
-  <!-- CANVAS -->
   <section class="canvas-area">
     <div class="canvas-toolbar">
       <div class="canvas-info">
-        <span>360 × 640</span>
-        <span class="dot"></span>
-        <span>iPhone Preview</span>
-        <span class="dot"></span>
-        <span class="live">Live Preview</span>
+        <span id="canvasSizeLabel">360 × 640</span>
       </div>
       <div class="canvas-tools">
-        <button class="tool-btn" id="snapBtn">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z M3 9h18 M9 3v18"/></svg>
-          Snap
-        </button>
-        <button class="tool-btn" id="duplicateBtn" title="Duplicate (⌘D)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Duplicate
-        </button>
-        <button class="tool-btn" id="deleteBtn" title="Delete (⌫)">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18 M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6 M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-          Delete
-        </button>
-        <button class="tool-btn" id="clearBtn">Clear All</button>
+        <select class="tool-select" id="deviceSelect">
+          <option value="360x640">iPhone (9:16)</option>
+          <option value="640x360">Desktop (16:9)</option>
+          <option value="640x480">iPad (4:3)</option>
+          <option value="540x540">Square (1:1)</option>
+        </select>
+        <button class="tool-btn" id="zoomOutBtn">-</button>
+        <select class="tool-select" id="zoomSelect" style="width: 60px; text-align: center;">
+          <option value="0.5">50%</option>
+          <option value="0.75">75%</option>
+          <option value="1" selected>100%</option>
+          <option value="1.25">125%</option>
+          <option value="1.5">150%</option>
+        </select>
+        <button class="tool-btn" id="zoomInBtn">+</button>
+        <button class="tool-btn" id="snapBtn">Snap</button>
       </div>
     </div>
-    <div class="canvas-wrapper">
+    <div class="canvas-wrapper" id="canvasWrapper">
       <div class="canvas-stage" id="canvasStage">
-        <div class="phone-status-bar">
-          <span>9:41</span>
-          <div class="status-icons">
-            <svg width="16" height="10" viewBox="0 0 16 10" fill="white">
-              <rect x="0" y="6" width="3" height="4" rx="0.5"/>
-              <rect x="4" y="4" width="3" height="6" rx="0.5"/>
-              <rect x="8" y="2" width="3" height="8" rx="0.5"/>
-              <rect x="12" y="0" width="3" height="10" rx="0.5"/>
-            </svg>
-            <svg width="14" height="10" viewBox="0 0 14 10" fill="white">
-              <path d="M7 8.5a1 1 0 100-2 1 1 0 000 2zM7 0C4.5 0 2.2 1 .5 2.7l.7.7C2.8 1.8 4.8 1 7 1s4.2.8 5.8 2.4l.7-.7C11.8 1 9.5 0 7 0zM7 3c-1.7 0-3.3.7-4.5 1.8l.7.7C4.2 4.6 5.5 4 7 4s2.8.6 3.8 1.5l.7-.7C10.3 3.7 8.7 3 7 3z"/>
-            </svg>
-            <svg width="24" height="11" viewBox="0 0 24 11" fill="white">
-              <rect x="0" y="0" width="21" height="11" rx="2.5" fill="none" stroke="white" stroke-opacity="0.5" stroke-width="1"/>
-              <rect x="2" y="2" width="17" height="7" rx="1.2"/>
-              <rect x="22" y="3.5" width="1.5" height="4" rx="0.5"/>
-            </svg>
-          </div>
-        </div>
-        <div class="phone-home-indicator"></div>
+        <div class="canvas-bg" id="canvasBg"></div>
       </div>
     </div>
   </section>
 
-  <!-- RIGHT SIDEBAR -->
   <aside class="sidebar-right">
     <div class="inspector-tabs">
       <button class="tab-btn active" data-tab="element">Element</button>
@@ -1490,14 +581,13 @@
     <div class="inspector-content" id="inspectorContent"></div>
   </aside>
 
-  <!-- TIMELINE -->
   <footer class="timeline">
     <div class="timeline-header">
       <span class="panel-title">Timeline</span>
       <div class="timeline-controls">
         <label>Duration</label>
         <input type="range" class="slider" id="totalDurationSlider" min="1000" max="6000" step="500" value="2000">
-        <span style="font-size: 11px; color: var(--text); min-width: 36px; font-variant-numeric: tabular-nums;" id="totalDurationLabel">2.0s</span>
+        <span style="font-size: 12px; color: var(--text); min-width: 40px; font-variant-numeric: tabular-nums;" id="totalDurationLabel">2.0s</span>
       </div>
     </div>
     <div class="timeline-body">
@@ -1507,23 +597,13 @@
   </footer>
 </div>
 
-<!-- CONTEXT MENU -->
-<div class="context-menu" id="contextMenu"></div>
-
-<!-- EXPORT MODAL -->
-<div class="modal-overlay" id="exportModal">
+<div class="modal-overlay" id="htmlExportModal">
   <div class="modal">
     <div class="modal-header">
       <div class="modal-title">Export — Standalone HTML</div>
-      <button class="modal-close" id="closeExport">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
+      <button class="modal-close" id="closeHtmlExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
-    <div class="modal-body">
-      <pre class="code-block" id="exportCode"></pre>
-    </div>
+    <div class="modal-body"><pre class="code-block" id="exportCode"></pre></div>
     <div class="modal-footer">
       <button class="btn-ghost" id="copyCode">Copy Code</button>
       <button class="btn-primary" id="downloadCode">Download output.html</button>
@@ -1531,11 +611,49 @@
   </div>
 </div>
 
-<!-- TOAST -->
+<div class="modal-overlay" id="videoExportModal">
+  <div class="modal" style="width: 480px;">
+    <div class="modal-header">
+      <div class="modal-title">Export Video (MP4 / WebM)</div>
+      <button class="modal-close" id="closeVideoExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="export-options">
+        <div class="export-option-group">
+          <h4>Resolution</h4>
+          <div class="resolution-grid">
+            <button class="opt-btn active" data-res="720"><span class="opt-title">720p</span><span class="opt-sub">HD</span></button>
+            <button class="opt-btn" data-res="1080"><span class="opt-title">1080p</span><span class="opt-sub">Full HD</span></button>
+            <button class="opt-btn" data-res="1440"><span class="opt-title">1440p</span><span class="opt-sub">2K</span></button>
+            <button class="opt-btn" data-res="2160"><span class="opt-title">2160p</span><span class="opt-sub">4K</span></button>
+          </div>
+        </div>
+        <div class="export-option-group">
+          <h4>Frame Rate</h4>
+          <div class="fps-grid">
+            <button class="opt-btn active" data-fps="30"><span class="opt-title">30 fps</span><span class="opt-sub">Standard</span></button>
+            <button class="opt-btn" data-fps="60"><span class="opt-title">60 fps</span><span class="opt-sub">Smooth</span></button>
+            <button class="opt-btn" data-fps="90"><span class="opt-title">90 fps</span><span class="opt-sub">Ultra</span></button>
+            <button class="opt-btn" data-fps="120"><span class="opt-title">120 fps</span><span class="opt-sub">Max</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="progress-container" id="progressContainer">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">Initializing renderer...</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="cancelVideoExport">Cancel</button>
+      <button class="btn-primary" id="startVideoExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Render & Download</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+<canvas id="renderCanvas" style="display: none;"></canvas>
 
 <script>
-  // ========== STATE ==========
   const state = {
     elements: [],
     selectedId: null,
@@ -1545,95 +663,215 @@
     totalDuration: 2000,
     playStartTime: 0,
     animationFrame: null,
-    scene: {
-      bgType: 'solid',
-      bgColor0: '#1a1a1f',
-      bgColor1: '#0e0e12',
-      bgAngle: 180
-    },
+    scene: { bgType: 'solid', bgColor0: '#1a1a1f', bgColor1: '#0e0e12', bgAngle: 180 },
     snapEnabled: false,
     snapGrid: 10,
-    contextTarget: null
+    zoom: 1,
+    canvasSize: { w: 360, h: 640 },
+    exportSettings: { res: 720, fps: 30 },
+    undoStack: [],
+    redoStack: []
   };
 
-  // ========== CONSTANTS ==========
-  const EASINGS = {
-    'ease':        'cubic-bezier(0.25, 0.1, 0.25, 1)',
-    'ease-in':     'cubic-bezier(0.42, 0, 1, 1)',
-    'ease-out':    'cubic-bezier(0, 0, 0.58, 1)',
-    'ease-in-out': 'cubic-bezier(0.42, 0, 0.58, 1)',
-    'linear':      'linear',
-    'spring':      'cubic-bezier(0.34, 1.56, 0.64, 1)',
-    'bounce':      'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
-    'smooth':      'cubic-bezier(0.4, 0, 0.2, 1)'
+  const EASING_FN = {
+    'linear': t => t,
+    'ease-in': t => t * t,
+    'ease-out': t => 1 - (1 - t) * (1 - t),
+    'ease-in-out': t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    'ease': t => 1 - Math.pow(1 - t, 3),
+    'smooth': t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    'spring': t => { const c = 2.5; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); },
+    'bounce': t => { const n1 = 7.5625, d1 = 2.75; if (t < 1 / d1) return n1 * t * t; else if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75; else if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375; else return n1 * (t -= 2.625 / d1) * t + 0.984375; }
   };
 
-  const EASING_CURVES = {
-    'ease':        'M0,18 C6,16 6,2 14,2 L28,2',
-    'ease-in':     'M0,18 C11,18 17,2 28,2',
-    'ease-out':    'M0,18 C5,17 11,2 28,2',
-    'ease-in-out': 'M0,18 C6,18 10,2 14,2 C18,2 22,2 28,2',
-    'linear':      'M0,18 L28,2',
-    'spring':      'M0,18 C6,15 5,-1 14,2 C19,4 22,1 28,2',
-    'bounce':      'M0,18 C8,15 4,24 12,12 C16,7 19,10 28,2',
-    'smooth':      'M0,18 C6,16 21,4 28,2'
+  const EASINGS_CSS = {
+    'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1)', 'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
+    'ease-out': 'cubic-bezier(0, 0, 0.58, 1)', 'ease-in-out': 'cubic-bezier(0.42, 0, 0.58, 1)',
+    'linear': 'linear', 'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    'bounce': 'cubic-bezier(0.68, -0.6, 0.32, 1.6)', 'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)'
+  };
+
+  const EASING_CURVES_PATH = {
+    'ease': 'M0,18 C6,16 6,2 14,2 L28,2', 'ease-in': 'M0,18 C11,18 17,2 28,2',
+    'ease-out': 'M0,18 C5,17 11,2 28,2', 'ease-in-out': 'M0,18 C6,18 10,2 14,2 C18,2 22,2 28,2',
+    'linear': 'M0,18 L28,2', 'spring': 'M0,18 C6,15 5,-1 14,2 C19,4 22,1 28,2',
+    'bounce': 'M0,18 C8,15 4,24 12,12 C16,7 19,10 28,2', 'smooth': 'M0,18 C6,16 21,4 28,2'
   };
 
   const PRESETS = {
-    'fade-in':     { name: 'Fade In',     desc: 'Opacity 0 → 1',     type: 'fade-in',     duration: 600, easing: 'ease-out' },
-    'slide-up':    { name: 'Slide Up',    desc: 'From below',        type: 'slide-up',    duration: 500, easing: 'spring' },
-    'slide-down':  { name: 'Slide Down',  desc: 'From above',        type: 'slide-down',  duration: 500, easing: 'spring' },
-    'slide-left':  { name: 'Slide Left',  desc: 'From right',        type: 'slide-left',  duration: 500, easing: 'ease-out' },
-    'slide-right': { name: 'Slide Right', desc: 'From left',         type: 'slide-right', duration: 500, easing: 'ease-out' },
-    'scale-in':    { name: 'Scale In',    desc: 'From 0.5x',         type: 'scale-in',    duration: 500, easing: 'spring' },
-    'spring-pop':  { name: 'Spring Pop',  desc: 'Bouncy scale',      type: 'spring-pop',  duration: 700, easing: 'spring' },
-    'blur-in':     { name: 'Blur In',     desc: 'Defocus to sharp',  type: 'blur-in',     duration: 600, easing: 'ease-out' },
-    'rotate-in':   { name: 'Rotate In',   desc: 'Spin & scale',      type: 'rotate-in',   duration: 600, easing: 'spring' },
-    'flip-in':     { name: 'Flip In',     desc: '3D flip',           type: 'flip-in',     duration: 600, easing: 'ease-out' }
+    'fade-in': { name: 'Fade In', desc: 'Opacity 0 → 1', type: 'fade-in', duration: 600, easing: 'ease-out' },
+    'slide-up': { name: 'Slide Up', desc: 'From below', type: 'slide-up', duration: 500, easing: 'spring' },
+    'slide-down': { name: 'Slide Down', desc: 'From above', type: 'slide-down', duration: 500, easing: 'spring' },
+    'slide-left': { name: 'Slide Left', desc: 'From right', type: 'slide-left', duration: 500, easing: 'ease-out' },
+    'slide-right': { name: 'Slide Right', desc: 'From left', type: 'slide-right', duration: 500, easing: 'ease-out' },
+    'scale-in': { name: 'Scale In', desc: 'From 0.5x', type: 'scale-in', duration: 500, easing: 'spring' },
+    'spring-pop': { name: 'Spring Pop', desc: 'Bouncy scale', type: 'spring-pop', duration: 700, easing: 'spring' },
+    'blur-in': { name: 'Blur In', desc: 'Defocus to sharp', type: 'blur-in', duration: 600, easing: 'ease-out' },
+    'rotate-in': { name: 'Rotate In', desc: 'Spin & scale', type: 'rotate-in', duration: 600, easing: 'spring' },
+    'flip-in': { name: 'Flip In', desc: '3D flip', type: 'flip-in', duration: 600, easing: 'ease-out' }
   };
 
-  const TYPE_COLORS = {
-    card:   '#0a84ff',
-    text:   '#bf5af2',
-    button: '#30d158',
-    circle: '#ff9f0a',
-    image:  '#ff375f'
-  };
-
+  const TYPE_COLORS = { card: '#0a84ff', text: '#bf5af2', button: '#30d158', circle: '#ff9f0a', image: '#ff375f', video: '#5e5ce6' };
   let idCounter = 1;
   const nextId = () => `el-${idCounter++}`;
 
-  // ========== DEFAULT SCENE ==========
-  function createDefaultElements() {
-    state.elements = [
-      {
-        id: nextId(), type: 'circle', name: 'Avatar',
-        x: 150, y: 90, width: 60, height: 60,
-        color: '#bf5af2', text: '', opacity: 100, borderRadius: 50, rotation: 0, shadow: true, src: null,
-        animation: { type: 'scale-in', duration: 600, delay: 0,   easing: 'spring',  intensity: 60 }
-      },
-      {
-        id: nextId(), type: 'text', name: 'Title',
-        x: 40, y: 170, width: 280, height: 30,
-        color: '#ffffff', text: 'Welcome Back', opacity: 100, borderRadius: 0, rotation: 0, shadow: false, src: null,
-        animation: { type: 'slide-up', duration: 500, delay: 200, easing: 'spring',  intensity: 40 }
-      },
-      {
-        id: nextId(), type: 'card', name: 'Balance Card',
-        x: 40, y: 220, width: 280, height: 140,
-        color: '#2c2c2e', text: '', opacity: 100, borderRadius: 16, rotation: 0, shadow: true, src: null,
-        animation: { type: 'slide-up', duration: 600, delay: 350, easing: 'ease-out', intensity: 50 }
-      },
-      {
-        id: nextId(), type: 'button', name: 'Continue Button',
-        x: 40, y: 400, width: 280, height: 48,
-        color: '#0a84ff', text: 'Continue', opacity: 100, borderRadius: 14, rotation: 0, shadow: true, src: null,
-        animation: { type: 'spring-pop', duration: 700, delay: 600, easing: 'spring',  intensity: 70 }
-      }
-    ];
+  // ========== HISTORY / UNDO REDO ==========
+  function pushHistory() {
+    const snapshot = JSON.parse(JSON.stringify({
+      elements: state.elements,
+      scene: state.scene,
+      totalDuration: state.totalDuration,
+      canvasSize: state.canvasSize
+    }));
+    state.undoStack.push(snapshot);
+    if (state.undoStack.length > 50) state.undoStack.shift();
+    state.redoStack = [];
+    updateUndoRedoButtons();
   }
 
-  // ========== HELPERS ==========
+  function undo() {
+    if (state.undoStack.length === 0) return;
+    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize }));
+    state.redoStack.push(current);
+    
+    const prev = state.undoStack.pop();
+    state.elements = prev.elements;
+    state.scene = prev.scene;
+    state.totalDuration = prev.totalDuration;
+    state.canvasSize = prev.canvasSize;
+    
+    state.selectedId = null;
+    applyCanvasSize();
+    renderScene();
+    renderAll();
+    renderTimeline();
+    updateUndoRedoButtons();
+  }
+
+  function redo() {
+    if (state.redoStack.length === 0) return;
+    const current = JSON.parse(JSON.stringify({ elements: state.elements, scene: state.scene, totalDuration: state.totalDuration, canvasSize: state.canvasSize }));
+    state.undoStack.push(current);
+    
+    const next = state.redoStack.pop();
+    state.elements = next.elements;
+    state.scene = next.scene;
+    state.totalDuration = next.totalDuration;
+    state.canvasSize = next.canvasSize;
+    
+    state.selectedId = null;
+    applyCanvasSize();
+    renderScene();
+    renderAll();
+    renderTimeline();
+    updateUndoRedoButtons();
+  }
+
+  function updateUndoRedoButtons() {
+    document.getElementById('undoBtn').disabled = state.undoStack.length === 0;
+    document.getElementById('redoBtn').disabled = state.redoStack.length === 0;
+  }
+
+  // ========== DEMO SCENES ==========
+  function loadDemoScene(sceneName) {
+    pushHistory();
+    state.elements = [];
+    idCounter = 1;
+    state.selectedId = null;
+    
+    const setup = (w, h, bg0, bg1, type='gradient') => {
+      state.canvasSize = { w, h };
+      state.scene = { bgType: type, bgColor0: bg0, bgColor1: bg1 || bg0, bgAngle: 180 };
+    };
+    
+    const add = (type, x, y, w, h, color, text, anim, props={}) => {
+      state.elements.push({
+        id: nextId(), type, name: text || (type.charAt(0).toUpperCase() + type.slice(1)),
+        x, y, width: w, height: h, color, text, opacity: 100, 
+        borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : type === 'image' ? 12 : 0,
+        rotation: 0, shadow: type !== 'text', src: null,
+        animation: { duration: 500, delay: 0, easing: 'ease-out', intensity: 50, ...anim },
+        ...props
+      });
+    };
+
+    if (sceneName === 'default') {
+      setup(360, 640, '#1a1a1f', '#0e0e12');
+      add('circle', 150, 90, 60, 60, '#bf5af2', '', { type: 'scale-in', duration: 600, delay: 0, easing: 'spring', intensity: 60 });
+      add('text', 40, 170, 280, 30, '#ffffff', 'Welcome Back', { type: 'slide-up', duration: 500, delay: 200, easing: 'spring', intensity: 40 });
+      add('card', 40, 220, 280, 140, '#2c2c2e', '', { type: 'slide-up', duration: 600, delay: 350, easing: 'ease-out', intensity: 50 });
+      add('button', 40, 400, 280, 48, '#0a84ff', 'Continue', { type: 'spring-pop', duration: 700, delay: 600, easing: 'spring', intensity: 70 });
+    } 
+    else if (sceneName === 'onboarding') {
+      setup(360, 640, '#0a84ff', '#409cff');
+      add('circle', 130, 100, 100, 100, '#fff', '', { type: 'scale-in', duration: 600, delay: 0, easing: 'spring', intensity: 70 });
+      add('text', 40, 240, 280, 40, '#fff', 'Discover New', { type: 'slide-up', duration: 500, delay: 200, easing: 'smooth', intensity: 30 });
+      add('text', 40, 285, 280, 20, '#fff', 'Features you will love', { type: 'slide-up', duration: 500, delay: 300, easing: 'smooth', intensity: 30 });
+      add('text', 40, 500, 280, 40, '#fff', 'Skip', { type: 'fade-in', duration: 400, delay: 800, easing: 'ease-out', intensity: 40 });
+      add('button', 40, 560, 280, 48, '#bf5af2', 'Get Started', { type: 'spring-pop', duration: 700, delay: 1000, easing: 'spring', intensity: 70 });
+    }
+    else if (sceneName === 'hero') {
+      setup(640, 360, '#1c1c1e', '#000000');
+      add('text', 40, 80, 400, 50, '#ffffff', 'New Product', { type: 'slide-right', duration: 600, delay: 0, easing: 'smooth', intensity: 40 });
+      add('text', 40, 130, 400, 30, '#86868b', 'Available Now', { type: 'slide-right', duration: 600, delay: 150, easing: 'smooth', intensity: 40 });
+      add('card', 40, 190, 200, 120, '#0a84ff', '', { type: 'scale-in', duration: 500, delay: 400, easing: 'spring', intensity: 50 });
+      add('button', 260, 190, 160, 48, '#0a84ff', 'Buy Now', { type: 'fade-in', duration: 500, delay: 600, easing: 'ease-out', intensity: 40 });
+      add('circle', 500, 50, 80, 80, '#bf5af2', '', { type: 'rotate-in', duration: 800, delay: 800, easing: 'spring', intensity: 60 });
+      add('text', 500, 150, 120, 20, '#ffffff', '$99/mo', { type: 'slide-up', duration: 400, delay: 1000, easing: 'ease-out', intensity: 30 });
+    }
+    else if (sceneName === 'icon-grid') {
+      setup(360, 640, '#000000', '#000000', 'solid');
+      const cols = 3, rows = 4, sz = 80, gap = 20;
+      const startX = (360 - (cols * sz + (cols - 1) * gap)) / 2;
+      let idx = 0;
+      const colors = ['#ff375f', '#ff9f0a', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#5e5ce6', '#ff453a', '#32ade6', '#a2845e', '#ac8e96', '#8e8e93'];
+      for(let r=0; r<rows; r++) {
+        for(let c=0; c<cols; c++) {
+          add('card', startX + c * (sz + gap), 100 + r * (sz + gap), sz, sz, colors[idx], '', { type: 'scale-in', duration: 400, delay: idx * 50, easing: 'spring', intensity: 60 });
+          idx++;
+        }
+      }
+    }
+    else if (sceneName === 'card-deck') {
+      setup(360, 640, '#1c1c1e', '#0e0e12');
+      add('card', 40, 140, 280, 360, '#0a84ff', '', { type: 'slide-up', duration: 600, delay: 0, easing: 'spring', intensity: 30 });
+      add('card', 40, 130, 280, 360, '#bf5af2', '', { type: 'slide-up', duration: 600, delay: 150, easing: 'spring', intensity: 30 });
+      add('card', 40, 120, 280, 360, '#ff9f0a', '', { type: 'slide-up', duration: 600, delay: 300, easing: 'spring', intensity: 30 });
+      add('text', 40, 500, 280, 40, '#fff', 'Swipe to explore', { type: 'fade-in', duration: 500, delay: 800, easing: 'smooth', intensity: 40 });
+      add('button', 40, 560, 280, 48, '#30d158', 'Next Card', { type: 'spring-pop', duration: 700, delay: 1000, easing: 'spring', intensity: 70 });
+      add('circle', 160, 50, 40, 40, '#fff', '', { type: 'scale-in', duration: 500, delay: 1200, easing: 'bounce', intensity: 60 });
+    }
+    else if (sceneName === 'feed') {
+      setup(360, 640, '#000000', '#000000', 'solid');
+      add('text', 20, 40, 200, 30, '#fff', 'Notifications', { type: 'slide-down', duration: 500, delay: 0, easing: 'spring', intensity: 30 });
+      for(let i=0; i<8; i++) {
+        add('card', 20, 90 + i * 65, 320, 55, '#1c1c1e', '', { type: 'slide-right', duration: 400, delay: 200 + i * 80, easing: 'smooth', intensity: 40 });
+        add('circle', 30, 100 + i * 65, 35, 35, ['#0a84ff', '#bf5af2', '#30d158', '#ff9f0a'][i%4], '', { type: 'scale-in', duration: 300, delay: 250 + i * 80, easing: 'spring', intensity: 50 });
+      }
+    }
+    else if (sceneName === 'dashboard') {
+      setup(640, 360, '#1c1c1e', '#000000');
+      add('text', 20, 20, 200, 30, '#fff', 'Dashboard', { type: 'slide-down', duration: 500, delay: 0, easing: 'smooth', intensity: 20 });
+      let idxx = 0;
+      for(let r=0; r<4; r++) {
+        for(let c=0; c<5; c++) {
+          add('card', 20 + c * 120, 70 + r * 60, 110, 50, '#2c2c2e', '', { type: 'scale-in', duration: 300, delay: idxx * 30, easing: 'ease-out', intensity: 30 });
+          idxx++;
+        }
+      }
+    }
+    
+    state.totalDuration = 3000;
+    document.getElementById('totalDurationSlider').value = 3000;
+    document.getElementById('totalDurationLabel').textContent = '3.0s';
+    document.getElementById('totalTime').textContent = '3.00s';
+    
+    applyCanvasSize();
+    renderScene();
+    renderAll();
+    renderTimeline();
+  }
+
   function darkenColor(hex, amount) {
     const c = hex.replace('#', '');
     const r = Math.max(0, Math.round(parseInt(c.substr(0,2), 16) * (1 - amount)));
@@ -1644,81 +882,73 @@
 
   function getLayerIcon(type) {
     const icons = {
-      card:   '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>',
-      text:   '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
+      card: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>',
+      text: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>',
       button: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="8" width="20" height="8" rx="4"/></svg>',
       circle: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="9"/></svg>',
-      image:  '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'
+      image: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>',
+      video: '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>'
     };
     return icons[type] || '';
   }
 
-  function getSceneBackground() {
-    if (state.scene.bgType === 'gradient') {
-      return `linear-gradient(${state.scene.bgAngle}deg, ${state.scene.bgColor0}, ${state.scene.bgColor1})`;
-    }
-    return state.scene.bgColor0;
-  }
-
   function applySceneBackground() {
-    const stage = document.getElementById('canvasStage');
-    stage.style.background = getSceneBackground();
+    const bg = document.getElementById('canvasBg');
+    const bgVal = state.scene.bgType === 'gradient'
+      ? `linear-gradient(${state.scene.bgAngle}deg, ${state.scene.bgColor0}, ${state.scene.bgColor1})`
+      : state.scene.bgColor0;
+    bg.style.background = bgVal;
   }
 
-  // ========== RENDER: SCENE ==========
+  function applyCanvasSize() {
+    const stage = document.getElementById('canvasStage');
+    stage.style.width = state.canvasSize.w + 'px';
+    stage.style.height = state.canvasSize.h + 'px';
+    document.getElementById('canvasSizeLabel').textContent = `${state.canvasSize.w} × ${state.canvasSize.h}`;
+    applyZoom();
+  }
+
+  function applyZoom() {
+    const stage = document.getElementById('canvasStage');
+    stage.style.transform = `scale(${state.zoom})`;
+  }
+
   function renderScene() {
     document.getElementById('bgColor0Preview').style.background = state.scene.bgColor0;
     document.getElementById('bgColor0Label').textContent = state.scene.bgColor0.toUpperCase();
     document.getElementById('bgColor1Preview').style.background = state.scene.bgColor1;
     document.getElementById('bgColor1Label').textContent = state.scene.bgColor1.toUpperCase();
-
     document.getElementById('bgColor1Wrap').style.display = state.scene.bgType === 'gradient' ? 'flex' : 'none';
-
     document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.type === state.scene.bgType);
     });
-
     applySceneBackground();
   }
 
-  // ========== RENDER: LAYERS ==========
   function renderLayers() {
     const list = document.getElementById('layersList');
     document.getElementById('layerCount').textContent = state.elements.length;
 
     if (state.elements.length === 0) {
-      list.innerHTML = `
-        <div class="empty-state">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="3" width="18" height="18" rx="3"/>
-            <path d="M3 9h18"/>
-          </svg>
-          No layers yet.<br>Add elements above.
-        </div>`;
+      list.innerHTML = `<div class="empty-state"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/></svg>No layers yet.<br>Add elements above.</div>`;
       return;
     }
 
-    // Render in reverse order (top layer first)
     const reversed = [...state.elements].reverse();
     list.innerHTML = reversed.map(el => {
       const color = TYPE_COLORS[el.type];
-      const iconHTML = el.type === 'image' && el.src
-        ? `<img src="${el.src}" alt="">`
-        : getLayerIcon(el.type);
+      let iconHTML = getLayerIcon(el.type);
+      if (el.type === 'image' && el.src) iconHTML = `<img src="${el.src}" alt="">`;
+      if (el.type === 'video' && el.src) iconHTML = `<video src="${el.src}" muted></video>`;
+      
       return `
         <div class="layer-item ${state.selectedId === el.id ? 'selected' : ''}" data-id="${el.id}" draggable="true">
-          <div class="layer-icon" style="background: ${el.type === 'image' ? 'transparent' : color + '22'}; color: ${color};">
-            ${iconHTML}
-          </div>
+          <div class="layer-icon" style="background: ${(el.type === 'image' || el.type === 'video') ? 'transparent' : color + '22'}; color: ${color};">${iconHTML}</div>
           <span class="layer-name">${el.name}</span>
           <span class="layer-anim-dot" style="background: ${color};"></span>
           <div class="layer-actions">
-            <button class="layer-action-btn duplicate" data-action="duplicate" title="Duplicate">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-            </button>
-            <button class="layer-action-btn delete" data-action="delete" title="Delete">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
-            </button>
+            <button class="layer-action-btn duplicate" data-action="duplicate" title="Duplicate"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+            <button class="layer-action-btn delete" data-action="delete" title="Delete"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
           </div>
         </div>
       `;
@@ -1738,20 +968,13 @@
       item.addEventListener('mouseleave', () => {
         document.querySelectorAll('.canvas-element.hovered').forEach(el => el.classList.remove('hovered'));
       });
-
-      // Action buttons
       item.querySelectorAll('.layer-action-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          if (btn.dataset.action === 'delete') {
-            deleteElement(elId);
-          } else if (btn.dataset.action === 'duplicate') {
-            duplicateElement(elId);
-          }
+          if (btn.dataset.action === 'delete') deleteElement(elId);
+          else if (btn.dataset.action === 'duplicate') duplicateElement(elId);
         });
       });
-
-      // Drag reorder
       item.addEventListener('dragstart', (e) => {
         item.classList.add('dragging');
         e.dataTransfer.setData('text/plain', elId);
@@ -1770,28 +993,14 @@
       item.addEventListener('drop', (e) => {
         e.preventDefault();
         const draggedId = e.dataTransfer.getData('text/plain');
-        if (draggedId && draggedId !== elId) {
-          reorderLayers(draggedId, elId);
-        }
+        if (draggedId && draggedId !== elId) reorderLayers(draggedId, elId);
       });
     });
   }
 
-  function reorderLayers(draggedId, targetId) {
-    const draggedIdx = state.elements.findIndex(e => e.id === draggedId);
-    const targetIdx = state.elements.findIndex(e => e.id === targetId);
-    if (draggedIdx === -1 || targetIdx === -1) return;
-    const [dragged] = state.elements.splice(draggedIdx, 1);
-    const newTargetIdx = state.elements.findIndex(e => e.id === targetId);
-    state.elements.splice(newTargetIdx, 0, dragged);
-    renderAll();
-  }
-
-  // ========== RENDER: CANVAS ==========
   function renderCanvas() {
     const stage = document.getElementById('canvasStage');
-    const existing = stage.querySelectorAll('.canvas-element');
-    existing.forEach(e => e.remove());
+    stage.querySelectorAll('.canvas-element').forEach(e => e.remove());
 
     state.elements.forEach(el => {
       const div = document.createElement('div');
@@ -1823,9 +1032,11 @@
       } else if (el.type === 'image') {
         div.style.borderRadius = el.borderRadius + 'px';
         if (el.shadow) div.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
-        if (el.src) {
-          div.innerHTML = `<img src="${el.src}" alt="">`;
-        }
+        if (el.src) div.innerHTML = `<img src="${el.src}" alt="">`;
+      } else if (el.type === 'video') {
+        div.style.borderRadius = el.borderRadius + 'px';
+        if (el.shadow) div.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.3)';
+        if (el.src) div.innerHTML = `<video src="${el.src}" autoplay muted loop playsinline></video>`;
       }
       if (el.type === 'button') div.textContent = el.text || 'Button';
 
@@ -1837,23 +1048,15 @@
         renderAll();
         startDrag(e, el);
       });
-      div.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        state.selectedId = el.id;
-        renderAll();
-        showContextMenu(e.clientX, e.clientY, 'element');
-      });
     });
   }
 
   function startDrag(e, el) {
     e.preventDefault();
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const origX = el.x;
-    const origY = el.y;
+    const startX = e.clientX, startY = e.clientY;
+    const origX = el.x, origY = el.y;
     let hasMoved = false;
+    const snapshot = JSON.parse(JSON.stringify(state.elements));
 
     function onMove(e) {
       hasMoved = true;
@@ -1863,19 +1066,20 @@
         newX = Math.round(newX / state.snapGrid) * state.snapGrid;
         newY = Math.round(newY / state.snapGrid) * state.snapGrid;
       }
-      el.x = newX;
-      el.y = newY;
+      el.x = newX; el.y = newY;
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
-      if (dom) {
-        dom.style.left = el.x + 'px';
-        dom.style.top = el.y + 'px';
-      }
-      const posX = document.getElementById('posX');
-      const posY = document.getElementById('posY');
+      if (dom) { dom.style.left = el.x + 'px'; dom.style.top = el.y + 'px'; }
+      const posX = document.getElementById('posX'), posY = document.getElementById('posY');
       if (posX) posX.value = el.x;
       if (posY) posY.value = el.y;
     }
     function onUp() {
+      if (hasMoved) {
+        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)) });
+        if (state.undoStack.length > 50) state.undoStack.shift();
+        state.redoStack = [];
+        updateUndoRedoButtons();
+      }
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
     }
@@ -1883,19 +1087,11 @@
     document.addEventListener('mouseup', onUp);
   }
 
-  // ========== RENDER: INSPECTOR ==========
   function renderInspector() {
     const content = document.getElementById('inspectorContent');
     const el = state.elements.find(x => x.id === state.selectedId);
-
     if (!el) {
-      content.innerHTML = `
-        <div class="empty-state">
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
-          </svg>
-          Select an element<br>to edit its properties.
-        </div>`;
+      content.innerHTML = `<div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Select an element<br>to edit its properties.</div>`;
       return;
     }
 
@@ -1908,33 +1104,21 @@
         <div class="inspector-section">
           <div class="inspector-section-title">Position</div>
           <div class="field-row">
-            <div class="field">
-              <label class="field-label">X</label>
-              <input type="number" class="field-input" id="posX" value="${el.x}">
-            </div>
-            <div class="field">
-              <label class="field-label">Y</label>
-              <input type="number" class="field-input" id="posY" value="${el.y}">
-            </div>
+            <div class="field"><label class="field-label">X</label><input type="number" class="field-input" id="posX" value="${el.x}"></div>
+            <div class="field"><label class="field-label">Y</label><input type="number" class="field-input" id="posY" value="${el.y}"></div>
           </div>
         </div>
         <div class="inspector-section">
           <div class="inspector-section-title">Size</div>
           <div class="field-row">
-            <div class="field">
-              <label class="field-label">Width</label>
-              <input type="number" class="field-input" id="sizeW" value="${el.width}" min="10">
-            </div>
-            <div class="field">
-              <label class="field-label">Height</label>
-              <input type="number" class="field-input" id="sizeH" value="${el.height}" min="10">
-            </div>
+            <div class="field"><label class="field-label">Width</label><input type="number" class="field-input" id="sizeW" value="${el.width}" min="10"></div>
+            <div class="field"><label class="field-label">Height</label><input type="number" class="field-input" id="sizeH" value="${el.height}" min="10"></div>
           </div>
         </div>
         <div class="inspector-section">
           <div class="inspector-section-title">Appearance</div>
-          ${el.type !== 'image' ? `
-            <div class="field" style="margin-bottom: 10px;">
+          ${(el.type !== 'image' && el.type !== 'video') ? `
+            <div class="field" style="margin-bottom: 12px;">
               <label class="field-label">Color</label>
               <div class="color-swatch" id="colorSwatch">
                 <div class="color-preview" style="background: ${el.color};"></div>
@@ -1944,32 +1128,23 @@
             </div>
           ` : ''}
           ${(el.type === 'text' || el.type === 'button') ? `
-            <div class="field" style="margin-bottom: 10px;">
+            <div class="field" style="margin-bottom: 12px;">
               <label class="field-label">Text Content</label>
               <input type="text" class="field-input" id="elText" value="${(el.text || '').replace(/"/g, '&quot;')}">
             </div>
           ` : ''}
           <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-label">Opacity</span>
-              <span class="slider-value">${el.opacity}%</span>
-            </div>
+            <div class="slider-header"><span class="slider-label">Opacity</span><span class="slider-value">${el.opacity}%</span></div>
             <input type="range" class="slider" id="opacitySlider" min="0" max="100" step="1" value="${el.opacity}" style="--p: ${el.opacity}%">
           </div>
           ${el.type !== 'text' && el.type !== 'circle' ? `
             <div class="slider-row">
-              <div class="slider-header">
-                <span class="slider-label">Corner Radius</span>
-                <span class="slider-value">${el.borderRadius}px</span>
-              </div>
+              <div class="slider-header"><span class="slider-label">Corner Radius</span><span class="slider-value">${el.borderRadius}px</span></div>
               <input type="range" class="slider" id="radiusSlider" min="0" max="40" step="1" value="${el.borderRadius}" style="--p: ${(el.borderRadius/40)*100}%">
             </div>
           ` : ''}
           <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-label">Rotation</span>
-              <span class="slider-value">${el.rotation}°</span>
-            </div>
+            <div class="slider-header"><span class="slider-label">Rotation</span><span class="slider-value">${el.rotation}°</span></div>
             <input type="range" class="slider" id="rotationSlider" min="-180" max="180" step="1" value="${el.rotation}" style="--p: ${((el.rotation+180)/360)*100}%">
           </div>
           <div class="toggle-row">
@@ -1981,46 +1156,47 @@
 
       const nameInput = document.getElementById('elName');
       nameInput.addEventListener('input', e => { el.name = e.target.value; renderLayers(); renderTimeline(); });
+      nameInput.addEventListener('change', pushHistory);
+      
       document.getElementById('posX').addEventListener('input', e => { el.x = +e.target.value; renderCanvas(); });
+      document.getElementById('posX').addEventListener('change', pushHistory);
       document.getElementById('posY').addEventListener('input', e => { el.y = +e.target.value; renderCanvas(); });
+      document.getElementById('posY').addEventListener('change', pushHistory);
       document.getElementById('sizeW').addEventListener('input', e => { el.width = Math.max(10, +e.target.value); renderCanvas(); });
+      document.getElementById('sizeW').addEventListener('change', pushHistory);
       document.getElementById('sizeH').addEventListener('input', e => { el.height = Math.max(10, +e.target.value); renderCanvas(); });
+      document.getElementById('sizeH').addEventListener('change', pushHistory);
 
       const colorSwatch = document.getElementById('colorSwatch');
       if (colorSwatch) {
         colorSwatch.addEventListener('click', () => document.getElementById('colorInput').click());
-        document.getElementById('colorInput').addEventListener('input', e => {
-          el.color = e.target.value;
-          renderCanvas(); renderInspector(); renderLayers();
-        });
+        document.getElementById('colorInput').addEventListener('input', e => { el.color = e.target.value; renderCanvas(); renderInspector(); renderLayers(); });
+        document.getElementById('colorInput').addEventListener('change', pushHistory);
       }
       const textInput = document.getElementById('elText');
-      if (textInput) textInput.addEventListener('input', e => { el.text = e.target.value; renderCanvas(); });
-
+      if (textInput) {
+        textInput.addEventListener('input', e => { el.text = e.target.value; renderCanvas(); });
+        textInput.addEventListener('change', pushHistory);
+      }
+      
       const opSlider = document.getElementById('opacitySlider');
-      opSlider.addEventListener('input', e => {
-        el.opacity = +e.target.value;
-        e.target.style.setProperty('--p', el.opacity + '%');
-        renderCanvas(); renderInspector();
-      });
+      opSlider.addEventListener('input', e => { el.opacity = +e.target.value; e.target.style.setProperty('--p', el.opacity + '%'); renderCanvas(); renderInspector(); });
+      opSlider.addEventListener('change', pushHistory);
+      
       const radSlider = document.getElementById('radiusSlider');
       if (radSlider) {
-        radSlider.addEventListener('input', e => {
-          el.borderRadius = +e.target.value;
-          e.target.style.setProperty('--p', (el.borderRadius/40)*100 + '%');
-          renderCanvas(); renderInspector();
-        });
+        radSlider.addEventListener('input', e => { el.borderRadius = +e.target.value; e.target.style.setProperty('--p', (el.borderRadius/40)*100 + '%'); renderCanvas(); renderInspector(); });
+        radSlider.addEventListener('change', pushHistory);
       }
       const rotSlider = document.getElementById('rotationSlider');
-      rotSlider.addEventListener('input', e => {
-        el.rotation = +e.target.value;
-        e.target.style.setProperty('--p', ((el.rotation+180)/360)*100 + '%');
-        renderCanvas(); renderInspector();
-      });
-      document.getElementById('shadowToggle').addEventListener('click', (e) => {
-        el.shadow = !el.shadow;
-        e.currentTarget.classList.toggle('active');
-        renderCanvas();
+      rotSlider.addEventListener('input', e => { el.rotation = +e.target.value; e.target.style.setProperty('--p', ((el.rotation+180)/360)*100 + '%'); renderCanvas(); renderInspector(); });
+      rotSlider.addEventListener('change', pushHistory);
+      
+      document.getElementById('shadowToggle').addEventListener('click', (e) => { 
+        pushHistory(); 
+        el.shadow = !el.shadow; 
+        e.currentTarget.classList.toggle('active'); 
+        renderCanvas(); 
       });
     } else {
       const anim = el.animation;
@@ -2028,90 +1204,55 @@
         <div class="inspector-section">
           <div class="inspector-section-title">Animation Preset</div>
           <div class="preset-grid">
-            ${Object.entries(PRESETS).map(([key, p]) => `
-              <button class="preset-btn ${anim.type === p.type ? 'active' : ''}" data-preset="${key}">
-                <div class="preset-name">${p.name}</div>
-                <div class="preset-desc">${p.desc}</div>
-              </button>
-            `).join('')}
+            ${Object.entries(PRESETS).map(([key, p]) => `<button class="preset-btn ${anim.type === p.type ? 'active' : ''}" data-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
           </div>
         </div>
         <div class="inspector-section">
           <div class="inspector-section-title">Timing</div>
           <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-label">Duration</span>
-              <span class="slider-value">${(anim.duration/1000).toFixed(2)}s</span>
-            </div>
+            <div class="slider-header"><span class="slider-label">Duration</span><span class="slider-value">${(anim.duration/1000).toFixed(2)}s</span></div>
             <input type="range" class="slider" id="durationSlider" min="100" max="2000" step="50" value="${anim.duration}" style="--p: ${(anim.duration/2000)*100}%">
           </div>
           <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-label">Delay</span>
-              <span class="slider-value">${(anim.delay/1000).toFixed(2)}s</span>
-            </div>
+            <div class="slider-header"><span class="slider-label">Delay</span><span class="slider-value">${(anim.delay/1000).toFixed(2)}s</span></div>
             <input type="range" class="slider" id="delaySlider" min="0" max="3000" step="50" value="${anim.delay}" style="--p: ${(anim.delay/3000)*100}%">
           </div>
           <div class="slider-row">
-            <div class="slider-header">
-              <span class="slider-label">Intensity</span>
-              <span class="slider-value">${anim.intensity}%</span>
-            </div>
+            <div class="slider-header"><span class="slider-label">Intensity</span><span class="slider-value">${anim.intensity}%</span></div>
             <input type="range" class="slider" id="intensitySlider" min="0" max="100" step="5" value="${anim.intensity}" style="--p: ${anim.intensity}%">
           </div>
         </div>
         <div class="inspector-section">
           <div class="inspector-section-title">Easing Curve</div>
           <div class="easing-grid">
-            ${Object.entries(EASINGS).map(([key]) => `
-              <button class="easing-btn ${anim.easing === key ? 'active' : ''}" data-easing="${key}">
-                <svg class="easing-curve" viewBox="0 0 28 20">
-                  <path d="${EASING_CURVES[key]}"/>
-                </svg>
-                <span class="easing-name">${key}</span>
-              </button>
-            `).join('')}
+            ${Object.entries(EASINGS_CSS).map(([key]) => `<button class="easing-btn ${anim.easing === key ? 'active' : ''}" data-easing="${key}"><svg class="easing-curve" viewBox="0 0 28 20"><path d="${EASING_CURVES_PATH[key]}"/></svg><span class="easing-name">${key}</span></button>`).join('')}
           </div>
         </div>
       `;
 
       content.querySelectorAll('.preset-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+          pushHistory();
           const preset = PRESETS[btn.dataset.preset];
-          anim.type = preset.type;
-          anim.duration = preset.duration;
-          anim.easing = preset.easing;
+          anim.type = preset.type; anim.duration = preset.duration; anim.easing = preset.easing;
           renderAll(); renderTimeline();
         });
       });
       const durSlider = document.getElementById('durationSlider');
-      durSlider.addEventListener('input', e => {
-        anim.duration = +e.target.value;
-        e.target.style.setProperty('--p', (anim.duration/2000)*100 + '%');
-        renderInspector(); renderTimeline();
-      });
+      durSlider.addEventListener('input', e => { anim.duration = +e.target.value; e.target.style.setProperty('--p', (anim.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
+      durSlider.addEventListener('change', pushHistory);
       const delSlider = document.getElementById('delaySlider');
-      delSlider.addEventListener('input', e => {
-        anim.delay = +e.target.value;
-        e.target.style.setProperty('--p', (anim.delay/3000)*100 + '%');
-        renderInspector(); renderTimeline();
-      });
+      delSlider.addEventListener('input', e => { anim.delay = +e.target.value; e.target.style.setProperty('--p', (anim.delay/3000)*100 + '%'); renderInspector(); renderTimeline(); });
+      delSlider.addEventListener('change', pushHistory);
       const intSlider = document.getElementById('intensitySlider');
-      intSlider.addEventListener('input', e => {
-        anim.intensity = +e.target.value;
-        e.target.style.setProperty('--p', anim.intensity + '%');
-        renderInspector();
-      });
+      intSlider.addEventListener('input', e => { anim.intensity = +e.target.value; e.target.style.setProperty('--p', anim.intensity + '%'); renderInspector(); });
+      intSlider.addEventListener('change', pushHistory);
       content.querySelectorAll('.easing-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          anim.easing = btn.dataset.easing;
-          renderInspector();
-        });
+        btn.addEventListener('click', () => { pushHistory(); anim.easing = btn.dataset.easing; renderInspector(); });
       });
     }
   }
 
-  // ========== RENDER: TIMELINE ==========
   function renderTimeline() {
     const ruler = document.getElementById('timelineRuler');
     const tracks = document.getElementById('timelineTracks');
@@ -2120,8 +1261,7 @@
 
     let rulerHtml = '';
     const step = 0.25;
-    const numMarks = Math.ceil(totalSec / step);
-    for (let i = 0; i <= numMarks; i++) {
+    for (let i = 0; i <= Math.ceil(totalSec / step); i++) {
       const sec = i * step;
       if (sec > totalSec + 0.01) break;
       const left = (sec / totalSec) * rulerWidth;
@@ -2140,20 +1280,22 @@
         const width = Math.max(24, (anim.duration / state.totalDuration) * rulerWidth);
         const color = TYPE_COLORS[el.type];
         const presetName = Object.values(PRESETS).find(p => p.type === anim.type)?.name || anim.type;
+        let iconHTML = getLayerIcon(el.type);
+        if (el.type === 'image' && el.src) iconHTML = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`;
+        if (el.type === 'video' && el.src) iconHTML = `<video src="${el.src}" muted style="width:100%;height:100%;object-fit:cover;border-radius:4px;"></video>`;
+        
         tracksHtml += `
           <div class="timeline-track">
             <div class="track-label">
-              <div class="layer-icon" style="background: ${el.type === 'image' && el.src ? 'transparent' : color + '22'}; color: ${color};">
-                ${el.type === 'image' && el.src ? `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">` : getLayerIcon(el.type)}
+              <div class="layer-icon" style="background: ${(el.type === 'image' || el.type === 'video') && el.src ? 'transparent' : color + '22'}; color: ${color};">
+                ${iconHTML}
               </div>
               <span>${el.name}</span>
             </div>
             <div class="track-area">
               <div class="track-bar" data-id="${el.id}" style="left: ${left}px; width: ${width}px; background: linear-gradient(90deg, ${color}, ${color}aa);">
                 <span class="bar-label">${presetName}</span>
-                <button class="delete-btn" data-id="${el.id}" title="Delete">
-                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                </button>
+                <button class="delete-btn" data-id="${el.id}" title="Delete"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
                 <div class="trim-handle" data-id="${el.id}"></div>
               </div>
             </div>
@@ -2163,50 +1305,20 @@
     }
     tracks.innerHTML = tracksHtml;
 
-    // Bar interactions
     tracks.querySelectorAll('.track-bar').forEach(bar => {
       const elId = bar.dataset.id;
-
-      // Click to select
       bar.addEventListener('click', (e) => {
         if (e.target.closest('.delete-btn') || e.target.closest('.trim-handle')) return;
-        if (!bar._hasMoved) {
-          state.selectedId = elId;
-          renderAll();
-        }
+        if (!bar._hasMoved) { state.selectedId = elId; renderAll(); }
       });
-
-      // Delete button
-      const delBtn = bar.querySelector('.delete-btn');
-      delBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteElement(elId);
-      });
-
-      // Drag to move delay
+      bar.querySelector('.delete-btn').addEventListener('click', (e) => { e.stopPropagation(); deleteElement(elId); });
       bar.addEventListener('mousedown', (e) => {
         if (e.target.closest('.delete-btn') || e.target.closest('.trim-handle')) return;
         startBarDrag(e, elId, 'move');
       });
-
-      // Trim handle
-      const trimHandle = bar.querySelector('.trim-handle');
-      trimHandle.addEventListener('mousedown', (e) => {
-        e.stopPropagation();
-        startBarDrag(e, elId, 'trim');
-      });
-
-      // Right-click
-      bar.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        state.selectedId = elId;
-        renderAll();
-        showContextMenu(e.clientX, e.clientY, 'element');
-      });
+      bar.querySelector('.trim-handle').addEventListener('mousedown', (e) => { e.stopPropagation(); startBarDrag(e, elId, 'trim'); });
     });
 
-    // Click track area to scrub
     tracks.addEventListener('mousedown', (e) => {
       if (e.target.classList.contains('timeline-tracks') || e.target.classList.contains('timeline-track') || e.target.classList.contains('track-area')) {
         const rect = tracks.getBoundingClientRect();
@@ -2232,12 +1344,12 @@
     const bar = document.querySelector(`.track-bar[data-id="${elId}"]`);
     bar.classList.add('dragging');
     bar._hasMoved = false;
+    const snapshot = JSON.parse(JSON.stringify(state.elements));
 
     function onMove(e) {
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 3) bar._hasMoved = true;
       const dMs = dx * msPerPx;
-
       if (mode === 'move') {
         let newDelay = startDelay + dMs;
         newDelay = Math.max(0, Math.min(state.totalDuration - el.animation.duration, newDelay));
@@ -2247,35 +1359,22 @@
         newDuration = Math.max(100, Math.min(state.totalDuration - el.animation.delay, newDuration));
         el.animation.duration = Math.round(newDuration);
       }
-
-      // Update bar position live
       const left = (el.animation.delay / state.totalDuration) * rulerWidth;
       const width = Math.max(24, (el.animation.duration / state.totalDuration) * rulerWidth);
-      bar.style.left = left + 'px';
-      bar.style.width = width + 'px';
-
-      // Update inspector if open
-      const durSlider = document.getElementById('durationSlider');
-      const delSlider = document.getElementById('delaySlider');
-      if (durSlider) {
-        durSlider.value = el.animation.duration;
-        durSlider.style.setProperty('--p', (el.animation.duration/2000)*100 + '%');
-        const val = durSlider.parentElement.querySelector('.slider-value');
-        if (val) val.textContent = (el.animation.duration/1000).toFixed(2) + 's';
-      }
-      if (delSlider) {
-        delSlider.value = el.animation.delay;
-        delSlider.style.setProperty('--p', (el.animation.delay/3000)*100 + '%');
-        const val = delSlider.parentElement.querySelector('.slider-value');
-        if (val) val.textContent = (el.animation.delay/1000).toFixed(2) + 's';
-      }
+      bar.style.left = left + 'px'; bar.style.width = width + 'px';
     }
     function onUp() {
+      if (bar._hasMoved) {
+        state.undoStack.push({ elements: snapshot, scene: JSON.parse(JSON.stringify(state.scene)), totalDuration: state.totalDuration, canvasSize: JSON.parse(JSON.stringify(state.canvasSize)) });
+        if (state.undoStack.length > 50) state.undoStack.shift();
+        state.redoStack = [];
+        updateUndoRedoButtons();
+      }
       bar.classList.remove('dragging');
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
       setTimeout(() => { bar._hasMoved = false; }, 50);
-      renderTimeline();
+      renderTimeline(); renderInspector();
     }
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
@@ -2285,60 +1384,33 @@
     const ruler = document.getElementById('timelineRuler');
     const playhead = document.getElementById('playhead');
     const rulerWidth = Math.max(100, ruler.offsetWidth);
-    if (playhead) {
-      playhead.style.left = (120 + (state.currentTime / state.totalDuration) * rulerWidth) + 'px';
-    }
+    if (playhead) playhead.style.left = (120 + (state.currentTime / state.totalDuration) * rulerWidth) + 'px';
     document.getElementById('currentTime').textContent = (state.currentTime / 1000).toFixed(2) + 's';
   }
 
-  // ========== RENDER ALL ==========
-  function renderAll() {
-    renderLayers();
-    renderCanvas();
-    renderInspector();
-  }
+  function renderAll() { renderLayers(); renderCanvas(); renderInspector(); }
 
-  // ========== ELEMENT OPERATIONS ==========
   function addElement(type) {
-    const names = { card: 'Card', text: 'Text', button: 'Button', circle: 'Avatar', image: 'Image' };
+    pushHistory();
+    const names = { card: 'Card', text: 'Text', button: 'Button', circle: 'Avatar', image: 'Image', video: 'Video' };
     const counts = state.elements.filter(e => e.type === type).length + 1;
-    const defaultSizes = {
-      card:   { w: 200, h: 100 },
-      text:   { w: 200, h: 30 },
-      button: { w: 200, h: 48 },
-      circle: { w: 60,  h: 60 },
-      image:  { w: 120, h: 120 }
-    };
+    const defaultSizes = { card: { w: 200, h: 100 }, text: { w: 200, h: 30 }, button: { w: 200, h: 48 }, circle: { w: 60, h: 60 }, image: { w: 120, h: 120 }, video: { w: 160, h: 90 } };
     const size = defaultSizes[type];
     const el = {
-      id: nextId(),
-      type,
-      name: `${names[type]} ${counts}`,
-      x: 80 + Math.random() * 40,
-      y: 100 + state.elements.length * 60,
-      width: size.w,
-      height: size.h,
+      id: nextId(), type, name: `${names[type]} ${counts}`,
+      x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
+      width: size.w, height: size.h,
       color: type === 'text' ? '#ffffff' : TYPE_COLORS[type],
       text: type === 'text' ? 'New Text' : type === 'button' ? 'Tap Me' : '',
-      opacity: 100,
-      borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : type === 'image' ? 12 : 0,
-      rotation: 0,
-      shadow: type !== 'text',
-      src: null,
-      animation: {
-        type: 'fade-in',
-        duration: 500,
-        delay: Math.min(state.elements.length * 100, 1500),
-        easing: 'ease-out',
-        intensity: 50
-      }
+      opacity: 100, borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : (type === 'image' || type === 'video') ? 12 : 0,
+      rotation: 0, shadow: type !== 'text', src: null,
+      animation: { type: 'fade-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 }
     };
-    state.elements.push(el);
-    state.selectedId = el.id;
-    renderAll(); renderTimeline();
+    state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
   }
 
   function deleteElement(id) {
+    pushHistory();
     const idx = state.elements.findIndex(e => e.id === id);
     if (idx === -1) return;
     state.elements.splice(idx, 1);
@@ -2348,90 +1420,37 @@
   }
 
   function duplicateElement(id) {
+    pushHistory();
     const el = state.elements.find(e => e.id === id);
     if (!el) return;
     const copy = JSON.parse(JSON.stringify(el));
-    copy.id = nextId();
-    copy.name = el.name + ' Copy';
-    copy.x = el.x + 20;
-    copy.y = el.y + 20;
+    copy.id = nextId(); copy.name = el.name + ' Copy';
+    copy.x = el.x + 20; copy.y = el.y + 20;
     copy.animation = { ...el.animation, delay: el.animation.delay + 100 };
     const idx = state.elements.findIndex(e => e.id === id);
     state.elements.splice(idx + 1, 0, copy);
-    state.selectedId = copy.id;
-    renderAll(); renderTimeline();
+    state.selectedId = copy.id; renderAll(); renderTimeline();
     showToast('Element duplicated');
   }
 
-  // ========== IMAGE UPLOAD ==========
-  function handleImageUpload(files) {
-    Array.from(files).forEach(file => {
-      if (!file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxSize = 200;
-          let w = img.naturalWidth, h = img.naturalHeight;
-          if (w > maxSize || h > maxSize) {
-            const ratio = Math.min(maxSize / w, maxSize / h);
-            w = Math.round(w * ratio);
-            h = Math.round(h * ratio);
-          }
-          const counts = state.elements.filter(e => e.type === 'image').length + 1;
-          const el = {
-            id: nextId(),
-            type: 'image',
-            name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Image ${counts}`,
-            x: 80 + Math.random() * 40,
-            y: 100 + state.elements.length * 60,
-            width: w,
-            height: h,
-            color: '#ffffff',
-            text: '',
-            opacity: 100,
-            borderRadius: 12,
-            rotation: 0,
-            shadow: true,
-            src: e.target.result,
-            animation: {
-              type: 'scale-in',
-              duration: 500,
-              delay: Math.min(state.elements.length * 100, 1500),
-              easing: 'spring',
-              intensity: 50
-            }
-          };
-          state.elements.push(el);
-          state.selectedId = el.id;
-          renderAll(); renderTimeline();
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-    showToast(`${files.length} image${files.length > 1 ? 's' : ''} uploaded`);
+  function reorderLayers(draggedId, targetId) {
+    pushHistory();
+    const draggedIdx = state.elements.findIndex(e => e.id === draggedId);
+    const targetIdx = state.elements.findIndex(e => e.id === targetId);
+    if (draggedIdx === -1 || targetIdx === -1) return;
+    const [dragged] = state.elements.splice(draggedIdx, 1);
+    const newTargetIdx = state.elements.findIndex(e => e.id === targetId);
+    state.elements.splice(newTargetIdx, 0, dragged);
+    renderAll();
   }
 
-  // ========== PLAYBACK ==========
-  function togglePlay() {
-    if (state.isPlaying) stopPlayback();
-    else play();
-  }
+  function togglePlay() { if (state.isPlaying) stopPlayback(); else play(); }
 
   function play() {
-    if (state.elements.length === 0) {
-      showToast('Add elements first', '#ff9f0a');
-      return;
-    }
-    state.isPlaying = true;
-    state.currentTime = 0;
-    state.playStartTime = performance.now();
+    if (state.elements.length === 0) { showToast('Add elements first', '#ff9f0a'); return; }
+    state.isPlaying = true; state.currentTime = 0; state.playStartTime = performance.now();
     applyInitialStates();
-    requestAnimationFrame(() => {
-      triggerAnimations();
-      animatePlayhead();
-    });
+    requestAnimationFrame(() => { triggerAnimations(); animatePlayhead(); });
     const btn = document.getElementById('playBtn');
     btn.classList.add('playing');
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
@@ -2443,7 +1462,6 @@
     const btn = document.getElementById('playBtn');
     btn.classList.remove('playing');
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-    // Reset elements to final state
     state.elements.forEach(el => {
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
       if (dom) {
@@ -2465,56 +1483,16 @@
       const baseTransform = `translate(0, 0) scale(1) rotate(${el.rotation}deg)`;
 
       switch(anim.type) {
-        case 'fade-in':
-          dom.style.opacity = '0';
-          dom.style.transform = baseTransform;
-          dom.style.filter = 'none';
-          break;
-        case 'slide-up':
-          dom.style.opacity = '0';
-          dom.style.transform = `translateY(${60 * intensity}px) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'slide-down':
-          dom.style.opacity = '0';
-          dom.style.transform = `translateY(${-60 * intensity}px) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'slide-left':
-          dom.style.opacity = '0';
-          dom.style.transform = `translateX(${80 * intensity}px) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'slide-right':
-          dom.style.opacity = '0';
-          dom.style.transform = `translateX(${-80 * intensity}px) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'scale-in':
-          dom.style.opacity = '0';
-          dom.style.transform = `scale(${Math.max(0.1, 1 - 0.6 * intensity)}) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'spring-pop':
-          dom.style.opacity = '0';
-          dom.style.transform = `scale(${Math.max(0.1, 1 - 0.8 * intensity)}) rotate(${el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'blur-in':
-          dom.style.opacity = '0';
-          dom.style.transform = baseTransform;
-          dom.style.filter = `blur(${12 * intensity}px)`;
-          break;
-        case 'rotate-in':
-          dom.style.opacity = '0';
-          dom.style.transform = `scale(${Math.max(0.1, 1 - 0.4 * intensity)}) rotate(${360 * intensity + el.rotation}deg)`;
-          dom.style.filter = 'none';
-          break;
-        case 'flip-in':
-          dom.style.opacity = '0';
-          dom.style.transform = `perspective(800px) rotateX(${90 * intensity}deg)`;
-          dom.style.filter = 'none';
-          break;
+        case 'fade-in': dom.style.opacity = '0'; dom.style.transform = baseTransform; dom.style.filter = 'none'; break;
+        case 'slide-up': dom.style.opacity = '0'; dom.style.transform = `translateY(${60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'slide-down': dom.style.opacity = '0'; dom.style.transform = `translateY(${-60 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'slide-left': dom.style.opacity = '0'; dom.style.transform = `translateX(${80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'slide-right': dom.style.opacity = '0'; dom.style.transform = `translateX(${-80 * intensity}px) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'scale-in': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.6 * intensity)}) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'spring-pop': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.8 * intensity)}) rotate(${el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'blur-in': dom.style.opacity = '0'; dom.style.transform = baseTransform; dom.style.filter = `blur(${12 * intensity}px)`; break;
+        case 'rotate-in': dom.style.opacity = '0'; dom.style.transform = `scale(${Math.max(0.1, 1 - 0.4 * intensity)}) rotate(${360 * intensity + el.rotation}deg)`; dom.style.filter = 'none'; break;
+        case 'flip-in': dom.style.opacity = '0'; dom.style.transform = `perspective(800px) rotateX(${90 * intensity}deg)`; dom.style.filter = 'none'; break;
       }
       void dom.offsetHeight;
     });
@@ -2525,7 +1503,7 @@
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
       if (!dom) return;
       const anim = el.animation;
-      const easing = EASINGS[anim.easing] || 'ease';
+      const easing = EASINGS_CSS[anim.easing] || 'ease';
       dom.style.transition = `all ${anim.duration}ms ${easing} ${anim.delay}ms`;
       dom.style.opacity = el.opacity / 100;
       dom.style.transform = `rotate(${el.rotation}deg)`;
@@ -2538,201 +1516,384 @@
     const elapsed = performance.now() - state.playStartTime;
     state.currentTime = Math.min(elapsed, state.totalDuration);
     updatePlayhead();
-    if (elapsed >= state.totalDuration + 100) {
-      setTimeout(() => stopPlayback(), 200);
-      return;
-    }
+    if (elapsed >= state.totalDuration + 100) { setTimeout(() => stopPlayback(), 200); return; }
     state.animationFrame = requestAnimationFrame(animatePlayhead);
   }
 
-  function restart() {
-    stopPlayback();
-    state.currentTime = 0;
-    updatePlayhead();
-    setTimeout(() => play(), 100);
-  }
+  function restart() { stopPlayback(); state.currentTime = 0; updatePlayhead(); setTimeout(() => play(), 100); }
 
-  // ========== CONTEXT MENU ==========
-  function showContextMenu(x, y, type) {
-    const menu = document.getElementById('contextMenu');
-    let items = [];
-    if (type === 'element' && state.selectedId) {
-      items = [
-        { label: 'Duplicate', shortcut: '⌘D', action: () => duplicateElement(state.selectedId) },
-        { label: 'Bring Forward', action: () => bringForward(state.selectedId) },
-        { label: 'Send Backward', action: () => sendBackward(state.selectedId) },
-        { divider: true },
-        { label: 'Delete', shortcut: '⌫', danger: true, action: () => deleteElement(state.selectedId) }
-      ];
-    }
-    menu.innerHTML = items.map(item => {
-      if (item.divider) return '<div class="ctx-divider"></div>';
-      return `<div class="ctx-item ${item.danger ? 'danger' : ''}" data-action="${item.label}">
-        <span>${item.label}</span>
-        ${item.shortcut ? `<span style="margin-left:auto;color:var(--text-tertiary);font-size:10px;">${item.shortcut}</span>` : ''}
-      </div>`;
-    }).join('');
-    menu.style.left = x + 'px';
-    menu.style.top = y + 'px';
-    menu.classList.add('show');
-
-    menu.querySelectorAll('.ctx-item').forEach((item, i) => {
-      const itemData = items.filter(it => !it.divider)[i];
-      if (itemData) {
-        item.addEventListener('click', () => {
-          itemData.action();
-          hideContextMenu();
-        });
-      }
+  // ========== FILE UPLOADS ==========
+  function handleImageUpload(files) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          pushHistory();
+          const maxSize = 200;
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxSize || h > maxSize) {
+            const ratio = Math.min(maxSize / w, maxSize / h);
+            w = Math.round(w * ratio); h = Math.round(h * ratio);
+          }
+          const counts = state.elements.filter(el => el.type === 'image').length + 1;
+          const el = {
+            id: nextId(), type: 'image', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Image ${counts}`,
+            x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
+            width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
+            animation: { type: 'scale-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'spring', intensity: 50 }
+          };
+          state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
     });
+    showToast(`${files.length} image${files.length > 1 ? 's' : ''} uploaded`);
   }
 
-  function hideContextMenu() {
-    document.getElementById('contextMenu').classList.remove('show');
+  function handleVideoUpload(files) {
+    Array.from(files).forEach(file => {
+      if (!file.type.startsWith('video/')) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const vid = document.createElement('video');
+        vid.onloadedmetadata = () => {
+          pushHistory();
+          const maxSize = 320;
+          let w = vid.videoWidth, h = vid.videoHeight;
+          if (w > maxSize || h > maxSize) {
+            const ratio = Math.min(maxSize / w, maxSize / h);
+            w = Math.round(w * ratio); h = Math.round(h * ratio);
+          }
+          const counts = state.elements.filter(el => el.type === 'video').length + 1;
+          const el = {
+            id: nextId(), type: 'video', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Video ${counts}`,
+            x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
+            width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
+            animation: { type: 'fade-in', duration: 600, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 }
+          };
+          state.elements.push(el); state.selectedId = el.id; renderAll(); renderTimeline();
+        };
+        vid.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    showToast(`${files.length} video${files.length > 1 ? 's' : ''} uploaded`);
   }
 
-  function bringForward(id) {
-    const idx = state.elements.findIndex(e => e.id === id);
-    if (idx < state.elements.length - 1) {
-      [state.elements[idx], state.elements[idx+1]] = [state.elements[idx+1], state.elements[idx]];
-      renderAll(); renderTimeline();
+  // ========== JSON IMPORT / EXPORT ==========
+  function exportJSON() {
+    const projectData = {
+      version: "1.0",
+      elements: state.elements,
+      scene: state.scene,
+      totalDuration: state.totalDuration,
+      canvasSize: state.canvasSize
+    };
+    const blob = new Blob([JSON.stringify(projectData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'project.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Project JSON exported');
+  }
+
+  function importJSON(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        state.elements = data.elements || [];
+        state.scene = data.scene || { bgType: 'solid', bgColor0: '#000000', bgColor1: '#000000', bgAngle: 180 };
+        state.totalDuration = data.totalDuration || 2000;
+        state.canvasSize = data.canvasSize || { w: 360, h: 640 };
+        
+        document.getElementById('totalDurationSlider').value = state.totalDuration;
+        document.getElementById('totalDurationLabel').textContent = (state.totalDuration/1000).toFixed(1) + 's';
+        document.getElementById('totalTime').textContent = (state.totalDuration/1000).toFixed(2) + 's';
+        
+        let maxId = 0;
+        state.elements.forEach(el => {
+          const idNum = parseInt(el.id.replace('el-', ''));
+          if (idNum > maxId) maxId = idNum;
+        });
+        idCounter = maxId + 1;
+        
+        state.selectedId = null;
+        state.undoStack = [];
+        state.redoStack = [];
+        
+        applyCanvasSize();
+        renderScene();
+        renderAll();
+        renderTimeline();
+        updateUndoRedoButtons();
+        showToast('Project imported successfully');
+      } catch (err) {
+        showToast('Invalid JSON file', '#ff453a');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ========== VIDEO EXPORT ==========
+  function getElementStateAtTime(el, time) {
+    const anim = el.animation;
+    const elapsed = time - anim.delay;
+    let progress = 0;
+    if (elapsed >= anim.duration) progress = 1;
+    else if (elapsed > 0) progress = elapsed / anim.duration;
+
+    const eased = EASING_FN[anim.easing] ? EASING_FN[anim.easing](progress) : progress;
+    const intensity = anim.intensity / 100;
+
+    const state = { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100, blur: 0, flipX: 0 };
+
+    switch(anim.type) {
+      case 'fade-in': state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'slide-up': state.y = (el.y + 60 * intensity) + (el.y - (el.y + 60 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'slide-down': state.y = (el.y - 60 * intensity) + (el.y - (el.y - 60 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'slide-left': state.x = (el.x + 80 * intensity) + (el.x - (el.x + 80 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'slide-right': state.x = (el.x - 80 * intensity) + (el.x - (el.x - 80 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'scale-in': state.scale = (1 - 0.6 * intensity) + (1 - (1 - 0.6 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'spring-pop': state.scale = (1 - 0.8 * intensity) + (1 - (1 - 0.8 * intensity)) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'blur-in': state.blur = (12 * intensity) - (12 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'rotate-in': state.scale = (1 - 0.4 * intensity) + (1 - (1 - 0.4 * intensity)) * eased; state.rotation = (360 * intensity + el.rotation) - (360 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
+      case 'flip-in': state.flipX = (90 * intensity) - (90 * intensity) * eased; state.opacity = 0 + (el.opacity / 100) * eased; break;
     }
+    return state;
   }
 
-  function sendBackward(id) {
-    const idx = state.elements.findIndex(e => e.id === id);
-    if (idx > 0) {
-      [state.elements[idx], state.elements[idx-1]] = [state.elements[idx-1], state.elements[idx]];
-      renderAll(); renderTimeline();
+  function drawElementOnCanvas(ctx, el, st, scale) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, Math.min(1, st.opacity));
+
+    const w = el.width * scale;
+    const h = el.height * scale;
+    const cx = st.x * scale + (el.width * scale) / 2;
+    const cy = st.y * scale + (el.height * scale) / 2;
+
+    ctx.translate(cx, cy);
+    ctx.rotate(st.rotation * Math.PI / 180);
+    if (st.flipX > 0) ctx.transform(1, 0, 0, Math.cos(st.flipX * Math.PI / 180), 0, 0);
+    ctx.scale(st.scale, st.scale);
+
+    if (st.blur > 0) ctx.filter = `blur(${st.blur * scale}px)`;
+    if (el.shadow) {
+      ctx.shadowColor = el.type === 'button' ? el.color + '59' : 'rgba(0,0,0,0.4)';
+      ctx.shadowBlur = 20 * scale;
+      ctx.shadowOffsetY = 6 * scale;
     }
+
+    ctx.translate(-w/2, -h/2);
+
+    if (el.type === 'card') {
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, el.color);
+      grad.addColorStop(1, darkenColor(el.color, 0.4));
+      ctx.fillStyle = grad;
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.fill(); } else { ctx.fillRect(0, 0, w, h); }
+    } else if (el.type === 'circle') {
+      const grad = ctx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, el.color);
+      grad.addColorStop(1, darkenColor(el.color, 0.5));
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(w/2, h/2, w/2, 0, Math.PI * 2); ctx.fill();
+    } else if (el.type === 'button') {
+      ctx.fillStyle = el.color;
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.fill(); } else { ctx.fillRect(0, 0, w, h); }
+      ctx.fillStyle = 'white';
+      ctx.font = `600 ${15 * scale}px -apple-system, sans-serif`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(el.text || 'Button', w/2, h/2);
+    } else if (el.type === 'text') {
+      ctx.fillStyle = el.color;
+      ctx.font = `700 ${Math.min(el.height * 0.75, 26) * scale}px -apple-system, sans-serif`;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(el.text || 'Text', 4 * scale, 0);
+    } else if (el.type === 'image' && el._img) {
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.clip(); }
+      ctx.drawImage(el._img, 0, 0, w, h);
+    } else if (el.type === 'video' && el._vid) {
+      if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.clip(); }
+      try { ctx.drawImage(el._vid, 0, 0, w, h); } catch(e) {}
+    }
+
+    ctx.restore();
   }
 
-  // ========== EXPORT ==========
+  async function startVideoExport() {
+    const { res, fps } = state.exportSettings;
+    const aspect = state.canvasSize.w / state.canvasSize.h;
+    let outW, outH;
+    if (aspect > 1) { outW = res; outH = Math.round(res / aspect); } else { outH = res; outW = Math.round(res * aspect); }
+    outW = outW % 2 === 0 ? outW : outW + 1;
+    outH = outH % 2 === 0 ? outH : outH + 1;
+
+    const canvas = document.getElementById('renderCanvas');
+    canvas.width = outW; canvas.height = outH;
+    const ctx = canvas.getContext('2d');
+    const scale = outW / state.canvasSize.w;
+
+    const imagePromises = state.elements.filter(e => e.type === 'image' && e.src).map(el => {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => { el._img = img; resolve(); };
+        img.onerror = resolve;
+        img.src = el.src;
+      });
+    });
+
+    const videoPromises = state.elements.filter(e => e.type === 'video' && e.src).map(el => {
+      return new Promise(resolve => {
+        const vid = document.createElement('video');
+        vid.src = el.src;
+        vid.muted = true;
+        vid.loop = true;
+        vid.playsInline = true;
+        vid.onloadeddata = () => {
+          el._vid = vid;
+          vid.play().then(resolve).catch(resolve);
+        };
+        vid.onerror = resolve;
+      });
+    });
+
+    await Promise.all([...imagePromises, ...videoPromises]);
+
+    const stream = canvas.captureStream(0);
+    const track = stream.getVideoTracks()[0];
+    
+    let mimeType = 'video/mp4;codecs=h264';
+    if (!MediaRecorder.isTypeSupported(mimeType)) {
+      mimeType = 'video/webm;codecs=vp9';
+      if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = 'video/webm';
+    }
+
+    const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 10000000 });
+    const chunks = [];
+    recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+
+    const totalFrames = Math.ceil((state.totalDuration / 1000) * fps);
+    const frameDuration = 1000 / fps;
+
+    document.getElementById('progressContainer').classList.add('active');
+    document.getElementById('startVideoExport').style.display = 'none';
+    document.getElementById('cancelVideoExport').textContent = 'Rendering... Please wait';
+    document.getElementById('cancelVideoExport').disabled = true;
+
+    recorder.start();
+
+    for (let i = 0; i < totalFrames; i++) {
+      const time = i * frameDuration;
+
+      if (state.scene.bgType === 'gradient') {
+        const grad = ctx.createLinearGradient(0, 0, 0, outH);
+        grad.addColorStop(0, state.scene.bgColor0);
+        grad.addColorStop(1, state.scene.bgColor1);
+        ctx.fillStyle = grad;
+      } else {
+        ctx.fillStyle = state.scene.bgColor0;
+      }
+      ctx.fillRect(0, 0, outW, outH);
+
+      state.elements.forEach(el => {
+        const st = getElementStateAtTime(el, time);
+        drawElementOnCanvas(ctx, el, st, scale);
+      });
+
+      track.requestFrame();
+      
+      const progress = ((i + 1) / totalFrames) * 100;
+      document.getElementById('progressFill').style.width = progress + '%';
+      document.getElementById('progressText').textContent = `Rendering frame ${i + 1} of ${totalFrames} (${progress.toFixed(1)}%)`;
+
+      await new Promise(r => setTimeout(r, 1000 / fps < 16 ? 16 : 1000 / fps + 5));
+    }
+
+    await new Promise(r => setTimeout(r, 500));
+    recorder.stop();
+
+    recorder.onstop = () => {
+      state.elements.forEach(el => { if (el._vid) { el._vid.pause(); delete el._vid; } });
+      
+      const blob = new Blob(chunks, { type: mimeType.split(';')[0] });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const ext = mimeType.includes('mp4') ? 'mp4' : 'webm';
+      a.download = `transition-studio-${res}p-${fps}fps.${ext}`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      document.getElementById('progressContainer').classList.remove('active');
+      document.getElementById('startVideoExport').style.display = 'flex';
+      document.getElementById('cancelVideoExport').textContent = 'Cancel';
+      document.getElementById('cancelVideoExport').disabled = false;
+      document.getElementById('videoExportModal').classList.remove('active');
+      showToast(`Video exported successfully (${ext.toUpperCase()})`);
+    };
+  }
+
+  // ========== HTML EXPORT ==========
   function exportHTML() {
-    if (state.elements.length === 0) {
-      showToast('Nothing to export', '#ff9f0a');
-      return;
-    }
-
+    if (state.elements.length === 0) { showToast('Nothing to export', '#ff9f0a'); return; }
     const bgCSS = state.scene.bgType === 'gradient'
       ? `linear-gradient(${state.scene.bgAngle}deg, ${state.scene.bgColor0}, ${state.scene.bgColor1})`
       : state.scene.bgColor0;
 
-    let elementsCSS = '';
-    let keyframes = '';
-    let elementsHTML = '';
-
+    let elementsCSS = '', keyframes = '', elementsHTML = '';
     state.elements.forEach(el => {
       const anim = el.animation;
-      const intensity = anim.intensity / 100;
-      const easing = EASINGS[anim.easing] || 'ease';
+      const easing = EASINGS_CSS[anim.easing] || 'ease';
       const className = 'el-' + el.id;
       const animName = 'anim-' + el.id;
       const baseTransform = el.rotation ? `rotate(${el.rotation}deg)` : 'none';
 
-      // Element CSS
-      let elStyles = `
-  position: absolute;
-  left: ${el.x}px;
-  top: ${el.y}px;
-  width: ${el.width}px;
-  height: ${el.height}px;
-  opacity: ${el.opacity / 100};`;
-
+      let elStyles = `  position: absolute;\n  left: ${el.x}px;\n  top: ${el.y}px;\n  width: ${el.width}px;\n  height: ${el.height}px;\n  opacity: ${el.opacity / 100};`;
       if (el.type === 'card') {
-        elStyles += `
-  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.4)});
-  border-radius: ${el.borderRadius}px;
-  border: 1px solid rgba(255,255,255,0.06);`;
+        elStyles += `\n  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.4)});\n  border-radius: ${el.borderRadius}px;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 8px 24px rgba(0,0,0,0.3);`;
       } else if (el.type === 'circle') {
-        elStyles += `
-  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.5)});
-  border-radius: 50%;`;
+        elStyles += `\n  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.5)});\n  border-radius: 50%;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 20px rgba(0,0,0,0.4);`;
       } else if (el.type === 'button') {
-        elStyles += `
-  background: ${el.color};
-  border-radius: ${el.borderRadius}px;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  font-size: 15px;
-  font-family: -apple-system, sans-serif;`;
+        elStyles += `\n  background: ${el.color};\n  border-radius: ${el.borderRadius}px;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: 600;\n  font-size: 15px;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 16px ${el.color}59;`;
       } else if (el.type === 'text') {
-        elStyles += `
-  color: ${el.color};
-  font-size: ${Math.min(el.height * 0.75, 26)}px;
-  font-weight: 700;
-  font-family: -apple-system, sans-serif;
-  letter-spacing: -0.03em;
-  display: flex;
-  align-items: center;
-  padding-left: 4px;`;
-      } else if (el.type === 'image') {
-        elStyles += `
-  border-radius: ${el.borderRadius}px;
-  overflow: hidden;`;
+        elStyles += `\n  color: ${el.color};\n  font-size: ${Math.min(el.height * 0.75, 26)}px;\n  font-weight: 700;\n  display: flex;\n  align-items: center;\n  padding-left: 4px;`;
+      } else if (el.type === 'image' || el.type === 'video') {
+        elStyles += `\n  border-radius: ${el.borderRadius}px;\n  overflow: hidden;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 8px 24px rgba(0,0,0,0.3);`;
       }
-
       elementsCSS += `.${className} {${elStyles}\n  animation: ${animName} ${(anim.duration/1000).toFixed(2)}s ${easing} ${(anim.delay/1000).toFixed(2)}s both;\n}\n\n`;
 
-      // Keyframes
       let fromState = '', toState = '';
+      const intensity = anim.intensity / 100;
       switch(anim.type) {
-        case 'fade-in':
-          fromState = `opacity: 0; transform: ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: ${baseTransform};`;
-          break;
-        case 'slide-up':
-          fromState = `opacity: 0; transform: translateY(${(60*intensity).toFixed(0)}px) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`;
-          break;
-        case 'slide-down':
-          fromState = `opacity: 0; transform: translateY(${(-60*intensity).toFixed(0)}px) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`;
-          break;
-        case 'slide-left':
-          fromState = `opacity: 0; transform: translateX(${(80*intensity).toFixed(0)}px) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`;
-          break;
-        case 'slide-right':
-          fromState = `opacity: 0; transform: translateX(${(-80*intensity).toFixed(0)}px) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`;
-          break;
-        case 'scale-in':
-          fromState = `opacity: 0; transform: scale(${(1-0.6*intensity).toFixed(2)}) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`;
-          break;
-        case 'spring-pop':
-          fromState = `opacity: 0; transform: scale(${(1-0.8*intensity).toFixed(2)}) ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`;
-          break;
-        case 'blur-in':
-          fromState = `opacity: 0; filter: blur(${(12*intensity).toFixed(0)}px); transform: ${baseTransform};`;
-          toState = `opacity: ${el.opacity/100}; filter: blur(0); transform: ${baseTransform};`;
-          break;
-        case 'rotate-in':
-          fromState = `opacity: 0; transform: scale(${(1-0.4*intensity).toFixed(2)}) rotate(${(360*intensity + el.rotation).toFixed(0)}deg);`;
-          toState = `opacity: ${el.opacity/100}; transform: scale(1) rotate(${el.rotation}deg);`;
-          break;
-        case 'flip-in':
-          fromState = `opacity: 0; transform: perspective(800px) rotateX(${(90*intensity).toFixed(0)}deg);`;
-          toState = `opacity: ${el.opacity/100}; transform: perspective(800px) rotateX(0);`;
-          break;
+        case 'fade-in': fromState = `opacity: 0; transform: ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: ${baseTransform};`; break;
+        case 'slide-up': fromState = `opacity: 0; transform: translateY(${(60*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`; break;
+        case 'slide-down': fromState = `opacity: 0; transform: translateY(${(-60*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateY(0) ${baseTransform};`; break;
+        case 'slide-left': fromState = `opacity: 0; transform: translateX(${(80*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`; break;
+        case 'slide-right': fromState = `opacity: 0; transform: translateX(${(-80*intensity).toFixed(0)}px) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: translateX(0) ${baseTransform};`; break;
+        case 'scale-in': fromState = `opacity: 0; transform: scale(${(1-0.6*intensity).toFixed(2)}) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`; break;
+        case 'spring-pop': fromState = `opacity: 0; transform: scale(${(1-0.8*intensity).toFixed(2)}) ${baseTransform};`; toState = `opacity: ${el.opacity/100}; transform: scale(1) ${baseTransform};`; break;
+        case 'blur-in': fromState = `opacity: 0; filter: blur(${(12*intensity).toFixed(0)}px); transform: ${baseTransform};`; toState = `opacity: ${el.opacity/100}; filter: blur(0); transform: ${baseTransform};`; break;
+        case 'rotate-in': fromState = `opacity: 0; transform: scale(${(1-0.4*intensity).toFixed(2)}) rotate(${(360*intensity + el.rotation).toFixed(0)}deg);`; toState = `opacity: ${el.opacity/100}; transform: scale(1) rotate(${el.rotation}deg);`; break;
+        case 'flip-in': fromState = `opacity: 0; transform: perspective(800px) rotateX(${(90*intensity).toFixed(0)}deg);`; toState = `opacity: ${el.opacity/100}; transform: perspective(800px) rotateX(0);`; break;
       }
       keyframes += `@keyframes ${animName} {\n  from { ${fromState} }\n  to   { ${toState} }\n}\n\n`;
 
-      // Element HTML
       let innerContent = '';
       if (el.type === 'text') innerContent = el.text || 'Text';
       else if (el.type === 'button') innerContent = el.text || 'Button';
       else if (el.type === 'image' && el.src) innerContent = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;">`;
-
+      else if (el.type === 'video' && el.src) innerContent = `<video src="${el.src}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>`;
+      
       elementsHTML += `    <div class="${className}">${innerContent}</div>\n`;
     });
 
@@ -2744,44 +1905,12 @@
 <title>Transition Studio Export</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0a0a0c;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-    padding: 40px;
-  }
-  .stage {
-    width: 360px;
-    height: 640px;
-    background: ${bgCSS};
-    border-radius: 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px rgba(0,0,0,0.6);
-  }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #0a0a0c; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; padding: 40px; }
+  .stage { width: ${state.canvasSize.w}px; height: ${state.canvasSize.h}px; background: ${bgCSS}; border-radius: 36px; position: relative; overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 30px 80px rgba(0,0,0,0.6); }
  ${elementsCSS}
  ${keyframes}
-  .replay-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #0a84ff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(10,132,255,0.4);
-  }
+  .replay-btn { position: fixed; top: 20px; right: 20px; background: #0a84ff; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(10,132,255,0.4); }
   .replay-btn:hover { background: #409cff; transform: translateY(-1px); }
-  .replay-btn:active { transform: translateY(0); }
 </style>
 </head>
 <body>
@@ -2789,41 +1918,20 @@
   <div class="stage">
  ${elementsHTML}  </div>
 <script>
-    function replay() {
-      const els = document.querySelectorAll('.stage > div');
-      els.forEach(el => {
-        el.style.animation = 'none';
-        void el.offsetWidth;
-        el.style.animation = '';
-      });
-    }
-    // Auto-replay on load
-    window.addEventListener('load', () => {
-      setTimeout(replay, 100);
-    });
-  <\/script>
+  function replay() {
+    const els = document.querySelectorAll('.stage > div');
+    els.forEach(el => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+  }
+  window.addEventListener('load', () => { setTimeout(replay, 100); });
+<\/script>
 </body>
 </html>`;
 
-    // Syntax highlight
-    const highlighted = html
-      .replace(/(&lt;\/?)(html|head|body|style|script|meta|title|div|button|img)/g, '$1<span class="kw">$2</span>')
-      .replace(/(&lt;)/g, '&lt;')
-      .replace(/(<)/g, '&lt;')
-      .replace(/(&lt;\/?)(html|head|body|style|script|meta|title|div|button|img)/g, '$1<span class="kw">$2</span>')
-      .replace(/([a-z-]+)(=)("[^"]*")/g, '<span class="prop">$1</span>$2<span class="str">$3</span>')
-      .replace(/(\/\/[^\n]*)/g, '<span class="com">$1</span>')
-      .replace(/(\.[a-z][a-z0-9-]+)/g, '<span class="sel">$1</span>')
-      .replace(/(@keyframes|from|to|@media)/g, '<span class="kw">$1</span>')
-      .replace(/([a-z-]+)(?=:)/g, '<span class="prop">$1</span>')
-      .replace(/(\d+\.?\d*(?:px|s|deg|%|ms)?)/g, '<span class="num">$1</span>');
-
-    document.getElementById('exportCode').innerHTML = highlighted;
-    document.getElementById('exportModal').classList.add('active');
+    document.getElementById('exportCode').textContent = html;
+    document.getElementById('htmlExportModal').classList.add('active');
     state._exportedHTML = html;
   }
 
-  // ========== TOAST ==========
   function showToast(msg, color = '#30d158') {
     const toast = document.getElementById('toast');
     toast.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> ${msg}`;
@@ -2832,15 +1940,44 @@
     toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
-  // ========== INIT ==========
-  function init() {
-    createDefaultElements();
-    state.selectedId = state.elements[2].id;
+  function applyTheme(theme) {
+    const root = document.documentElement;
+    const icon = document.getElementById('themeIcon');
+    if (theme === 'light') {
+      root.classList.add('light');
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    } else {
+      root.classList.remove('light');
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+  }
+
+  function startBlankProject() {
+    pushHistory();
+    state.elements = [];
+    idCounter = 1;
+    state.selectedId = null;
+    state.scene = { bgType: 'solid', bgColor0: '#ffffff', bgColor1: '#f5f5f7', bgAngle: 180 };
+    state.canvasSize = { w: 360, h: 640 };
+    state.totalDuration = 2000;
+    
+    document.getElementById('totalDurationSlider').value = 2000;
+    document.getElementById('totalDurationLabel').textContent = '2.0s';
+    document.getElementById('totalTime').textContent = '2.00s';
+    document.getElementById('sceneSelect').value = '';
+    
+    applyCanvasSize();
     renderScene();
     renderAll();
-    requestAnimationFrame(() => renderTimeline());
+    renderTimeline();
+    showToast('New blank project created');
+  }
 
-    // Tabs
+  function init() {
+    loadDemoScene('default');
+    updateUndoRedoButtons();
+    applyTheme(localStorage.getItem('theme') || 'dark');
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         state.activeTab = btn.dataset.tab;
@@ -2849,85 +1986,132 @@
       });
     });
 
-    // Add buttons
-    document.querySelectorAll('.add-btn').forEach(btn => {
-      if (btn.id === 'uploadBtn') {
-        btn.addEventListener('click', () => document.getElementById('fileInput').click());
-      } else {
-        btn.addEventListener('click', () => addElement(btn.dataset.type));
-      }
+    document.getElementById('undoBtn').addEventListener('click', undo);
+    document.getElementById('redoBtn').addEventListener('click', redo);
+
+    document.getElementById('sceneSelect').addEventListener('change', (e) => {
+      if(e.target.value) loadDemoScene(e.target.value);
     });
 
-    // File upload
+    document.getElementById('newProjectBtn').addEventListener('click', startBlankProject);
+
+    document.getElementById('importJsonBtn').addEventListener('click', () => document.getElementById('jsonInput').click());
+    document.getElementById('jsonInput').addEventListener('change', (e) => {
+      if (e.target.files.length > 0) importJSON(e.target.files[0]);
+      e.target.value = '';
+    });
+    document.getElementById('exportJsonBtn').addEventListener('click', exportJSON);
+
+    document.getElementById('themeToggleBtn').addEventListener('click', () => {
+      const isLight = document.documentElement.classList.contains('light');
+      const newTheme = isLight ? 'dark' : 'light';
+      localStorage.setItem('theme', newTheme);
+      applyTheme(newTheme);
+    });
+
+    document.querySelectorAll('.add-btn').forEach(btn => {
+      if (btn.id === 'uploadBtn') btn.addEventListener('click', () => document.getElementById('fileInput').click());
+      else if (btn.id === 'uploadVideoBtn') btn.addEventListener('click', () => document.getElementById('videoInput').click());
+      else btn.addEventListener('click', () => addElement(btn.dataset.type));
+    });
+
     document.getElementById('fileInput').addEventListener('change', (e) => {
       handleImageUpload(e.target.files);
       e.target.value = '';
     });
 
-    // Playback
+    document.getElementById('videoInput').addEventListener('change', (e) => {
+      handleVideoUpload(e.target.files);
+      e.target.value = '';
+    });
+
     document.getElementById('playBtn').addEventListener('click', togglePlay);
     document.getElementById('restartBtn').addEventListener('click', restart);
 
-    // Export
-    document.getElementById('exportBtn').addEventListener('click', exportHTML);
-    document.getElementById('closeExport').addEventListener('click', () => {
-      document.getElementById('exportModal').classList.remove('active');
-    });
-    document.getElementById('exportModal').addEventListener('click', (e) => {
-      if (e.target.id === 'exportModal') {
-        document.getElementById('exportModal').classList.remove('active');
-      }
-    });
-    document.getElementById('copyCode').addEventListener('click', () => {
-      navigator.clipboard.writeText(state._exportedHTML).then(() => showToast('HTML copied to clipboard'));
-    });
+    document.getElementById('exportHtmlBtn').addEventListener('click', exportHTML);
+    document.getElementById('closeHtmlExport').addEventListener('click', () => document.getElementById('htmlExportModal').classList.remove('active'));
+    document.getElementById('copyCode').addEventListener('click', () => { navigator.clipboard.writeText(state._exportedHTML).then(() => showToast('HTML copied to clipboard')); });
     document.getElementById('downloadCode').addEventListener('click', () => {
       const blob = new Blob([state._exportedHTML], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'output.html';
-      a.click();
-      URL.revokeObjectURL(url);
-      showToast('output.html downloaded');
+      const a = document.createElement('a'); a.href = url; a.download = 'output.html'; a.click();
+      URL.revokeObjectURL(url); showToast('output.html downloaded');
     });
 
-    // Clear
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      if (state.elements.length === 0) return;
-      stopPlayback();
-      state.elements = [];
-      state.selectedId = null;
-      renderAll(); renderTimeline();
-      showToast('Canvas cleared', '#ff453a');
+    document.getElementById('exportVideoBtn').addEventListener('click', () => document.getElementById('videoExportModal').classList.add('active'));
+    document.getElementById('closeVideoExport').addEventListener('click', () => document.getElementById('videoExportModal').classList.remove('active'));
+    document.getElementById('cancelVideoExport').addEventListener('click', () => document.getElementById('videoExportModal').classList.remove('active'));
+    
+    document.querySelectorAll('.opt-btn[data-res]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.opt-btn[data-res]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.exportSettings.res = parseInt(btn.dataset.res);
+      });
     });
+    document.querySelectorAll('.opt-btn[data-fps]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.opt-btn[data-fps]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.exportSettings.fps = parseInt(btn.dataset.fps);
+      });
+    });
+    document.getElementById('startVideoExport').addEventListener('click', startVideoExport);
 
-    // Reset
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      stopPlayback();
-      idCounter = 1;
-      createDefaultElements();
-      state.selectedId = state.elements[2].id;
-      renderAll(); renderTimeline();
-      showToast('Demo scene restored');
+    document.getElementById('deviceSelect').addEventListener('change', (e) => {
+      pushHistory();
+      const [w, h] = e.target.value.split('x').map(Number);
+      state.canvasSize = { w, h };
+      applyCanvasSize();
+      renderTimeline();
     });
-
-    // Duplicate & Delete toolbar
-    document.getElementById('duplicateBtn').addEventListener('click', () => {
-      if (state.selectedId) duplicateElement(state.selectedId);
+    document.getElementById('zoomSelect').addEventListener('change', (e) => {
+      state.zoom = parseFloat(e.target.value);
+      applyZoom();
     });
-    document.getElementById('deleteBtn').addEventListener('click', () => {
-      if (state.selectedId) deleteElement(state.selectedId);
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+      const zoomSelect = document.getElementById('zoomSelect');
+      const idx = zoomSelect.selectedIndex;
+      if (idx < zoomSelect.options.length - 1) {
+        zoomSelect.selectedIndex = idx + 1;
+        state.zoom = parseFloat(zoomSelect.value);
+        applyZoom();
+      }
     });
-
-    // Snap toggle
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+      const zoomSelect = document.getElementById('zoomSelect');
+      const idx = zoomSelect.selectedIndex;
+      if (idx > 0) {
+        zoomSelect.selectedIndex = idx - 1;
+        state.zoom = parseFloat(zoomSelect.value);
+        applyZoom();
+      }
+    });
     document.getElementById('snapBtn').addEventListener('click', (e) => {
       state.snapEnabled = !state.snapEnabled;
       e.currentTarget.classList.toggle('active', state.snapEnabled);
       showToast(`Snap to grid ${state.snapEnabled ? 'enabled' : 'disabled'}`);
     });
 
-    // Total duration slider
+    document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
+      btn.addEventListener('click', () => { 
+        pushHistory();
+        state.scene.bgType = btn.dataset.type; 
+        renderScene(); 
+      });
+    });
+    document.querySelectorAll('.scene-color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        const stop = swatch.dataset.stop;
+        const input = document.createElement('input');
+        input.type = 'color';
+        input.value = state.scene['bgColor' + stop];
+        input.addEventListener('input', e => { state.scene['bgColor' + stop] = e.target.value; renderScene(); });
+        input.addEventListener('change', pushHistory);
+        input.click();
+      });
+    });
+
     const tdSlider = document.getElementById('totalDurationSlider');
     tdSlider.style.setProperty('--p', ((state.totalDuration - 1000) / 5000) * 100 + '%');
     tdSlider.addEventListener('input', e => {
@@ -2938,75 +2122,33 @@
       document.getElementById('totalTime').textContent = (state.totalDuration/1000).toFixed(2) + 's';
       renderTimeline();
     });
+    tdSlider.addEventListener('change', pushHistory);
 
-    // Scene background controls
-    document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.scene.bgType = btn.dataset.type;
-        renderScene();
-      });
-    });
-
-    // Color swatches for scene
-    document.querySelectorAll('.scene-color-swatch').forEach(swatch => {
-      swatch.addEventListener('click', () => {
-        const stop = swatch.dataset.stop;
-        const input = document.createElement('input');
-        input.type = 'color';
-        input.value = state.scene['bgColor' + stop];
-        input.addEventListener('input', e => {
-          state.scene['bgColor' + stop] = e.target.value;
-          renderScene();
-        });
-        input.click();
-      });
-    });
-
-    // Click empty canvas to deselect
     document.getElementById('canvasStage').addEventListener('mousedown', (e) => {
-      if (e.target.id === 'canvasStage' || e.target.classList.contains('phone-status-bar') || e.target.classList.contains('phone-home-indicator')) {
-        state.selectedId = null;
-        renderAll();
+      if (e.target.id === 'canvasStage' || e.target.classList.contains('canvas-bg')) {
+        state.selectedId = null; renderAll();
       }
     });
 
-    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-      if (e.code === 'Space') {
+      if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ') {
+        e.preventDefault();
+        if (e.shiftKey) redo();
+        else undo();
+      } else if (e.code === 'Space') {
         e.preventDefault(); togglePlay();
       } else if (e.code === 'KeyR') {
         restart();
       } else if (e.code === 'Escape') {
-        document.getElementById('exportModal').classList.remove('active');
-        hideContextMenu();
-        state.selectedId = null;
-        renderAll();
-      } else if (e.code === 'Delete' || e.code === 'Backspace') {
-        if (state.selectedId) {
-          e.preventDefault();
-          deleteElement(state.selectedId);
-        }
-      } else if ((e.metaKey || e.ctrlKey) && e.code === 'KeyD') {
-        e.preventDefault();
-        if (state.selectedId) duplicateElement(state.selectedId);
+        document.getElementById('htmlExportModal').classList.remove('active');
+        document.getElementById('videoExportModal').classList.remove('active');
+        state.selectedId = null; renderAll();
       }
     });
 
-    // Context menu dismiss
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.context-menu')) hideContextMenu();
-    });
-    document.addEventListener('contextmenu', (e) => {
-      if (!e.target.closest('.canvas-element') && !e.target.closest('.track-bar')) {
-        hideContextMenu();
-      }
-    });
-
-    // Initial time display
     document.getElementById('totalTime').textContent = (state.totalDuration/1000).toFixed(2) + 's';
 
-    // Resize handler
     let resizeTimer;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimer);
