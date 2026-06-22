@@ -246,8 +246,8 @@
 
   .el-card { border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); overflow: hidden; }
   .el-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent); }
-  .el-text { color: white; font-weight: 700; font-size: 22px; letter-spacing: -0.03em; display: flex; align-items: center; padding-left: 4px; }
-  .el-button { color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; box-shadow: 0 6px 16px rgba(10, 132, 255, 0.35); }
+  .el-text { display: flex; align-items: center; padding-left: 4px; }
+  .el-button { color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(10, 132, 255, 0.35); }
   .el-circle { border-radius: 50%; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); }
   .el-circle::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%); }
   .el-image, .el-video { border-radius: 12px; overflow: hidden; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
@@ -493,6 +493,7 @@
           <option value="card-deck">Card Deck (6)</option>
           <option value="feed">Notification Feed (8)</option>
           <option value="dashboard">Dashboard (20)</option>
+          <option value="showcase">Complex Showcase (7)</option>
         </optgroup>
       </select>
     </div>
@@ -567,6 +568,7 @@
       <button class="add-btn upload" id="uploadBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Upload Image</button>
       <button class="add-btn upload" id="uploadVideoBtn" style="margin-top: 6px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Upload Video</button>
       <button class="add-btn upload" id="uploadAudioBtn" style="margin-top: 6px; background: rgba(191, 90, 242, 0.1); border-color: rgba(191, 90, 242, 0.3); color: var(--purple);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zm12-3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Upload Audio</button>
+      <button class="add-btn upload" id="generateStoryBtn" style="margin-top: 6px; background: rgba(48, 209, 88, 0.1); border-color: rgba(48, 209, 88, 0.3); color: var(--green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Generate Story</button>
     </div>
     <input type="file" id="fileInput" class="hidden-file-input" accept="image/*" multiple>
     <input type="file" id="videoInput" class="hidden-file-input" accept="video/*" multiple>
@@ -636,6 +638,24 @@
       </div>
     </div>
   </footer>
+</div>
+
+<!-- Story Generator Modal -->
+<div class="modal-overlay" id="storyModal">
+  <div class="modal" style="width: 600px;">
+    <div class="modal-header">
+      <div class="modal-title">Generate Story / Presentation</div>
+      <button class="modal-close" id="closeStoryModal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom: 12px; color: var(--text-secondary); font-size: 13px;">Paste your text below. Each paragraph will become a new scene/element sequenced on the timeline. Lines starting with ## will be titles.</p>
+      <textarea id="storyInput" style="width: 100%; height: 300px; background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 12px; font-family: monospace; font-size: 13px; resize: none; outline: none;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="loadEinsteinBtn">Load Einstein Sample</button>
+      <button class="btn-primary" id="generateStoryConfirmBtn">Generate Sequence</button>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="htmlExportModal">
@@ -712,6 +732,7 @@
     canvasSize: { w: 360, h: 640 },
     exportSettings: { res: 720, fps: 30 },
     audio: { src: null, name: '' },
+    typewriterIntervals: [],
     undoStack: [],
     redoStack: []
   };
@@ -874,7 +895,12 @@
         transformOrigin: 'center center',
         motionBlur: false,
         fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+        fontSize: type === 'text' ? 24 : 16,
+        fontWeight: 600,
+        textAlign: 'left',
+        letterSpacing: 0,
         textAnimation: 'none',
+        textAnimDuration: 2000,
         animation: { duration: 500, delay: 0, easing: 'ease-out', intensity: 50, ...anim },
         exit: { duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50, ...exit },
         ...props
@@ -884,26 +910,38 @@
     if (sceneName === 'default') {
       setup(360, 640, '#1a1a1f', '#0e0e12');
       add('circle', 150, 90, 60, 60, '#bf5af2', '', { type: 'scale-in', duration: 600, delay: 0, easing: 'spring', intensity: 60 });
-      add('text', 40, 170, 280, 30, '#ffffff', 'Welcome Back', { type: 'slide-up', duration: 500, delay: 200, easing: 'spring', intensity: 40 });
+      add('text', 40, 170, 280, 30, '#ffffff', 'Welcome Back', { type: 'slide-up', duration: 500, delay: 200, easing: 'spring', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 28, fontWeight: 700 });
       add('card', 40, 220, 280, 140, '#2c2c2e', '', { type: 'slide-up', duration: 600, delay: 350, easing: 'ease-out', intensity: 50 });
       add('button', 40, 400, 280, 48, '#0a84ff', 'Continue', { type: 'spring-pop', duration: 700, delay: 600, easing: 'spring', intensity: 70 });
     } 
+    else if (sceneName === 'showcase') {
+      setup(360, 640, '#0a0a0c', '#1c1c1e');
+      state.totalDuration = 5000;
+      
+      add('card', 30, 50, 300, 500, '#1c1c1e', '', { type: 'scale-in', duration: 500, delay: 0, easing: 'spring', intensity: 40 }, { type: 'collapse', duration: 500, start: 4500 }, { borderRadius: 24 });
+      add('text', 50, 80, 260, 40, '#ffffff', 'UI Motion', { type: 'slide-up', duration: 500, delay: 200, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 32, fontWeight: 800, letterSpacing: -1 });
+      add('text', 50, 120, 260, 25, '#8e8e93', 'Generated with Transition Studio', { type: 'fade-in', duration: 500, delay: 400, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 14, fontWeight: 500 });
+      add('text', 50, 200, 260, 80, '#0a84ff', 'Initializing system...\nRendering UI...\nApplying transitions...', { type: 'none', duration: 0, delay: 0, easing: 'linear', intensity: 0 }, { type: 'none', start: 0 }, { fontSize: 16, fontWeight: 700, textAnimation: 'typewriter', textAnimDuration: 3000 });
+      add('circle', 140, 320, 80, 80, '#bf5af2', '', { type: 'spring-pop', duration: 800, delay: 600, easing: 'spring', intensity: 60 }, { type: 'fade-out', duration: 400, start: 4000 });
+      add('card', 0, 420, 60, 20, '#ff9f0a', '', { type: 'fly-in-left', duration: 1500, delay: 1000, easing: 'linear', intensity: 0 }, { type: 'fly-out-right', duration: 1000, start: 3000 });
+      add('button', 80, 450, 200, 50, '#30d158', 'Get Started', { type: 'slide-up', duration: 500, delay: 800, easing: 'spring', intensity: 50 }, { type: 'slide-down-out', duration: 400, start: 4200 }, { fontSize: 16, fontWeight: 600, transformOrigin: 'bottom center' });
+    }
     else if (sceneName === 'onboarding') {
       setup(360, 640, '#0a84ff', '#409cff');
       add('circle', 130, 100, 100, 100, '#fff', '', { type: 'scale-in', duration: 600, delay: 0, easing: 'spring', intensity: 70 });
-      add('text', 40, 240, 280, 40, '#fff', 'Discover New', { type: 'slide-up', duration: 500, delay: 200, easing: 'smooth', intensity: 30 });
-      add('text', 40, 285, 280, 20, '#fff', 'Features you will love', { type: 'slide-up', duration: 500, delay: 300, easing: 'smooth', intensity: 30 });
-      add('text', 40, 500, 280, 40, '#fff', 'Skip', { type: 'fade-in', duration: 400, delay: 800, easing: 'ease-out', intensity: 40 });
+      add('text', 40, 240, 280, 40, '#fff', 'Discover New', { type: 'slide-up', duration: 500, delay: 200, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 28, fontWeight: 700 });
+      add('text', 40, 285, 280, 20, '#fff', 'Features you will love', { type: 'slide-up', duration: 500, delay: 300, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 16, fontWeight: 500 });
+      add('text', 40, 500, 280, 40, '#fff', 'Skip', { type: 'fade-in', duration: 400, delay: 800, easing: 'ease-out', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 14, fontWeight: 600 });
       add('button', 40, 560, 280, 48, '#bf5af2', 'Get Started', { type: 'spring-pop', duration: 700, delay: 1000, easing: 'spring', intensity: 70 });
     }
     else if (sceneName === 'hero') {
       setup(640, 360, '#1c1c1e', '#000000');
-      add('text', 40, 80, 400, 50, '#ffffff', 'New Product', { type: 'slide-right', duration: 600, delay: 0, easing: 'smooth', intensity: 40 });
-      add('text', 40, 130, 400, 30, '#86868b', 'Available Now', { type: 'slide-right', duration: 600, delay: 150, easing: 'smooth', intensity: 40 });
+      add('text', 40, 80, 400, 50, '#ffffff', 'New Product', { type: 'slide-right', duration: 600, delay: 0, easing: 'smooth', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 32, fontWeight: 800 });
+      add('text', 40, 130, 400, 30, '#86868b', 'Available Now', { type: 'slide-right', duration: 600, delay: 150, easing: 'smooth', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 18, fontWeight: 500 });
       add('card', 40, 190, 200, 120, '#0a84ff', '', { type: 'scale-in', duration: 500, delay: 400, easing: 'spring', intensity: 50 }, { type: 'slide-left', duration: 400, start: 2500 });
-      add('button', 260, 190, 160, 48, '#0a84ff', 'Buy Now', { type: 'fade-in', duration: 500, delay: 600, easing: 'ease-out', intensity: 40 });
+      add('button', 260, 190, 160, 48, '#0a84ff', 'Buy Now', { type: 'fade-in', duration: 500, delay: 600, easing: 'ease-out', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 16, fontWeight: 600 });
       add('circle', 500, 50, 80, 80, '#bf5af2', '', { type: 'rotate-in', duration: 800, delay: 800, easing: 'spring', intensity: 60 });
-      add('text', 500, 150, 120, 20, '#ffffff', '$99/mo', { type: 'slide-up', duration: 400, delay: 1000, easing: 'ease-out', intensity: 30 });
+      add('text', 500, 150, 120, 20, '#ffffff', '$99/mo', { type: 'slide-up', duration: 400, delay: 1000, easing: 'ease-out', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 16, fontWeight: 700 });
     }
     else if (sceneName === 'icon-grid') {
       setup(360, 640, '#000000', '#000000', 'solid');
@@ -923,13 +961,13 @@
       add('card', 40, 140, 280, 360, '#0a84ff', '', { type: 'slide-up', duration: 600, delay: 0, easing: 'spring', intensity: 30 });
       add('card', 40, 130, 280, 360, '#bf5af2', '', { type: 'slide-up', duration: 600, delay: 150, easing: 'spring', intensity: 30 });
       add('card', 40, 120, 280, 360, '#ff9f0a', '', { type: 'slide-up', duration: 600, delay: 300, easing: 'spring', intensity: 30 });
-      add('text', 40, 500, 280, 40, '#fff', 'Swipe to explore', { type: 'fade-in', duration: 500, delay: 800, easing: 'smooth', intensity: 40 });
+      add('text', 40, 500, 280, 40, '#fff', 'Swipe to explore', { type: 'fade-in', duration: 500, delay: 800, easing: 'smooth', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 16, fontWeight: 500 });
       add('button', 40, 560, 280, 48, '#30d158', 'Next Card', { type: 'spring-pop', duration: 700, delay: 1000, easing: 'spring', intensity: 70 });
       add('circle', 160, 50, 40, 40, '#fff', '', { type: 'scale-in', duration: 500, delay: 1200, easing: 'bounce', intensity: 60 });
     }
     else if (sceneName === 'feed') {
       setup(360, 640, '#000000', '#000000', 'solid');
-      add('text', 20, 40, 200, 30, '#fff', 'Notifications', { type: 'slide-down', duration: 500, delay: 0, easing: 'spring', intensity: 30 });
+      add('text', 20, 40, 200, 30, '#fff', 'Notifications', { type: 'slide-down', duration: 500, delay: 0, easing: 'spring', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 20, fontWeight: 700 });
       for(let i=0; i<8; i++) {
         add('card', 20, 90 + i * 65, 320, 55, '#1c1c1e', '', { type: 'slide-right', duration: 400, delay: 200 + i * 80, easing: 'smooth', intensity: 40 });
         add('circle', 30, 100 + i * 65, 35, 35, ['#0a84ff', '#bf5af2', '#30d158', '#ff9f0a'][i%4], '', { type: 'scale-in', duration: 300, delay: 250 + i * 80, easing: 'spring', intensity: 50 });
@@ -937,7 +975,7 @@
     }
     else if (sceneName === 'dashboard') {
       setup(640, 360, '#1c1c1e', '#000000');
-      add('text', 20, 20, 200, 30, '#fff', 'Dashboard', { type: 'slide-down', duration: 500, delay: 0, easing: 'smooth', intensity: 20 });
+      add('text', 20, 20, 200, 30, '#fff', 'Dashboard', { type: 'slide-down', duration: 500, delay: 0, easing: 'smooth', intensity: 20 }, { type: 'none', start: 0 }, { fontSize: 20, fontWeight: 700 });
       let idxx = 0;
       for(let r=0; r<4; r++) {
         for(let c=0; c<5; c++) {
@@ -947,10 +985,16 @@
       }
     }
     
-    state.totalDuration = 3000;
-    document.getElementById('totalDurationSlider').value = 3000;
-    document.getElementById('totalDurationLabel').textContent = '3.0s';
-    document.getElementById('totalTime').textContent = '3.00s';
+    if (sceneName === 'showcase') {
+      document.getElementById('totalDurationSlider').value = 5000;
+      document.getElementById('totalDurationLabel').textContent = '5.0s';
+      document.getElementById('totalTime').textContent = '5.00s';
+    } else {
+      state.totalDuration = 3000;
+      document.getElementById('totalDurationSlider').value = 3000;
+      document.getElementById('totalDurationLabel').textContent = '3.0s';
+      document.getElementById('totalTime').textContent = '3.00s';
+    }
     
     applyCanvasSize();
     renderScene();
@@ -1124,8 +1168,11 @@
         if (el.shadow) div.style.boxShadow = `0 6px 16px ${el.color}59`;
       } else if (el.type === 'text') {
         div.style.color = el.color;
-        div.style.fontSize = Math.min(el.height * 0.75, 26) + 'px';
-        div.style.fontFamily = el.fontFamily || '-apple-system, BlinkMacSystemFont, sans-serif';
+        div.style.fontSize = (el.fontSize || 24) + 'px';
+        div.style.fontWeight = el.fontWeight || 600;
+        div.style.textAlign = el.textAlign || 'left';
+        div.style.letterSpacing = (el.letterSpacing || 0) + 'px';
+        div.style.fontFamily = el.fontFamily || '-apple-system, sans-serif';
         const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
         div.innerHTML = `<span class="${textAnimClass}">${el.text || 'Text'}</span>`;
       } else if (el.type === 'image') {
@@ -1138,7 +1185,10 @@
         if (el.src) div.innerHTML = `<video src="${el.src}" autoplay muted loop playsinline></video>`;
       }
       if (el.type === 'button') {
-        div.style.fontFamily = el.fontFamily || '-apple-system, BlinkMacSystemFont, sans-serif';
+        div.style.fontSize = (el.fontSize || 16) + 'px';
+        div.style.fontWeight = el.fontWeight || 600;
+        div.style.fontFamily = el.fontFamily || '-apple-system, sans-serif';
+        div.style.letterSpacing = (el.letterSpacing || 0) + 'px';
         const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
         div.innerHTML = `<span class="${textAnimClass}">${el.text || 'Button'}</span>`;
       }
@@ -1241,17 +1291,51 @@
               <label class="field-label">Text Content</label>
               <input type="text" class="field-input" id="elText" value="${(el.text || '').replace(/"/g, '&quot;')}">
             </div>
+            <div class="inspector-section-title">Typography</div>
             <div class="field" style="margin-bottom: 12px;">
               <label class="field-label">Font Family</label>
               <select class="field-input" id="fontSelect">
                 ${TEXT_FONTS.map(f => `<option value="${f.value}" ${el.fontFamily === f.value ? 'selected' : ''}>${f.label}</option>`).join('')}
               </select>
             </div>
+            <div class="slider-row">
+              <div class="slider-header"><span class="slider-label">Font Size</span><span class="slider-value">${el.fontSize || 24}px</span></div>
+              <input type="range" class="slider" id="fontSizeSlider" min="8" max="72" step="1" value="${el.fontSize || 24}" style="--p: ${((el.fontSize || 24)/72)*100}%">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label class="field-label">Font Weight</label>
+                <select class="field-input" id="fontWeightSelect">
+                  <option value="300" ${el.fontWeight == 300 ? 'selected' : ''}>Light</option>
+                  <option value="400" ${el.fontWeight == 400 ? 'selected' : ''}>Regular</option>
+                  <option value="500" ${el.fontWeight == 500 ? 'selected' : ''}>Medium</option>
+                  <option value="600" ${el.fontWeight == 600 ? 'selected' : ''}>Semibold</option>
+                  <option value="700" ${el.fontWeight == 700 ? 'selected' : ''}>Bold</option>
+                  <option value="800" ${el.fontWeight == 800 ? 'selected' : ''}>Heavy</option>
+                </select>
+              </div>
+              <div class="field">
+                <label class="field-label">Alignment</label>
+                <select class="field-input" id="textAlignSelect">
+                  <option value="left" ${el.textAlign === 'left' ? 'selected' : ''}>Left</option>
+                  <option value="center" ${el.textAlign === 'center' ? 'selected' : ''}>Center</option>
+                  <option value="right" ${el.textAlign === 'right' ? 'selected' : ''}>Right</option>
+                </select>
+              </div>
+            </div>
+            <div class="slider-row">
+              <div class="slider-header"><span class="slider-label">Letter Spacing</span><span class="slider-value">${el.letterSpacing || 0}px</span></div>
+              <input type="range" class="slider" id="letterSpacingSlider" min="-5" max="10" step="0.5" value="${el.letterSpacing || 0}" style="--p: ${(((el.letterSpacing || 0)+5)/15)*100}%">
+            </div>
             <div class="field" style="margin-bottom: 12px;">
               <label class="field-label">Text Animation</label>
               <select class="field-input" id="textAnimSelect">
                 ${TEXT_ANIMATIONS.map(t => `<option value="${t.value}" ${el.textAnimation === t.value ? 'selected' : ''}>${t.label}</option>`).join('')}
               </select>
+            </div>
+            <div class="slider-row" id="textAnimDurationRow" style="display: ${el.textAnimation === 'typewriter' ? 'block' : 'none'};">
+              <div class="slider-header"><span class="slider-label">Typewriter Duration</span><span class="slider-value">${(el.textAnimDuration/1000).toFixed(2)}s</span></div>
+              <input type="range" class="slider" id="textAnimDurationSlider" min="500" max="10000" step="100" value="${el.textAnimDuration || 2000}" style="--p: ${(((el.textAnimDuration || 2000))/10000)*100}%">
             </div>
           ` : ''}
           <div class="slider-row">
@@ -1326,9 +1410,49 @@
       if (fontSelect) {
         fontSelect.addEventListener('change', e => { pushHistory(); el.fontFamily = e.target.value; renderCanvas(); });
       }
+      const fontSizeSlider = document.getElementById('fontSizeSlider');
+      if (fontSizeSlider) {
+        fontSizeSlider.addEventListener('input', e => { 
+          el.fontSize = +e.target.value; 
+          e.target.style.setProperty('--p', (el.fontSize/72)*100 + '%'); 
+          e.target.parentElement.querySelector('.slider-value').textContent = el.fontSize + 'px';
+          renderCanvas(); 
+        });
+        fontSizeSlider.addEventListener('change', pushHistory);
+      }
+      const fontWeightSelect = document.getElementById('fontWeightSelect');
+      if (fontWeightSelect) {
+        fontWeightSelect.addEventListener('change', e => { pushHistory(); el.fontWeight = +e.target.value; renderCanvas(); });
+      }
+      const textAlignSelect = document.getElementById('textAlignSelect');
+      if (textAlignSelect) {
+        textAlignSelect.addEventListener('change', e => { pushHistory(); el.textAlign = e.target.value; renderCanvas(); });
+      }
+      const letterSpacingSlider = document.getElementById('letterSpacingSlider');
+      if (letterSpacingSlider) {
+        letterSpacingSlider.addEventListener('input', e => { 
+          el.letterSpacing = +e.target.value; 
+          e.target.style.setProperty('--p', ((el.letterSpacing+5)/15)*100 + '%'); 
+          renderCanvas(); 
+        });
+        letterSpacingSlider.addEventListener('change', pushHistory);
+      }
       const textAnimSelect = document.getElementById('textAnimSelect');
       if (textAnimSelect) {
-        textAnimSelect.addEventListener('change', e => { pushHistory(); el.textAnimation = e.target.value; renderCanvas(); });
+        textAnimSelect.addEventListener('change', e => { 
+          pushHistory(); el.textAnimation = e.target.value; 
+          document.getElementById('textAnimDurationRow').style.display = (e.target.value === 'typewriter') ? 'block' : 'none';
+          renderCanvas(); 
+        });
+      }
+      const textAnimDurationSlider = document.getElementById('textAnimDurationSlider');
+      if (textAnimDurationSlider) {
+        textAnimDurationSlider.addEventListener('input', e => { 
+          el.textAnimDuration = +e.target.value; 
+          e.target.style.setProperty('--p', (el.textAnimDuration/10000)*100 + '%'); 
+          e.target.parentElement.querySelector('.slider-value').textContent = (el.textAnimDuration/1000).toFixed(2) + 's';
+        });
+        textAnimDurationSlider.addEventListener('change', pushHistory);
       }
       
       const opSlider = document.getElementById('opacitySlider');
@@ -1713,7 +1837,12 @@
       transformOrigin: 'center center',
       motionBlur: false,
       fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif',
+      fontSize: type === 'text' ? 24 : 16,
+      fontWeight: 600,
+      textAlign: 'left',
+      letterSpacing: 0,
       textAnimation: 'none',
+      textAnimDuration: 2000,
       animation: { type: type === 'card' ? 'none' : 'fade-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 },
       exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
     };
@@ -1777,6 +1906,31 @@
           setTimeout(() => triggerExit(el), el.exit.start);
         }
       });
+      // Trigger typewriters
+      state.elements.forEach(el => {
+        if (el.textAnimation === 'typewriter') {
+          const dom = document.querySelector(`.canvas-element[data-id="${el.id}"] span`);
+          if (dom) {
+            const fullText = el.text;
+            dom.innerText = '';
+            const typeStart = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
+            const timeoutId = setTimeout(() => {
+              let i = 0;
+              const interval = el.textAnimDuration / fullText.length;
+              const intervalId = setInterval(() => {
+                if (i < fullText.length) {
+                  dom.innerText = fullText.substring(0, i + 1);
+                  i++;
+                } else {
+                  clearInterval(intervalId);
+                }
+              }, interval);
+              state.typewriterIntervals.push(intervalId);
+            }, typeStart);
+            state.typewriterIntervals.push(timeoutId);
+          }
+        }
+      });
     });
 
     if (state.audio.src) {
@@ -1799,6 +1953,8 @@
     if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
     const highestTimeoutId = setTimeout(() => {}, 0);
     for (let i = 0; i < highestTimeoutId; i++) clearTimeout(i);
+    state.typewriterIntervals.forEach(id => { clearInterval(id); clearTimeout(id); });
+    state.typewriterIntervals = [];
     
     if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
     if (audioCtx) { audioCtx.close(); audioCtx = null; }
@@ -1813,6 +1969,10 @@
         dom.style.opacity = el.opacity / 100;
         dom.style.transform = `translate(0,0) rotate(${el.rotation}deg)`;
         dom.style.filter = 'none';
+        if (el.textAnimation === 'typewriter') {
+          const span = dom.querySelector('span');
+          if (span) span.innerText = el.text;
+        }
       }
     });
   }
@@ -1899,6 +2059,72 @@
 
   function restart() { stopPlayback(); state.currentTime = 0; updatePlayhead(); setTimeout(() => play(), 100); }
 
+  // ========== STORY GENERATOR ==========
+  function generateStory() {
+    const text = document.getElementById('storyInput').value;
+    if (!text.trim()) return;
+    
+    pushHistory();
+    state.elements = [];
+    idCounter = 1;
+    state.selectedId = null;
+    state.scene = { bgType: 'gradient', bgColor0: '#000000', bgColor1: '#1a1a1a', bgAngle: 180 };
+    state.canvasSize = { w: 640, h: 360 }; // 16:9 for storytelling
+    
+    const blocks = text.split('\n').filter(b => b.trim() && !b.trim().startsWith('---'));
+    let currentTime = 0;
+    
+    blocks.forEach((block, i) => {
+      const isTitle = block.trim().startsWith('## ');
+      const textContent = isTitle ? block.replace('## ', '') : block;
+      const textLength = textContent.length;
+      // Calculate reading time: 50ms per char, min 3s, max 8s
+      const duration = Math.min(8000, Math.max(3000, textLength * 50));
+      
+      const el = {
+        id: nextId(),
+        type: 'text',
+        name: `Scene ${i+1}`,
+        x: 40,
+        y: isTitle ? 120 : 160,
+        width: 560,
+        height: isTitle ? 50 : 120,
+        color: isTitle ? '#0a84ff' : '#ffffff',
+        text: textContent,
+        opacity: 100,
+        borderRadius: 0,
+        rotation: 0,
+        shadow: false,
+        src: null,
+        transformOrigin: 'center center',
+        motionBlur: false,
+        fontFamily: '-apple-system, sans-serif',
+        fontSize: isTitle ? 36 : 20,
+        fontWeight: isTitle ? 800 : 400,
+        textAlign: 'left',
+        letterSpacing: 0,
+        textAnimation: 'none',
+        textAnimDuration: 2000,
+        animation: { type: 'fade-in', duration: 800, delay: currentTime, easing: 'ease-out', intensity: 50 },
+        exit: { type: 'fade-out', duration: 800, start: currentTime + duration - 800, easing: 'ease-in', intensity: 50 }
+      };
+      state.elements.push(el);
+      currentTime += duration;
+    });
+    
+    state.totalDuration = currentTime + 1000;
+    document.getElementById('totalDurationSlider').value = state.totalDuration;
+    document.getElementById('totalDurationLabel').textContent = (state.totalDuration/1000).toFixed(1) + 's';
+    document.getElementById('totalTime').textContent = (state.totalDuration/1000).toFixed(2) + 's';
+    
+    document.getElementById('storyModal').classList.remove('active');
+    applyCanvasSize();
+    renderScene();
+    renderAll();
+    renderTimeline();
+    showToast('Story sequence generated!');
+  }
+
   // ========== FILE UPLOADS ==========
   function handleImageUpload(files) {
     Array.from(files).forEach(file => {
@@ -1919,7 +2145,7 @@
             id: nextId(), type: 'image', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Image ${counts}`,
             x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
             width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
-            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', textAnimation: 'none',
+            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', fontSize: 16, fontWeight: 600, textAlign: 'left', letterSpacing: 0, textAnimation: 'none', textAnimDuration: 2000,
             animation: { type: 'scale-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'spring', intensity: 50 },
             exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
           };
@@ -1951,7 +2177,7 @@
             id: nextId(), type: 'video', name: file.name.replace(/\.[^.]+$/, '').substring(0, 20) || `Video ${counts}`,
             x: 80 + Math.random() * 40, y: 100 + state.elements.length * 60,
             width: w, height: h, color: '#ffffff', text: '', opacity: 100, borderRadius: 12, rotation: 0, shadow: true, src: e.target.result,
-            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', textAnimation: 'none',
+            transformOrigin: 'center center', motionBlur: false, fontFamily: '-apple-system, sans-serif', fontSize: 16, fontWeight: 600, textAlign: 'left', letterSpacing: 0, textAnimation: 'none', textAnimDuration: 2000,
             animation: { type: 'fade-in', duration: 600, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 },
             exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
           };
@@ -1979,7 +2205,7 @@
   // ========== JSON IMPORT / EXPORT ==========
   function exportJSON() {
     const projectData = {
-      version: "5.0",
+      version: "6.0",
       canvasSize: state.canvasSize,
       totalDuration: state.totalDuration,
       scene: state.scene,
@@ -2017,6 +2243,11 @@
           if (!el.animation) el.animation = { type: 'fade-in', duration: 500, delay: 0, easing: 'ease-out', intensity: 50 };
           if (!el.fontFamily) el.fontFamily = '-apple-system, BlinkMacSystemFont, sans-serif';
           if (!el.textAnimation) el.textAnimation = 'none';
+          if (!el.textAnimDuration) el.textAnimDuration = 2000;
+          if (!el.fontSize) el.fontSize = el.type === 'text' ? 24 : 16;
+          if (!el.fontWeight) el.fontWeight = 600;
+          if (!el.textAlign) el.textAlign = 'left';
+          if (!el.letterSpacing) el.letterSpacing = 0;
           return el;
         });
         
@@ -2062,7 +2293,6 @@
     const cw = state.canvasSize.w, ch = state.canvasSize.h;
     const st = { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100, blur: 0, flipX: 0 };
     
-    // Text animations modify state
     if (el.type === 'text' && el.textAnimation !== 'none') {
       if (el.textAnimation === 'bounce') st.y -= Math.abs(Math.sin(time / 200) * 8);
       if (el.textAnimation === 'blink') st.opacity *= (0.5 + 0.5 * Math.sin(time / 100));
@@ -2161,22 +2391,32 @@
       ctx.fillStyle = el.color;
       if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.fill(); } else { ctx.fillRect(0, 0, w, h); }
       ctx.fillStyle = 'white';
-      ctx.font = `600 ${15 * scale}px ${el.fontFamily}`;
+      ctx.font = `${el.fontWeight} ${(el.fontSize || 16) * scale}px ${el.fontFamily}`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(el.text || 'Button', w/2, h/2);
     } else if (el.type === 'text') {
       ctx.fillStyle = el.color;
-      ctx.font = `700 ${Math.min(el.height * 0.75, 26) * scale}px ${el.fontFamily}`;
-      ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.font = `${el.fontWeight} ${(el.fontSize || 24) * scale}px ${el.fontFamily}`;
+      ctx.textAlign = el.textAlign || 'left'; ctx.textBaseline = 'top';
       
       let displayText = el.text || 'Text';
       if (el.textAnimation === 'typewriter') {
-        let typeDuration = 2000;
-        let progress = Math.min(1, state.currentTime / typeDuration);
-        let chars = Math.ceil(displayText.length * progress);
+        const typeStart = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
+        const typeElapsed = Math.max(0, state.currentTime - typeStart);
+        const progress = Math.min(1, typeElapsed / (el.textAnimDuration || 2000));
+        const chars = Math.min(displayText.length, Math.floor(progress * displayText.length));
         displayText = displayText.substring(0, chars);
       }
-      ctx.fillText(displayText, 4 * scale, 0);
+      
+      let textX = 4 * scale;
+      if (ctx.textAlign === 'center') textX = (el.width * scale) / 2;
+      if (ctx.textAlign === 'right') textX = (el.width * scale) - (4 * scale);
+      
+      const lines = displayText.split('\n');
+      const lineHeight = (el.fontSize || 24) * scale * 1.2;
+      lines.forEach((line, i) => {
+        ctx.fillText(line, textX, i * lineHeight);
+      });
     } else if (el.type === 'image' && el._img) {
       if (ctx.roundRect) { ctx.beginPath(); ctx.roundRect(0, 0, w, h, el.borderRadius * scale); ctx.clip(); }
       ctx.drawImage(el._img, 0, 0, w, h);
@@ -2230,7 +2470,6 @@
     const stream = canvas.captureStream(0);
     const track = stream.getVideoTracks()[0];
     
-    // Audio Mixing
     let audioCtx, audioDest, audioEl;
     if (state.audio.src) {
       try {
@@ -2277,7 +2516,7 @@
       } else {
         ctx.fillStyle = state.scene.bgColor0;
       }
-      ctx.fillRect(0, 0, outW, outH);
+      ctx.fillRect(0,0,outW,outH);
 
       state.elements.forEach(el => {
         const st = getElementStateAtTime(el, time);
@@ -2344,10 +2583,10 @@
         elStyles += `\n  background: linear-gradient(135deg, ${el.color}, ${darkenColor(el.color, 0.5)});\n  border-radius: 50%;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 20px rgba(0,0,0,0.4);`;
       } else if (el.type === 'button') {
-        elStyles += `\n  background: ${el.color};\n  border-radius: ${el.borderRadius}px;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: 600;\n  font-size: 15px;\n  font-family: ${el.fontFamily};`;
+        elStyles += `\n  background: ${el.color};\n  border-radius: ${el.borderRadius}px;\n  color: white;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-weight: ${el.fontWeight};\n  font-size: ${el.fontSize}px;\n  font-family: ${el.fontFamily};\n  letter-spacing: ${el.letterSpacing}px;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 6px 16px ${el.color}59;`;
       } else if (el.type === 'text') {
-        elStyles += `\n  color: ${el.color};\n  font-size: ${Math.min(el.height * 0.75, 26)}px;\n  font-weight: 700;\n  font-family: ${el.fontFamily};\n  display: flex;\n  align-items: center;\n  padding-left: 4px;`;
+        elStyles += `\n  color: ${el.color};\n  font-size: ${el.fontSize}px;\n  font-weight: ${el.fontWeight};\n  text-align: ${el.textAlign};\n  letter-spacing: ${el.letterSpacing}px;\n  font-family: ${el.fontFamily};\n  display: flex;\n  align-items: center;\n  padding-left: 4px;`;
       } else if (el.type === 'image' || el.type === 'video') {
         elStyles += `\n  border-radius: ${el.borderRadius}px;\n  overflow: hidden;`;
         if (el.shadow) elStyles += `\n  box-shadow: 0 8px 24px rgba(0,0,0,0.3);`;
@@ -2417,7 +2656,8 @@
       let innerContent = '';
       if (el.type === 'text' || el.type === 'button') {
         const textAnimClass = el.textAnimation && el.textAnimation !== 'none' ? `text-anim-${el.textAnimation}` : '';
-        innerContent = `<span class="${textAnimClass}">${el.text || (el.type === 'text' ? 'Text' : 'Button')}</span>`;
+        const typewriterDelay = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
+        innerContent = `<span class="${textAnimClass}" data-typewriter-delay="${typewriterDelay}" data-typewriter-duration="${el.textAnimDuration || 2000}">${el.text || (el.type === 'text' ? 'Text' : 'Button')}</span>`;
       } else if (el.type === 'image' && el.src) {
         innerContent = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;">`;
       } else if (el.type === 'video' && el.src) {
@@ -2434,6 +2674,27 @@
   .text-anim-bounce { animation: text-bounce 0.8s ease-in-out infinite; display: inline-block; }
   .text-anim-blink { animation: text-blink 0.6s ease-in-out infinite; display: inline-block; }
   .text-anim-shake { animation: text-shake 0.2s linear infinite; display: inline-block; }
+`;
+
+    let typewriterJS = `
+  document.querySelectorAll('.text-anim-typewriter').forEach(el => {
+    const text = el.textContent;
+    el.textContent = '';
+    const delay = parseInt(el.dataset.typewriterDelay || 0);
+    const duration = parseInt(el.dataset.typewriterDuration || 2000);
+    const interval = duration / text.length;
+    setTimeout(() => {
+      let i = 0;
+      const typeInterval = setInterval(() => {
+        if (i < text.length) {
+          el.textContent = text.substring(0, i + 1);
+          i++;
+        } else {
+          clearInterval(typeInterval);
+        }
+      }, interval);
+    }, delay);
+  });
 `;
 
     const audioHTML = state.audio.src ? `<audio src="${state.audio.src}" autoplay loop></audio>` : '';
@@ -2464,6 +2725,7 @@
   function replay() {
     const els = document.querySelectorAll('.stage > div');
     els.forEach(el => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+    ${typewriterJS}
   }
   window.addEventListener('load', () => { setTimeout(replay, 100); });
 <\/script>
@@ -2563,6 +2825,7 @@
       if (btn.id === 'uploadBtn') btn.addEventListener('click', () => document.getElementById('fileInput').click());
       else if (btn.id === 'uploadVideoBtn') btn.addEventListener('click', () => document.getElementById('videoInput').click());
       else if (btn.id === 'uploadAudioBtn') btn.addEventListener('click', () => document.getElementById('audioInput').click());
+      else if (btn.id === 'generateStoryBtn') btn.addEventListener('click', () => document.getElementById('storyModal').classList.add('active'));
       else btn.addEventListener('click', () => addElement(btn.dataset.type));
     });
 
@@ -2615,6 +2878,27 @@
       });
     });
     document.getElementById('startVideoExport').addEventListener('click', startVideoExport);
+
+    // Story Modal Listeners
+    document.getElementById('closeStoryModal').addEventListener('click', () => document.getElementById('storyModal').classList.remove('active'));
+    document.getElementById('generateStoryConfirmBtn').addEventListener('click', generateStory);
+    document.getElementById('loadEinsteinBtn').addEventListener('click', () => {
+      document.getElementById('storyInput').value = `## Chapter 1: The Boy Who Caught a Compass
+
+In 1880s Munich, a five-year-old Albert lay sick in bed. To cheer him up, his father handed him a simple pocket compass. He was transfixed by the invisible force guiding the needle.
+
+## Chapter 2: The Patent Clerk's Miracle
+
+By 1905, Einstein was 26, working a dead-end job at the Swiss Patent Office. Sitting at his wooden desk, he went on intense mental journeys he called thought experiments.
+
+## Chapter 3: Warping the Fabric of Space
+
+In 1915, he finished his masterpiece: General Relativity. He imagined space and time as a smooth, flexible fabric. A heavy object like the Sun doesn't "pull" on Earth; it creates a deep dip in space.
+
+## Chapter 4: The Refugee and the Legacy
+
+He fled to America, taking a position in Princeton. He spent his final decades chasing a "Unified Field Theory"—a single equation that could explain everything in the universe.`;
+    });
 
     document.getElementById('deviceSelect').addEventListener('change', (e) => {
       pushHistory();
@@ -2759,6 +3043,7 @@
       } else if (e.code === 'Escape') {
         document.getElementById('htmlExportModal').classList.remove('active');
         document.getElementById('videoExportModal').classList.remove('active');
+        document.getElementById('storyModal').classList.remove('active');
         state.selectedId = null; renderAll();
       } else if (e.code === 'BracketRight') {
         if (state.selectedId) bringForward(state.selectedId);
