@@ -245,12 +245,14 @@
 
   .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0,0,0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 36px; }
   .canvas-bg { position: absolute; inset: 0; border-radius: 36px; pointer-events: none; z-index: 0; }
-  .canvas-grid-overlay { position: absolute; inset: 0; border-radius: 36px; pointer-events: none; z-index: 1; display: none; background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 20px 20px; }
+  #editorCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; border-radius: 36px; }
+  .canvas-grid-overlay { position: absolute; inset: 0; border-radius: 36px; pointer-events: none; z-index: 2; display: none; background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 20px 20px; }
   .canvas-grid-overlay.visible { display: block; }
   .canvas-stage::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 20px 20px; pointer-events: none; z-index: 1; border-radius: 36px; }
   :root.light .canvas-stage::before { background-image: linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px); }
 
-  .canvas-element { position: absolute; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: move; user-select: none; z-index: 2; will-change: transform, opacity, filter; }
+  .canvas-element { position: absolute; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: move; user-select: none; z-index: 3; will-change: transform, opacity, filter; }
+  .is-playing .canvas-element { cursor: default; pointer-events: none; }
   .canvas-element.selected { outline: 2px solid var(--accent); outline-offset: 3px; z-index: 10; }
   .canvas-element.multi-selected { outline: 2px solid var(--purple); outline-offset: 3px; }
   .canvas-element.hovered:not(.selected):not(.multi-selected) { outline: 1px solid rgba(255, 255, 255, 0.4); outline-offset: 2px; }
@@ -359,9 +361,15 @@
   .timeline-track { height: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); position: relative; }
   :root.light .timeline-track { border-bottom-color: rgba(0, 0, 0, 0.05); }
   
-  .track-label { position: sticky; left: 0; width: 140px; height: 100%; padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 5; box-shadow: 4px 0 8px rgba(0,0,0,0.1); }
-  .track-label .layer-icon { width: 18px; height: 18px; border-radius: 4px; }
-  .track-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .track-label { position: sticky; left: 0; width: 140px; height: 100%; padding: 0 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 5; box-shadow: 4px 0 8px rgba(0,0,0,0.1); }
+  .track-label .layer-icon { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+  .track-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+  .track-controls { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+  .track-ctrl-btn { width: 20px; height: 20px; border: none; background: none; color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 4px; padding: 0; font-size: 11px; }
+  .track-ctrl-btn:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+  .track-ctrl-btn.active { color: var(--accent); }
+  .track-ctrl-btn.muted { color: var(--red); opacity: 0.5; }
+  .track-drag-handle { cursor: grab; color: var(--text-tertiary); font-size: 14px; line-height: 1; opacity: 0.4; flex-shrink: 0; }
   
   .track-area { position: absolute; top: 0; height: 100%; }
   .track-bar { position: absolute; height: 28px; top: 6px; border-radius: 6px; cursor: grab; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: white; font-weight: 500; overflow: hidden; white-space: nowrap; transition: filter 0.15s ease, box-shadow 0.15s ease; user-select: none; }
@@ -466,14 +474,6 @@
           </svg>
         </div>
         <div class="brand-title">Transition Studio<span class="brand-sub">— Motion Editor</span></div>
-      </div>
-      <div class="topbar-history">
-        <button class="ctrl-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.7 3L3 13"/></svg>
-        </button>
-        <button class="ctrl-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.7 3L21 13"/></svg>
-        </button>
       </div>
       <select class="tool-select" id="sceneSelect">
         <optgroup label="Templates">
@@ -602,6 +602,7 @@
           <button class="align-btn" data-align="distribute-h" title="Distribute Horizontal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="6" height="8" rx="1"/><rect x="15" y="8" width="6" height="8" rx="1"/><line x1="9" y1="12" x2="15" y2="12" stroke-dasharray="2 2"/></svg></button>
           <button class="align-btn" data-align="distribute-v" title="Distribute Vertical"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="3" width="8" height="6" rx="1"/><rect x="8" y="15" width="8" height="6" rx="1"/><line x1="12" y1="9" x2="12" y2="15" stroke-dasharray="2 2"/></svg></button>
         </div>
+        <button class="tool-btn" id="splitBtn" title="Split clip at playhead (Cmd+Shift+D)">✂ Split</button>
         <select class="tool-select" id="deviceSelect">
           <optgroup label="Social Media">
             <option value="1080x1920">Instagram Story (9:16)</option>
@@ -634,6 +635,7 @@
     </div>
     <div class="canvas-wrapper" id="canvasWrapper">
       <div class="canvas-stage" id="canvasStage">
+        <canvas id="editorCanvas"></canvas>
         <div class="canvas-bg" id="canvasBg"></div>
         <div class="canvas-grid-overlay" id="canvasGridOverlay"></div>
       </div>
@@ -658,6 +660,14 @@
         <span style="font-size: 12px; color: var(--text); min-width: 60px; font-variant-numeric: tabular-nums;" id="totalDurationLabel">3.0s</span>
         <label style="margin-left: 12px;">Jump to</label>
         <input type="text" class="time-jump-input" id="timeJumpInput" value="0.00" placeholder="sec">
+      </div>
+      <div style="display:flex;align-items:center;gap:4px;flex:1;justify-content:center;">
+        <button class="ctrl-btn" id="undoBtn" title="Undo (Ctrl+Z)" disabled style="width:28px;height:28px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.7 3L3 13"/></svg>
+        </button>
+        <button class="ctrl-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)" disabled style="width:28px;height:28px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.7 3L21 13"/></svg>
+        </button>
       </div>
       <div class="timeline-zoom">
         <button class="zoom-btn" id="tlZoomOutBtn">-</button>
@@ -781,6 +791,43 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="newProjectModal">
+  <div class="modal" style="width: 420px;">
+    <div class="modal-header">
+      <div class="modal-title">New Project</div>
+    </div>
+    <div class="modal-body">
+      <div class="field" style="margin-bottom:16px;">
+        <label class="field-label">Project Name</label>
+        <input type="text" class="field-input" id="projectNameInput" value="My Project" placeholder="Enter project name">
+      </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label class="field-label">Canvas Size</label>
+        <div class="resolution-grid" id="newProjectSizes">
+          <button class="opt-btn active" data-w="360" data-h="640"><span class="opt-title">9:16</span><span class="opt-sub">Mobile</span></button>
+          <button class="opt-btn" data-w="1080" data-h="1920"><span class="opt-title">9:16 HD</span><span class="opt-sub">Instagram Story</span></button>
+          <button class="opt-btn" data-w="1920" data-h="1080"><span class="opt-title">16:9</span><span class="opt-sub">YouTube</span></button>
+          <button class="opt-btn" data-w="1080" data-h="1080"><span class="opt-title">1:1</span><span class="opt-sub">Instagram Post</span></button>
+          <button class="opt-btn" data-w="1080" data-h="1350"><span class="opt-title">4:5</span><span class="opt-sub">Instagram Portrait</span></button>
+          <button class="opt-btn" data-w="1280" data-h="720"><span class="opt-title">16:9 HD</span><span class="opt-sub">Desktop</span></button>
+        </div>
+      </div>
+      <div class="field-row" style="margin-bottom:16px;">
+        <div class="field"><label class="field-label">Custom Width</label><input type="number" class="field-input" id="newProjectW" value="360" min="50"></div>
+        <div class="field"><label class="field-label">Height</label><input type="number" class="field-input" id="newProjectH" value="640" min="50"></div>
+      </div>
+      <div class="toggle-row" style="margin-bottom:16px;">
+        <span class="slider-label">Start with demo elements</span>
+        <div class="toggle-switch" id="newProjectDemo"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" id="newProjectCancel">Cancel</button>
+      <button class="btn-primary" id="newProjectCreate">Create Project</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <canvas id="renderCanvas" style="display: none;"></canvas>
 
@@ -805,7 +852,7 @@
     timelineZoom: 1,
     canvasSize: { w: 360, h: 640 },
     exportSettings: { res: 720, fps: 30, customWidth: null },
-    audio: { src: null, name: '' },
+    audio: { src: null, name: '', waveform: null },
     typewriterIntervals: [],
     undoStack: [],
     redoStack: [],
@@ -1017,39 +1064,6 @@
   }
 
   // ===== AUTOSAVE =====
-  let autosaveTimer;
-  function scheduleAutosave() {
-    clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(() => {
-      try {
-        const data = {
-          elements: state.elements,
-          scene: state.scene,
-          totalDuration: state.totalDuration,
-          canvasSize: state.canvasSize,
-          audio: { src: null, name: state.audio.name },
-          chapters: state.chapters,
-          version: '8.0'
-        };
-        localStorage.setItem('transitionStudio_autosave', JSON.stringify(data));
-      } catch(e) {}
-    }, 30000);
-  }
-
-  function loadAutosave() {
-    try {
-      const saved = localStorage.getItem('transitionStudio_autosave');
-      if (saved) {
-        const data = JSON.parse(saved);
-        if (data.elements && data.elements.length > 0) {
-          showToast('Autosave recovered — ' + data.elements.length + ' elements');
-          return data;
-        }
-      }
-    } catch(e) {}
-    return null;
-  }
-
   // ===== SCENE LOADING =====
   function loadDemoScene(sceneName) {
     pushHistory();
@@ -1218,6 +1232,7 @@
   function applyZoom() {
     const stage = document.getElementById('canvasStage');
     stage.style.transform = `scale(${state.zoom})`;
+    initEditorCanvas();
   }
 
   function renderScene() {
@@ -1355,6 +1370,7 @@
 
   // ===== CANVAS RENDERING =====
   function renderCanvas() {
+    try {
     const stage = document.getElementById('canvasStage');
     stage.querySelectorAll('.canvas-element').forEach(e => e.remove());
 
@@ -1368,6 +1384,7 @@
       div.style.width = el.width + 'px';
       div.style.height = el.height + 'px';
       div.style.opacity = el.opacity / 100;
+      div.style.zIndex = state.elements.indexOf(el) + 3;
       let transform = `rotate(${el.rotation}deg)`;
       if (el.flipH) transform += ' scaleX(-1)';
       if (el.flipV) transform += ' scaleY(-1)';
@@ -1417,6 +1434,7 @@
 
       if (!el.locked) {
         div.addEventListener('mousedown', (e) => {
+          if (state.isPlaying) return;
           e.stopPropagation();
           if (e.shiftKey) {
             if (state.multiSelectIds.includes(el.id)) {
@@ -1440,9 +1458,33 @@
       }
     });
     document.getElementById('multiSelectInfo').style.display = state.multiSelectIds.length > 1 ? 'inline' : 'none';
+    updateCanvasTime();
+    } catch(e) { console.error('renderCanvas error', e); }
+  }
+
+  function updateCanvasTime() {
+    const time = state.currentTime;
+    state.elements.forEach(el => {
+      const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
+      if (!dom) return;
+      if (el.visible === false) { dom.style.display = 'none'; return; }
+      const st = getElementStateAtTime(el, time);
+      dom.style.left = st.x + 'px';
+      dom.style.top = st.y + 'px';
+      const effectiveOpacity = Math.max(0, Math.min(1, st.opacity));
+      dom.style.opacity = effectiveOpacity;
+      dom.style.display = effectiveOpacity <= 0.001 ? 'none' : '';
+      let transform = `scale(${st.scale}) rotate(${st.rotation}deg)`;
+      if (el.flipH) transform += ' scaleX(-1)';
+      if (el.flipV) transform += ' scaleY(-1)';
+      dom.style.transform = transform;
+      dom.style.filter = st.blur > 0 ? `blur(${st.blur}px)` : 'none';
+    });
+    try { renderEditorCanvas(); } catch(e) {}
   }
 
   function startDrag(e, el) {
+    if (state.isPlaying) return;
     e.preventDefault();
     const startX = e.clientX, startY = e.clientY;
     const origX = el.x, origY = el.y;
@@ -1477,7 +1519,7 @@
         if (state.undoStack.length > 50) state.undoStack.shift();
         state.redoStack = [];
         updateUndoRedoButtons();
-        scheduleAutosave();
+        
       }
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
@@ -1487,6 +1529,7 @@
   }
 
   function startMultiDrag(e) {
+    if (state.isPlaying) return;
     e.preventDefault();
     const startX = e.clientX, startY = e.clientY;
     const selectedEls = state.elements.filter(el => state.multiSelectIds.includes(el.id) || el.id === state.selectedId);
@@ -1653,9 +1696,10 @@
       const ra = document.getElementById('removeAudioBtn');
       if (ra) ra.addEventListener('click', () => {
         pushHistory();
-        state.audio = { src: null, name: '' };
+        state.audio = { src: null, name: '', waveform: null };
         renderAudio();
         renderInspector();
+        renderTimeline();
       });
       return;
     }
@@ -1860,6 +1904,27 @@
         </div>
         ` : ''}
         <div class="inspector-section">
+          <div class="inspector-section-title">Keyframes <span style="font-weight:400;color:var(--text-tertiary);font-size:12px;">(replaces entrance/exit)</span></div>
+          <div class="toggle-row" style="margin-bottom:8px;">
+            <span class="slider-label">Enable Keyframes</span>
+            <div class="toggle-switch ${el.keyframes && el.keyframes.length >= 2 ? 'active' : ''}" id="keyframeToggle"></div>
+          </div>
+          ${el.keyframes && el.keyframes.length >= 2 ? `
+          <button class="btn-ghost" id="addKeyframeBtn" style="width:100%;margin-bottom:8px;">+ Add Keyframe at ${(state.currentTime/1000).toFixed(2)}s</button>
+          <div style="max-height:160px;overflow-y:auto;font-size:12px;">
+            ${el.keyframes.slice().sort((a,b)=>a.time-b.time).map((kf, i) => `
+              <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:4px;">
+                <span style="color:var(--accent);font-weight:600;min-width:50px;">${(kf.time/1000).toFixed(2)}s</span>
+                <span style="color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                  x:${(kf.props.x??el.x).toFixed(0)} y:${(kf.props.y??el.y).toFixed(0)} s:${(kf.props.scale??1).toFixed(2)} r:${(kf.props.rotation??el.rotation).toFixed(0)}° o:${(kf.props.opacity??el.opacity/100).toFixed(2)}
+                </span>
+                <button class="delete-keyframe" data-kf-index="${i}" style="background:none;border:none;color:var(--red);cursor:pointer;padding:2px;">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          ` : '<p style="color:var(--text-tertiary);font-size:12px;">Add at least 2 keyframes to enable interpolation.</p>'}
+        </div>
+        <div class="inspector-section">
           <div class="inspector-section-title">Exit Preset</div>
           <div class="preset-grid">
             ${Object.entries(EXIT_PRESETS).map(([key, p]) => `<button class="preset-btn ${exit.type === p.type ? 'active' : ''}" data-exit-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
@@ -1945,6 +2010,55 @@
       }
       content.querySelectorAll('.easing-btn[data-exit-easing]').forEach(btn => {
         btn.addEventListener('click', () => { pushHistory(); exit.easing = btn.dataset.exitEasing; renderInspector(); });
+      });
+
+      const kfToggle = document.getElementById('keyframeToggle');
+      if (kfToggle) {
+        kfToggle.addEventListener('click', () => {
+          pushHistory();
+          if (el.keyframes && el.keyframes.length >= 2) { el.keyframes = null; }
+          else {
+            const curTime = state.currentTime;
+            el.keyframes = [
+              { time: Math.max(0, curTime - 500), props: { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100 }, easing: 'linear' },
+              { time: curTime, props: { x: el.x + 50, y: el.y, scale: 1.2, rotation: el.rotation + 15, opacity: el.opacity / 100 }, easing: 'ease-out' }
+            ];
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
+      }
+      const addKfBtn = document.getElementById('addKeyframeBtn');
+      if (addKfBtn) {
+        addKfBtn.addEventListener('click', () => {
+          pushHistory();
+          if (!el.keyframes) el.keyframes = [];
+          const exists = el.keyframes.find(k => Math.abs(k.time - state.currentTime) < 50);
+          if (!exists) {
+            el.keyframes.push({
+              time: state.currentTime,
+              props: {
+                x: el.x, y: el.y,
+                scale: 1, rotation: el.rotation,
+                opacity: el.opacity / 100
+              },
+              easing: 'linear'
+            });
+            el.keyframes.sort((a, b) => a.time - b.time);
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
+      }
+      content.querySelectorAll('.delete-keyframe').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          pushHistory();
+          const idx = parseInt(btn.dataset.kfIndex);
+          if (el.keyframes && idx >= 0 && idx < el.keyframes.length) {
+            el.keyframes.splice(idx, 1);
+            if (el.keyframes.length < 2) el.keyframes = null;
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
       });
     }
   }
@@ -2042,12 +2156,17 @@
         }
         
         tracksHtml += `
-          <div class="timeline-track">
+          <div class="timeline-track" data-track-id="${el.id}">
             <div class="track-label">
+              <span class="track-drag-handle">⠿</span>
               <div class="layer-icon" style="background: ${(el.type === 'image' || el.type === 'video') && el.src ? 'transparent' : color + '22'}; color: ${color};">
                 ${iconHTML}
               </div>
               <span>${el.name}</span>
+              <div class="track-controls">
+                <button class="track-ctrl-btn ${el.visible === false ? 'muted' : ''}" data-vis="${el.id}" title="Toggle Visibility">${el.visible === false ? '◌' : '◉'}</button>
+                <button class="track-ctrl-btn ${el.locked ? 'active' : ''}" data-lock="${el.id}" title="Lock">🔒</button>
+              </div>
             </div>
             <div class="track-area" style="left: 140px; width: ${rulerWidth}px; height: 100%;">
               ${anim.type !== 'none' ? `
@@ -2061,6 +2180,22 @@
           </div>
         `;
       });
+    }
+    if (state.audio && state.audio.waveform && state.audio.waveform.length > 0) {
+      const wavePxPerSec = rulerWidth / totalSec;
+      const waveWidth = Math.min(rulerWidth, state.audio.waveform.length * (rulerWidth / state.audio.waveform.length));
+      const bars = state.audio.waveform.map((v, i) => {
+        const barH = Math.max(2, v * 36);
+        const barL = 140 + (i / state.audio.waveform.length) * rulerWidth;
+        return `<div style="position:absolute;left:${barL}px;bottom:50%;width:${Math.max(1, rulerWidth / state.audio.waveform.length - 1)}px;height:${barH}px;background:var(--accent);opacity:0.5;transform:translateY(-50%);border-radius:1px;"></div>`;
+      }).join('');
+      tracksHtml += `
+        <div class="timeline-track" style="height:50px;">
+          <div class="track-label"><span style="color:var(--purple);font-size:11px;">🎵 ${state.audio.name || 'Audio'}</span></div>
+          <div class="track-area" style="left:140px;width:${rulerWidth}px;height:100%;position:relative;overflow:hidden;">
+            ${bars}
+          </div>
+        </div>`;
     }
     tracksContainer.innerHTML = tracksHtml;
 
@@ -2103,6 +2238,45 @@
     });
 
     updatePlayhead();
+
+    tracksContainer.querySelectorAll('[data-vis]').forEach(btn => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.vis); if (el) { pushHistory(); el.visible = !(el.visible === false); renderAll(); renderTimeline(); renderLayers(); } });
+    });
+    tracksContainer.querySelectorAll('[data-lock]').forEach(btn => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.lock); if (el) { pushHistory(); el.locked = !el.locked; renderAll(); renderTimeline(); renderLayers(); } });
+    });
+
+    let dragTrackId = null, dragTrackStartY = 0, dragTrackOrigIdx = 0;
+    tracksContainer.querySelectorAll('.track-drag-handle').forEach(handle => {
+      handle.addEventListener('mousedown', (e) => {
+        e.stopPropagation(); e.preventDefault();
+        const track = handle.closest('.timeline-track');
+        dragTrackId = track.dataset.trackId;
+        dragTrackStartY = e.clientY;
+        dragTrackOrigIdx = state.elements.findIndex(x => x.id === +dragTrackId);
+        track.style.opacity = '0.5';
+        const onMove = (ev) => {
+          const dy = ev.clientY - dragTrackStartY;
+          if (Math.abs(dy) > 15) {
+            const trackHeight = 40;
+            const dir = dy > 0 ? 1 : -1;
+            const newIdx = Math.max(0, Math.min(state.elements.length - 1, dragTrackOrigIdx + Math.round(dy / trackHeight)));
+            if (newIdx !== dragTrackOrigIdx) {
+              pushHistory();
+              const [item] = state.elements.splice(dragTrackOrigIdx, 1);
+              state.elements.splice(newIdx, 0, item);
+              dragTrackOrigIdx = newIdx;
+              renderTimeline();
+              const newTrack = document.querySelector(`.timeline-track[data-track-id="${dragTrackId}"]`);
+              if (newTrack) newTrack.style.opacity = '0.5';
+            }
+          }
+        };
+        const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); const t = document.querySelector(`.timeline-track[data-track-id="${dragTrackId}"]`); if (t) t.style.opacity = ''; renderAll(); renderLayers(); };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
+    });
   }
 
   function startBarDrag(e, elId, mode, animMode) {
@@ -2187,6 +2361,7 @@
     document.getElementById('currentTime').textContent = state.totalDuration >= 60000 ? (state.currentTime / 60000).toFixed(2) + 'min' : (state.currentTime / 1000).toFixed(2) + 's';
     const tji = document.getElementById('timeJumpInput');
     if (tji && document.activeElement !== tji) tji.value = (state.currentTime / 1000).toFixed(2);
+    updateCanvasTime();
   }
 
   function renderAll() { renderLayers(); renderCanvas(); renderInspector(); }
@@ -2270,7 +2445,32 @@
     }
     renderCanvas();
     renderInspector();
-    scheduleAutosave();
+    
+  }
+
+  function splitElement() {
+    if (!state.selectedId) return;
+    const idx = state.elements.findIndex(e => e.id === state.selectedId);
+    if (idx === -1) return;
+    const el = state.elements[idx];
+    const splitTime = state.currentTime;
+    const anim = el.animation;
+    const exit = el.exit;
+    if (splitTime <= anim.delay || splitTime >= exit.start) { showToast('Split point outside element range', '#ff9f0a'); return; }
+    pushHistory();
+    const clone = JSON.parse(JSON.stringify(el));
+    clone.id = nextId();
+    clone.name = el.name + ' (split)';
+    const origEnd = exit.type !== 'none' ? exit.start + exit.duration : state.totalDuration;
+    anim.duration = splitTime - anim.delay;
+    exit.start = splitTime;
+    exit.duration = origEnd - splitTime;
+    clone.animation.delay = splitTime;
+    clone.animation.duration = origEnd - splitTime;
+    if (clone.exit.type !== 'none') clone.exit.start = splitTime + clone.animation.duration - clone.exit.duration;
+    state.elements.splice(idx + 1, 0, clone);
+    state.selectedId = clone.id;
+    renderAll(); renderTimeline();
   }
 
   // ===== ELEMENT OPS =====
@@ -2298,17 +2498,26 @@
       textAnimation: 'none',
       textAnimDuration: 2000,
       animation: { type: type === 'card' ? 'none' : 'fade-in', duration: 500, delay: Math.min(state.elements.length * 100, 1500), easing: 'ease-out', intensity: 50 },
-      exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 }
+      exit: { type: 'none', duration: 400, start: state.totalDuration - 400, easing: 'ease-in', intensity: 50 },
+      keyframes: null
     };
     state.elements.push(el);
     state.selectedId = el.id;
     state.multiSelectIds = [];
     renderAll();
     renderTimeline();
-    scheduleAutosave();
+    
   }
 
-  function deleteElement(id) {
+  let _pendingDeleteId = null;
+  function deleteElement(id, confirmed) {
+    if (!confirmed) {
+      _pendingDeleteId = id;
+      const el = state.elements.find(e => e.id === id);
+      showToast(`Delete "${el ? el.name : 'element'}"? Click again to confirm`, '#ff453a', 3000);
+      return;
+    }
+    _pendingDeleteId = null;
     pushHistory();
     const idx = state.elements.findIndex(e => e.id === id);
     if (idx === -1) return;
@@ -2318,7 +2527,7 @@
     renderAll();
     renderTimeline();
     showToast('Element deleted', '#ff453a');
-    scheduleAutosave();
+    
   }
 
   function duplicateElement(id) {
@@ -2337,7 +2546,7 @@
     renderAll();
     renderTimeline();
     showToast('Element duplicated');
-    scheduleAutosave();
+    
   }
 
   function copyElement(id) {
@@ -2361,7 +2570,7 @@
     renderAll();
     renderTimeline();
     showToast('Pasted');
-    scheduleAutosave();
+    
   }
 
   function selectAll() {
@@ -2386,8 +2595,13 @@
 
   function stepTime(direction) {
     if (state.isPlaying) return;
-    const step = 100; // 100ms steps
+    const step = 100;
     state.currentTime = Math.max(0, Math.min(state.totalDuration, state.currentTime + (direction * step)));
+    updatePlayhead();
+  }
+
+  function setTime(time) {
+    state.currentTime = Math.max(0, Math.min(state.totalDuration, time));
     updatePlayhead();
   }
 
@@ -2397,39 +2611,24 @@
     state.isPlaying = true;
     state.currentTime = 0;
     state.playStartTime = performance.now();
-    applyInitialStates();
-    requestAnimationFrame(() => { 
-      triggerAnimations(); 
-      animatePlayhead(); 
-      state.elements.forEach(el => {
-        if (el.exit && el.exit.type !== 'none') {
-          setTimeout(() => triggerExit(el), el.exit.start / state.playbackSpeed);
-        }
-      });
-      state.elements.forEach(el => {
-        if (el.textAnimation === 'typewriter') {
-          const dom = document.querySelector(`.canvas-element[data-id="${el.id}"] span`);
-          if (dom) {
-            const fullText = el.text;
-            dom.innerText = '';
-            const typeStart = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
-            const timeoutId = setTimeout(() => {
-              let i = 0;
-              const interval = (el.textAnimDuration / fullText.length) / state.playbackSpeed;
-              const intervalId = setInterval(() => {
-                if (i < fullText.length) {
-                  dom.innerText = fullText.substring(0, i + 1);
-                  i++;
-                } else {
-                  clearInterval(intervalId);
-                }
-              }, interval);
-              state.typewriterIntervals.push(intervalId);
-            }, typeStart / state.playbackSpeed);
-            state.typewriterIntervals.push(timeoutId);
-          }
-        }
-      });
+    updateCanvasTime();
+
+    state.elements.filter(el => el.textAnimation === 'typewriter').forEach(el => {
+      const dom = document.querySelector(`.canvas-element[data-id="${el.id}"] span`);
+      if (!dom) return;
+      const fullText = el.text;
+      dom.innerText = '';
+      const typeStart = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
+      const tid = setTimeout(() => {
+        let i = 0;
+        const interval = (el.textAnimDuration / fullText.length) / state.playbackSpeed;
+        const iid = setInterval(() => {
+          if (i < fullText.length) { dom.innerText = fullText.substring(0, i + 1); i++; }
+          else clearInterval(iid);
+        }, interval);
+        state.typewriterIntervals.push(iid);
+      }, typeStart / state.playbackSpeed);
+      state.typewriterIntervals.push(tid);
     });
 
     if (state.audio.src) {
@@ -2446,37 +2645,29 @@
     const btn = document.getElementById('playBtn');
     btn.classList.add('playing');
     btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+    document.getElementById('canvasStage').classList.add('is-playing');
+    animatePlayhead();
   }
 
   function stopPlayback() {
     state.isPlaying = false;
     if (state.animationFrame) cancelAnimationFrame(state.animationFrame);
-    // FIXED: Only clear typewriter intervals, not all timeouts
     state.typewriterIntervals.forEach(id => { clearInterval(id); clearTimeout(id); });
     state.typewriterIntervals = [];
-    
     if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; }
     if (audioCtx) { audioCtx.close(); audioCtx = null; }
-
     const btn = document.getElementById('playBtn');
     btn.classList.remove('playing');
     btn.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    document.getElementById('canvasStage').classList.remove('is-playing');
     state.elements.forEach(el => {
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
-      if (dom) {
-        dom.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        dom.style.opacity = el.opacity / 100;
-        let tr = `translate(0,0) rotate(${el.rotation}deg)`;
-        if (el.flipH) tr += ' scaleX(-1)';
-        if (el.flipV) tr += ' scaleY(-1)';
-        dom.style.transform = tr;
-        dom.style.filter = 'none';
-        if (el.textAnimation === 'typewriter') {
-          const span = dom.querySelector('span');
-          if (span) span.innerText = el.text;
-        }
+      if (dom && el.textAnimation === 'typewriter') {
+        const span = dom.querySelector('span');
+        if (span) span.innerText = el.text;
       }
     });
+    updateCanvasTime();
   }
 
   function applyInitialStates() {
@@ -2633,7 +2824,7 @@
     renderAll();
     renderTimeline();
     showToast('Story sequence generated!');
-    scheduleAutosave();
+    
   }
 
   // ===== FILE UPLOADS =====
@@ -2673,7 +2864,7 @@
       reader.readAsDataURL(file);
     });
     showToast(`${files.length} image${files.length > 1 ? 's' : ''} uploaded`);
-    scheduleAutosave();
+    
   }
 
   function handleVideoUpload(files) {
@@ -2712,7 +2903,7 @@
       reader.readAsDataURL(file);
     });
     showToast(`${files.length} video${files.length > 1 ? 's' : ''} uploaded`);
-    scheduleAutosave();
+    
   }
 
   function handleAudioUpload(file) {
@@ -2720,10 +2911,24 @@
     const reader = new FileReader();
     reader.onload = (e) => {
       pushHistory();
-      state.audio = { src: e.target.result, name: file.name };
+      state.audio = { src: e.target.result, name: file.name, waveform: null };
       renderAudio();
       showToast('Audio uploaded');
-      scheduleAutosave();
+      
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      fetch(e.target.result).then(r => r.arrayBuffer()).then(buf => audioCtx.decodeAudioData(buf)).then(audioBuf => {
+        const raw = audioBuf.getChannelData(0);
+        const samples = 500;
+        const blockSize = Math.floor(raw.length / samples);
+        const waveform = [];
+        for (let i = 0; i < samples; i++) {
+          let sum = 0;
+          for (let j = 0; j < blockSize; j++) sum += Math.abs(raw[i * blockSize + j] || 0);
+          waveform.push(sum / blockSize);
+        }
+        state.audio.waveform = waveform;
+        renderTimeline();
+      }).catch(() => {});
     };
     reader.readAsDataURL(file);
   }
@@ -2814,12 +3019,42 @@
 
   // ========== HIGH-FIDELITY VIDEO EXPORT ENGINE ==========
   // FIXED: Real-time rendering with captureStream(fps) + requestAnimationFrame
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function interpolateKeyframes(el, time) {
+    const kfs = el.keyframes;
+    if (!kfs || kfs.length < 2) return null;
+    const sorted = [...kfs].sort((a, b) => a.time - b.time);
+    if (time <= sorted[0].time) { const s = sorted[0].props; return { x: s.x||el.x, y: s.y||el.y, scale: s.scale||1, rotation: s.rotation||el.rotation, opacity: s.opacity!=null ? s.opacity : el.opacity/100, blur: 0, flipX: 0 }; }
+    if (time >= sorted[sorted.length-1].time) { const s = sorted[sorted.length-1].props; return { x: s.x||el.x, y: s.y||el.y, scale: s.scale||1, rotation: s.rotation||el.rotation, opacity: s.opacity!=null ? s.opacity : el.opacity/100, blur: 0, flipX: 0 }; }
+    for (let i = 0; i < sorted.length - 1; i++) {
+      if (time >= sorted[i].time && time < sorted[i+1].time) {
+        const t = sorted[i+1].time === sorted[i].time ? 0 : (time - sorted[i].time) / (sorted[i+1].time - sorted[i].time);
+        const s = sorted[i].props, e = sorted[i+1].props;
+        const easing = sorted[i].easing || 'linear';
+        const eased = (EASING_FN[easing] || EASING_FN.linear)(t);
+        return {
+          x: lerp(s.x != null ? s.x : el.x, e.x != null ? e.x : el.x, eased),
+          y: lerp(s.y != null ? s.y : el.y, e.y != null ? e.y : el.y, eased),
+          scale: lerp(s.scale != null ? s.scale : 1, e.scale != null ? e.scale : 1, eased),
+          rotation: lerp(s.rotation != null ? s.rotation : el.rotation, e.rotation != null ? e.rotation : el.rotation, eased),
+          opacity: lerp(s.opacity != null ? s.opacity : el.opacity/100, e.opacity != null ? e.opacity : el.opacity/100, eased),
+          blur: 0, flipX: 0
+        };
+      }
+    }
+    return null;
+  }
+
   function getElementStateAtTime(el, time) {
     const anim = el.animation;
     const exit = el.exit;
     const cw = state.canvasSize.w, ch = state.canvasSize.h;
     const st = { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100, blur: 0, flipX: 0 };
-    
+
+    const kf = interpolateKeyframes(el, time);
+    if (kf) { return { ...st, ...kf }; }
+
     if (el.type === 'text' && el.textAnimation !== 'none') {
       if (el.textAnimation === 'bounce') st.y -= Math.abs(Math.sin(time / 200) * 8);
       if (el.textAnimation === 'blink') st.opacity *= (0.5 + 0.5 * Math.sin(time / 100));
@@ -2954,6 +3189,51 @@
       try { ctx.drawImage(el._vid, 0, 0, w, h); } catch(e) {}
     }
 
+    ctx.restore();
+  }
+
+  function initEditorCanvas() {
+    const canvas = document.getElementById('editorCanvas');
+    const stage = document.getElementById('canvasStage');
+    const rect = stage.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    canvas._dpr = dpr;
+    return canvas;
+  }
+
+  function renderEditorCanvas() {
+    const canvas = document.getElementById('editorCanvas');
+    if (!canvas || !canvas.width || !canvas.height) return;
+    const dpr = canvas._dpr || 1;
+    const ctx = canvas.getContext('2d');
+    const cw = canvas.width;
+    const ch = canvas.height;
+    ctx.clearRect(0, 0, cw, ch);
+    const s = state.canvasSize;
+    const scale = Math.min(cw / s.w, ch / s.h);
+    const ox = (cw - s.w * scale) / 2;
+    const oy = (ch - s.h * scale) / 2;
+    ctx.save();
+    ctx.translate(ox, oy);
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(0, 0, s.w * scale, s.h * scale, 36 * scale) : ctx.rect(0, 0, s.w * scale, s.h * scale);
+    ctx.clip();
+    if (state.scene.bgType === 'gradient') {
+      const grad = ctx.createLinearGradient(0, 0, s.w * scale * Math.cos(state.scene.bgAngle * Math.PI / 180), s.h * scale * Math.sin(state.scene.bgAngle * Math.PI / 180));
+      grad.addColorStop(0, state.scene.bgColor0);
+      grad.addColorStop(1, state.scene.bgColor1);
+      ctx.fillStyle = grad;
+    } else ctx.fillStyle = state.scene.bgColor0;
+    ctx.fillRect(0, 0, s.w * scale, s.h * scale);
+    state.elements.forEach(el => {
+      if (el.visible === false) return;
+      const st = getElementStateAtTime(el, state.currentTime);
+      drawElementOnCanvas(ctx, el, st, scale);
+    });
     ctx.restore();
   }
 
@@ -3435,12 +3715,18 @@
     state._exportedHTML = html;
   }
 
-  function showToast(msg, color = '#30d158') {
+  function showToast(msg, color = '#30d158', duration) {
     const toast = document.getElementById('toast');
     toast.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> ${msg}`;
     toast.classList.add('show');
     clearTimeout(toast._timer);
-    toast._timer = setTimeout(() => toast.classList.remove('show'), 2200);
+    toast.style.cursor = '';
+    toast.onclick = null;
+    if (_pendingDeleteId) {
+      toast.style.cursor = 'pointer';
+      toast.onclick = () => { deleteElement(_pendingDeleteId, true); toast.classList.remove('show'); };
+    }
+    toast._timer = setTimeout(() => toast.classList.remove('show'), duration || 2200);
   }
 
   function applyTheme(theme) {
@@ -3486,23 +3772,8 @@
 
   // ===== INIT =====
   function init() {
-    const autosaved = loadAutosave();
-    if (autosaved) {
-      state.elements = autosaved.elements;
-      state.scene = autosaved.scene;
-      state.totalDuration = autosaved.totalDuration;
-      state.canvasSize = autosaved.canvasSize;
-      state.audio = autosaved.audio || { src: null, name: '' };
-      state.chapters = autosaved.chapters || [];
-      let maxId = 0;
-      state.elements.forEach(el => {
-        const n = parseInt(el.id.replace('el-', '')) || 0;
-        if (n > maxId) maxId = n;
-      });
-      idCounter = maxId + 1;
-    } else {
-      loadDemoScene('default');
-    }
+    document.getElementById('newProjectModal').classList.add('active');
+    applyCanvasSize(); renderScene(); renderAll(); renderTimeline();
     
     updateUndoRedoButtons();
     updateTimelineZoomUI();
@@ -3524,7 +3795,7 @@
       if (e.target.value) loadDemoScene(e.target.value);
     });
 
-    document.getElementById('newProjectBtn').addEventListener('click', startBlankProject);
+    document.getElementById('newProjectBtn').addEventListener('click', () => { document.getElementById('newProjectModal').classList.add('active'); });
 
     document.getElementById('importJsonBtn').addEventListener('click', () => document.getElementById('jsonInput').click());
     document.getElementById('jsonInput').addEventListener('change', (e) => {
@@ -3656,6 +3927,7 @@
       e.currentTarget.classList.toggle('active', state.gridVisible);
       document.getElementById('canvasGridOverlay').classList.toggle('visible', state.gridVisible);
     });
+    document.getElementById('splitBtn').addEventListener('click', splitElement);
 
     document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -3700,6 +3972,7 @@
     document.getElementById('tlZoomOutBtn').addEventListener('click', () => { state.timelineZoom = Math.max(0.25, state.timelineZoom / 1.5); updateTimelineZoomUI(); renderTimeline(); });
 
     document.getElementById('canvasStage').addEventListener('mousedown', (e) => {
+      if (state.isPlaying) return;
       if (e.target.id === 'canvasStage' || e.target.classList.contains('canvas-bg')) {
         state.selectedId = null; state.multiSelectIds = []; renderAll();
       }
@@ -3708,20 +3981,53 @@
     document.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
+      else if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.code === 'KeyD') { e.preventDefault(); splitElement(); }
       else if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
       else if (e.code === 'KeyR') { restart(); }
       else if (e.code === 'KeyG') { document.getElementById('gridBtn').click(); }
       else if (e.code === 'Delete' || e.code === 'Backspace') { if (state.selectedId) { e.preventDefault(); deleteElement(state.selectedId); } }
+      else if (e.code === 'ArrowLeft') { e.preventDefault(); stepTime(-1); }
+      else if (e.code === 'ArrowRight') { e.preventDefault(); stepTime(1); }
+      else if (e.code === 'Home') { e.preventDefault(); state.currentTime = 0; updatePlayhead(); }
+      else if (e.code === 'End') { e.preventDefault(); state.currentTime = state.totalDuration; updatePlayhead(); }
       else if (e.code === 'Escape') { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active')); state.selectedId = null; state.multiSelectIds = []; renderAll(); }
     });
 
     document.getElementById('totalTime').textContent = (state.totalDuration / 1000).toFixed(2) + 's';
 
-    let resizeTimer;
-    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => renderTimeline(), 100); });
+    document.querySelectorAll('#newProjectSizes .opt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#newProjectSizes .opt-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('newProjectW').value = btn.dataset.w;
+        document.getElementById('newProjectH').value = btn.dataset.h;
+      });
+    });
+    document.getElementById('newProjectCancel').addEventListener('click', () => { document.getElementById('newProjectModal').classList.remove('active'); startBlankProject(); });
+    document.getElementById('newProjectCreate').addEventListener('click', () => {
+      const name = document.getElementById('projectNameInput').value || 'My Project';
+      const w = parseInt(document.getElementById('newProjectW').value) || 360;
+      const h = parseInt(document.getElementById('newProjectH').value) || 640;
+      const loadDemo = document.getElementById('newProjectDemo').classList.contains('active');
+      pushHistory();
+      state.elements = []; idCounter = 1; state.selectedId = null; state.multiSelectIds = []; state.chapters = [];
+      state.canvasSize = { w, h };
+      state.scene = { bgType: 'solid', bgColor0: '#1a1a1f', bgColor1: '#0e0e12', bgAngle: 180 };
+      state.totalDuration = 3000;
+      state.audio = { src: null, name: '' };
+      document.getElementById('newProjectModal').classList.remove('active');
+      if (loadDemo) loadDemoScene('default');
+      updateDurationUI(); applyCanvasSize(); renderScene(); renderAudio(); renderAll(); renderTimeline();
+      showToast(`Project "${name}" created (${w}×${h})`);
+    });
+    document.getElementById('newProjectDemo').addEventListener('click', (e) => {
+      e.currentTarget.classList.toggle('active');
+    });
 
-    if (!autosaved) { applyCanvasSize(); renderScene(); renderAll(); renderTimeline(); }
-    scheduleAutosave();
+    let resizeTimer;
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderTimeline(); initEditorCanvas(); }, 100); });
+
+    window.addEventListener('beforeunload', (e) => { e.preventDefault(); e.returnValue = ''; });
   }
 
   init();
