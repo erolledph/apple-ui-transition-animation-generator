@@ -4,17 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Transition Studio Pro — Motion & Video Editor</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:wght@400;700&family=DM+Sans:opsz,wght@9..40,400;700&family=DM+Serif+Display&family=Figtree:wght@400;700&family=Fira+Code:wght@400;700&family=Fraunces:opsz,wght@9..144,400;700&family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@100..900&family=JetBrains+Mono:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Manrope:wght@400;700&family=Merriweather:wght@400;700&family=Montserrat:wght@100..900&family=Nunito:wght@400;700&family=Onest:wght@400;700&family=Outfit:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;700&family=Poppins:wght@100..900&family=Raleway:wght@100..900&family=Righteous&family=Sora:wght@400;700&family=Space+Mono:wght@400;700&family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
-<!-- Fonts not on Google Fonts (Clash Display, Cabinet Grotesk, Satoshi, General Sans, Geist) loaded via fontshare/other CDNs -->
-<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,700&f[]=cabinet-grotesk@400,700&f[]=satoshi@400,700&f[]=general-sans@400,700&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/style.css" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
 <style>
   :root {
     --bg: #000000;
@@ -34,16 +23,6 @@
     --orange: #ff9f0a;
     --purple: #bf5af2;
     --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
-    /* Advanced Effect Variables */
-    --effect-glass-bg: rgba(255, 255, 255, 0.05);
-    --effect-glass-border: rgba(255, 255, 255, 0.1);
-    --effect-glass-blur: blur(20px) saturate(150%);
-
-    --effect-neumorph-light: rgba(255, 255, 255, 0.05);
-    --effect-neumorph-dark: rgba(0, 0, 0, 0.5);
-
-    --effect-neon-glow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 40px var(--accent);
-
   }
 
   :root.light {
@@ -184,33 +163,6 @@
   :root.light .speed-select { background: rgba(0, 0, 0, 0.05); }
 
   /* ====== LEFT SIDEBAR ====== */
-
-  /* ====== SIDEBAR TABS ====== */
-  .sidebar-tabs { display: flex; border-bottom: 1px solid var(--border); }
-  .sidebar-tab { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s ease; border-bottom: 2px solid transparent; }
-  .sidebar-tab.active { color: var(--text); border-bottom-color: var(--accent); }
-  .sidebar-tab:hover:not(.active) { color: var(--text); background: rgba(255, 255, 255, 0.05); }
-
-  .sidebar-pane { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
-  .sidebar-pane:not(.active) { display: none; }
-
-  /* ====== MEDIA LIBRARY ====== */
-  .media-upload-area {
-    margin: 16px; padding: 24px 16px; border: 2px dashed var(--border-strong); border-radius: 12px;
-    text-align: center; color: var(--text-tertiary); font-size: 13px; cursor: pointer; transition: all 0.2s ease;
-  }
-  .media-upload-area:hover, .media-upload-area.drag-over { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
-
-  .media-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 16px 16px; overflow-y: auto; flex: 1; }
-  .media-item {
-    aspect-ratio: 1; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid var(--border);
-    overflow: hidden; position: relative; cursor: grab; display: flex; align-items: center; justify-content: center;
-  }
-  .media-item:hover { border-color: var(--border-strong); }
-  .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; }
-  .media-item .media-type { position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.6); padding: 2px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; }
-  .media-item .media-name { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 12px 4px 4px; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
   .sidebar-left { grid-area: left; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
 
   .scene-section { padding: 16px; border-bottom: 1px solid var(--border); }
@@ -219,7 +171,7 @@
   .scene-bg-toggle button { flex: 1; padding: 5px 8px; background: transparent; border: none; color: var(--text-secondary); font-size: 12px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all 0.15s ease; }
   .scene-bg-toggle button.active { background: rgba(255, 255, 255, 0.1); color: var(--text); }
   :root.light .scene-bg-toggle button.active { background: rgba(0, 0, 0, 0.1); }
-  
+
   .scene-colors { display: flex; gap: 10px; align-items: center; }
   .scene-color-swatch { flex: 1; height: 36px; border-radius: 9px; border: 1px solid var(--border); cursor: pointer; display: flex; align-items: center; padding: 5px; gap: 8px; transition: all 0.15s ease; position: relative; overflow: hidden; }
   .scene-color-swatch:hover { border-color: var(--border-strong); }
@@ -317,20 +269,6 @@
   .el-image, .el-video { border-radius: 12px; overflow: hidden; }
 
   /* ====== RIGHT SIDEBAR ====== */
-
-  .inspector-group { padding: 12px 16px; border-bottom: 1px solid var(--border); }
-  .inspector-group-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
-  .prop-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
-  .prop-label { font-size: 12px; color: var(--text-tertiary); width: 80px; flex-shrink: 0; }
-  .prop-input { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 6px; font-size: 12px; font-family: inherit; width: 100%; }
-  .prop-input:focus { border-color: var(--accent); outline: none; }
-  .prop-select { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 6px; font-size: 12px; width: 100%; outline: none; }
-
-  /* Color picker combo */
-  .color-picker-wrap { display: flex; flex: 1; gap: 4px; }
-  .color-preview { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; flex-shrink: 0; }
-  .color-hex { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 4px 6px; border-radius: 4px; font-size: 11px; font-family: monospace; }
-
   .sidebar-right { grid-area: right; display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid var(--border); }
   .inspector-tabs { display: flex; padding: 10px; gap: 4px; background: rgba(0, 0, 0, 0.2); border-bottom: 1px solid var(--border); }
   :root.light .inspector-tabs { background: rgba(0, 0, 0, 0.03); }
@@ -394,17 +332,6 @@
   .toggle-switch.active::after { transform: translateX(16px); }
 
   /* ====== TIMELINE ====== */
-
-  /* ====== NEW TIMELINE CSS ====== */
-  .tl-bar.full-clip {
-    cursor: grab;
-    transition: box-shadow 0.15s ease;
-  }
-  .tl-bar.full-clip:active { cursor: grabbing; box-shadow: 0 0 0 2px var(--accent); }
-  .tl-track.active { background: rgba(255,255,255,0.05); }
-  .tl-track.multi-selected { background: rgba(10, 132, 255, 0.1); }
-  #timelineRuler { cursor: text; } /* Indicates playhead scrubbing */
-
   .timeline { grid-area: timeline; display: flex; flex-direction: column; overflow: hidden; border-top: 1px solid var(--border); position: relative; }
   .timeline-header { height: 44px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0, 0, 0, 0.2); gap: 12px; flex-wrap: wrap; }
   :root.light .timeline-header { background: rgba(0, 0, 0, 0.03); }
@@ -413,7 +340,7 @@
   .timeline-controls .slider { width: 160px; }
   .time-jump-input { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 6px; font-size: 12px; width: 70px; font-family: "SF Mono", monospace; text-align: center; }
   :root.light .time-jump-input { background: rgba(0, 0, 0, 0.05); }
-  
+
   .timeline-zoom { display: flex; align-items: center; gap: 8px; }
   .zoom-btn { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s ease; }
   :root.light .zoom-btn { background: rgba(0,0,0,0.05); }
@@ -433,7 +360,7 @@
 
   .timeline-track { height: 40px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); position: relative; }
   :root.light .timeline-track { border-bottom-color: rgba(0, 0, 0, 0.05); }
-  
+
   .track-label { position: sticky; left: 0; width: 140px; height: 100%; padding: 0 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); border-right: 1px solid var(--border); background: var(--bg-glass-strong); backdrop-filter: blur(20px); z-index: 5; box-shadow: 4px 0 8px rgba(0,0,0,0.1); }
   .track-label .layer-icon { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
   .track-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
@@ -443,7 +370,7 @@
   .track-ctrl-btn.active { color: var(--accent); }
   .track-ctrl-btn.muted { color: var(--red); opacity: 0.5; }
   .track-drag-handle { cursor: grab; color: var(--text-tertiary); font-size: 14px; line-height: 1; opacity: 0.4; flex-shrink: 0; }
-  
+
   .track-area { position: absolute; top: 0; height: 100%; }
   .track-bar { position: absolute; height: 28px; top: 6px; border-radius: 6px; cursor: grab; display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: white; font-weight: 500; overflow: hidden; white-space: nowrap; transition: filter 0.15s ease, box-shadow 0.15s ease; user-select: none; }
   .track-bar:hover { filter: brightness(1.15); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
@@ -603,7 +530,6 @@
       <button class="ctrl-btn" id="shortcutsBtn" title="Keyboard Shortcuts (?)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg>
       </button>
-      <button class="btn-ghost" id="exportCodeBtn">Code</button>
       <button class="btn-ghost" id="exportGifBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><text x="12" y="15" font-size="6" fill="currentColor" text-anchor="middle" font-weight="bold">GIF</text></svg>
         GIF
@@ -620,12 +546,6 @@
   </header>
 
   <aside class="sidebar-left">
-    <div class="sidebar-tabs">
-      <button class="sidebar-tab active" data-tab="layers">Layers</button>
-      <button class="sidebar-tab" data-tab="media">Media</button>
-    </div>
-    <div class="sidebar-pane active" id="pane-layers">
-
     <div class="scene-section">
       <div class="panel-title" style="margin-bottom: 12px;">Scene Background</div>
       <div class="scene-bg-toggle" id="bgTypeToggle">
@@ -662,15 +582,6 @@
     <input type="file" id="videoInput" class="hidden-file-input" accept="video/*" multiple>
     <input type="file" id="audioInput" class="hidden-file-input" accept="audio/*">
     <div class="layers-list" id="layersList"></div>
-
-    </div>
-    <div class="sidebar-pane" id="pane-media">
-      <input type="file" id="mediaFileInput" multiple accept="image/*,video/*,audio/*" style="display: none;">
-      <div class="media-upload-area" id="mediaUploadArea">
-        Drag & Drop files here<br>or click to browse
-      </div>
-      <div class="media-grid" id="mediaGrid"></div>
-    </div>
   </aside>
 
   <section class="canvas-area">
@@ -947,9 +858,6 @@
     redoStack: [],
     clipboard: null,
     chapters: [],
-
-    mediaLibrary: [], // Array of {id, type, url, file, name}
-
     isExporting: false,
     exportCancelled: false
   };
@@ -963,7 +871,7 @@
       const cy = 3 * y1;
       const by = 3 * (y2 - y1) - cy;
       const ay = 1 - cy - by;
-      
+
       const solveCurveX = (t) => {
         let x = t;
         for (let i = 0; i < 5; i++) {
@@ -989,11 +897,7 @@
     'ease-in-out': bezierSolver(0.42, 0, 0.58, 1),
     'smooth': bezierSolver(0.4, 0, 0.2, 1),
     'spring': bezierSolver(0.34, 1.56, 0.64, 1),
-    'bounce': bezierSolver(0.68, -0.6, 0.32, 1.6),
-    'elastic': t => {
-        const c4 = (2 * Math.PI) / 3;
-        return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-    }
+    'bounce': bezierSolver(0.68, -0.6, 0.32, 1.6)
   };
 
   const EASINGS_CSS = {
@@ -1168,16 +1072,16 @@
     state.selectedId = null;
     state.multiSelectIds = [];
     state.chapters = [];
-    
+
     const setup = (w, h, bg0, bg1, type='gradient') => {
       state.canvasSize = { w, h };
       state.scene = { bgType: type, bgColor0: bg0, bgColor1: bg1 || bg0, bgAngle: 180 };
     };
-    
+
     const add = (type, x, y, w, h, color, text, anim, exit = { type: 'none', start: 0 }, props={}) => {
       state.elements.push({
         id: nextId(), type, name: text || (type.charAt(0).toUpperCase() + type.slice(1)),
-        x, y, width: w, height: h, color, text, opacity: 100, 
+        x, y, width: w, height: h, color, text, opacity: 100,
         borderRadius: type === 'card' ? 16 : type === 'button' ? 14 : type === 'image' ? 12 : 0,
         rotation: 0, shadow: type !== 'text', src: null,
         transformOrigin: 'center center',
@@ -1202,11 +1106,11 @@
       add('text', 40, 170, 280, 30, '#ffffff', 'Welcome Back', { type: 'slide-up', duration: 500, delay: 200, easing: 'spring', intensity: 40 }, { type: 'none', start: 0 }, { fontSize: 28, fontWeight: 700, textAlign: 'center' });
       add('card', 40, 220, 280, 140, '#2c2c2e', '', { type: 'slide-up', duration: 600, delay: 350, easing: 'ease-out', intensity: 50 });
       add('button', 40, 400, 280, 48, '#0a84ff', 'Continue', { type: 'spring-pop', duration: 700, delay: 600, easing: 'spring', intensity: 70 });
-    } 
+    }
     else if (sceneName === 'showcase') {
       setup(360, 640, '#0a0a0c', '#1c1c1e');
       state.totalDuration = 5000;
-      
+
       add('card', 30, 50, 300, 500, '#1c1c1e', '', { type: 'scale-in', duration: 500, delay: 0, easing: 'spring', intensity: 40 }, { type: 'collapse', duration: 500, start: 4500 }, { borderRadius: 24 });
       add('text', 50, 80, 260, 40, '#ffffff', 'UI Motion', { type: 'slide-up', duration: 500, delay: 200, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 32, fontWeight: 800, letterSpacing: -1, textAlign: 'center' });
       add('text', 50, 120, 260, 25, '#8e8e93', 'Generated with Transition Studio', { type: 'fade-in', duration: 500, delay: 400, easing: 'smooth', intensity: 30 }, { type: 'none', start: 0 }, { fontSize: 14, fontWeight: 500, textAlign: 'center' });
@@ -1273,7 +1177,7 @@
         }
       }
     }
-    
+
     if (sceneName === 'showcase') {
       state.totalDuration = 5000;
     } else {
@@ -1370,7 +1274,7 @@
       if (el.type === 'image' && el.src) iconHTML = `<img src="${el.src}" alt="">`;
       if (el.type === 'video' && el.src) iconHTML = `<video src="${el.src}" muted></video>`;
       const isSelected = state.selectedId === el.id || state.multiSelectIds.includes(el.id);
-      
+
       return `
         <div class="layer-item ${isSelected ? 'selected' : ''} ${el.locked ? 'locked' : ''}" data-id="${el.id}" draggable="true">
           <div class="layer-icon" style="background: ${(el.type === 'image' || el.type === 'video') ? 'transparent' : color + '22'}; color: ${color};">${iconHTML}</div>
@@ -1428,9 +1332,6 @@
               el.visible = el.visible === false ? true : false;
               renderAll();
               renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
-
             }
           }
           else if (action === 'lock') {
@@ -1440,9 +1341,6 @@
               el.locked = !el.locked;
               renderAll();
               renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
-
             }
           }
         });
@@ -1621,7 +1519,7 @@
         if (state.undoStack.length > 50) state.undoStack.shift();
         state.redoStack = [];
         updateUndoRedoButtons();
-        
+
       }
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
@@ -1677,192 +1575,495 @@
 
   // ===== INSPECTOR =====
   function renderInspector() {
-    const p = document.getElementById('inspectorPanel');
-    if (!state.selectedId) {
-      p.innerHTML = '<div style="padding:20px;color:var(--text-tertiary);text-align:center;">No element selected</div>';
+    const content = document.getElementById('inspectorContent');
+
+    if (state.activeTab === 'scene') {
+      content.innerHTML = `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Canvas Size</div>
+          <div class="field-row">
+            <div class="field"><label class="field-label">Width</label><input type="number" class="field-input" id="canvasW" value="${state.canvasSize.w}" min="50"></div>
+            <div class="field"><label class="field-label">Height</label><input type="number" class="field-input" id="canvasH" value="${state.canvasSize.h}" min="50"></div>
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Background</div>
+          <div class="scene-bg-toggle" id="bgTypeToggle2">
+            <button data-type="solid" class="${state.scene.bgType === 'solid' ? 'active' : ''}">Solid</button>
+            <button data-type="gradient" class="${state.scene.bgType === 'gradient' ? 'active' : ''}">Gradient</button>
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label class="field-label">Color 1</label>
+            <div class="color-swatch" id="bgColor0Swatch">
+              <div class="color-preview" style="background:${state.scene.bgColor0};"></div>
+              <span class="color-text">${state.scene.bgColor0}</span>
+            </div>
+          </div>
+          ${state.scene.bgType === 'gradient' ? `
+          <div class="field">
+            <label class="field-label">Color 2</label>
+            <div class="color-swatch" id="bgColor1Swatch">
+              <div class="color-preview" style="background:${state.scene.bgColor1};"></div>
+              <span class="color-text">${state.scene.bgColor1}</span>
+            </div>
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Gradient Angle</span><span class="slider-value">${state.scene.bgAngle}°</span></div>
+            <input type="range" class="slider" id="bgAngleSlider" min="0" max="360" step="1" value="${state.scene.bgAngle}" style="--p:${(state.scene.bgAngle/360)*100}%">
+          </div>` : ''}
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Chapter Markers</div>
+          <div id="chapterList" style="margin-bottom:10px;"></div>
+          <button class="btn-ghost" id="addChapterBtn" style="width:100%;">+ Add Chapter at Playhead</button>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Audio</div>
+          ${state.audio.src ? `
+            <p style="color:var(--text-secondary);font-size:13px;">${state.audio.name}</p>
+            <button class="btn-ghost" id="removeAudioBtn" style="margin-top:8px;color:var(--red);">Remove Audio</button>
+          ` : '<p style="color:var(--text-tertiary);font-size:13px;">No audio loaded. Use Upload Audio in left panel.</p>'}
+        </div>
+      `;
+
+      document.getElementById('canvasW').addEventListener('change', e => {
+        pushHistory();
+        state.canvasSize.w = Math.max(50, +e.target.value);
+        applyCanvasSize();
+        renderTimeline();
+      });
+      document.getElementById('canvasH').addEventListener('change', e => {
+        pushHistory();
+        state.canvasSize.h = Math.max(50, +e.target.value);
+        applyCanvasSize();
+        renderTimeline();
+      });
+      document.querySelectorAll('#bgTypeToggle2 button').forEach(btn => btn.addEventListener('click', () => {
+        pushHistory();
+        state.scene.bgType = btn.dataset.type;
+        renderScene();
+        renderInspector();
+      }));
+
+      const bg0 = document.getElementById('bgColor0Swatch');
+      if (bg0) bg0.addEventListener('click', () => {
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = state.scene.bgColor0;
+        inp.addEventListener('input', e => {
+          state.scene.bgColor0 = e.target.value;
+          renderScene();
+          renderInspector();
+        });
+        inp.addEventListener('change', pushHistory);
+        inp.click();
+      });
+
+      const bg1 = document.getElementById('bgColor1Swatch');
+      if (bg1) bg1.addEventListener('click', () => {
+        const inp = document.createElement('input');
+        inp.type = 'color';
+        inp.value = state.scene.bgColor1;
+        inp.addEventListener('input', e => {
+          state.scene.bgColor1 = e.target.value;
+          renderScene();
+          renderInspector();
+        });
+        inp.addEventListener('change', pushHistory);
+        inp.click();
+      });
+
+      const angSlider = document.getElementById('bgAngleSlider');
+      if (angSlider) {
+        angSlider.addEventListener('input', e => {
+          state.scene.bgAngle = +e.target.value;
+          e.target.style.setProperty('--p', (state.scene.bgAngle/360)*100 + '%');
+          e.target.parentElement.querySelector('.slider-value').textContent = state.scene.bgAngle + '°';
+          applySceneBackground();
+        });
+        angSlider.addEventListener('change', pushHistory);
+      }
+
+      renderChapterList();
+      document.getElementById('addChapterBtn').addEventListener('click', () => {
+        pushHistory();
+        if (!state.chapters) state.chapters = [];
+        state.chapters.push({ time: state.currentTime, label: 'Chapter ' + (state.chapters.length + 1) });
+        renderChapterList();
+        renderTimeline();
+      });
+
+      const ra = document.getElementById('removeAudioBtn');
+      if (ra) ra.addEventListener('click', () => {
+        pushHistory();
+        state.audio = { src: null, name: '', waveform: null };
+        renderAudio();
+        renderInspector();
+        renderTimeline();
+      });
       return;
     }
-    const el = state.elements.find(e => e.id === state.selectedId);
-    if (!el) return;
 
-    let html = `
-      <div class="panel-header">
-        <span class="panel-title">${el.name}</span>
-      </div>
-      <div class="inspector-group">
-        <div class="inspector-group-title">Transform</div>
-        <div class="prop-row"><span class="prop-label">X</span><input type="number" class="prop-input" id="prop-x" value="${Math.round(el.props.x)}"></div>
-        <div class="prop-row"><span class="prop-label">Y</span><input type="number" class="prop-input" id="prop-y" value="${Math.round(el.props.y)}"></div>
-        <div class="prop-row"><span class="prop-label">W / H</span><div style="display:flex;gap:4px;flex:1"><input type="number" class="prop-input" id="prop-w" value="${Math.round(el.props.width)}"><input type="number" class="prop-input" id="prop-h" value="${Math.round(el.props.height)}"></div></div>
-        <div class="prop-row"><span class="prop-label">Rotation</span><input type="number" class="prop-input" id="prop-rot" value="${el.props.rotation || 0}"></div>
-        <div class="prop-row"><span class="prop-label">Scale</span><input type="number" class="prop-input" id="prop-scale" step="0.1" value="${el.props.scale !== undefined ? el.props.scale : 1}"></div>
-        <div class="prop-row"><span class="prop-label">Opacity</span><input type="number" class="prop-input" id="prop-opacity" step="0.1" min="0" max="1" value="${el.props.opacity !== undefined ? el.props.opacity : 1}"></div>
-      </div>
-    `;
+    const el = state.elements.find(x => x.id === state.selectedId);
+    if (!el) {
+      content.innerHTML = `<div class="empty-state"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>Select an element<br>to edit its properties.</div>`;
+      return;
+    }
 
-    if (el.type === 'text') {
-      html += `
-        <div class="inspector-group">
-          <div class="inspector-group-title">Typography</div>
-          <div class="prop-row"><span class="prop-label">Text</span><input type="text" class="prop-input" id="prop-text" value="${el.props.text}"></div>
-          <div class="prop-row"><span class="prop-label">Font</span>
-            <select class="prop-select" id="prop-font">
-              <optgroup label="Sans-Serif">
-                <option value="Inter" ${el.props.font==='Inter'?'selected':''}>Inter</option>
-                <option value="SF Pro Display" ${el.props.font==='SF Pro Display'?'selected':''}>SF Pro Display</option>
-                <option value="Geist" ${el.props.font==='Geist'?'selected':''}>Geist</option>
-                <option value="Outfit" ${el.props.font==='Outfit'?'selected':''}>Outfit</option>
-                <option value="Plus Jakarta Sans" ${el.props.font==='Plus Jakarta Sans'?'selected':''}>Plus Jakarta Sans</option>
-                <option value="DM Sans" ${el.props.font==='DM Sans'?'selected':''}>DM Sans</option>
-                <option value="Manrope" ${el.props.font==='Manrope'?'selected':''}>Manrope</option>
-                <option value="Sora" ${el.props.font==='Sora'?'selected':''}>Sora</option>
-                <option value="Nunito" ${el.props.font==='Nunito'?'selected':''}>Nunito</option>
-                <option value="Poppins" ${el.props.font==='Poppins'?'selected':''}>Poppins</option>
-                <option value="Raleway" ${el.props.font==='Raleway'?'selected':''}>Raleway</option>
-                <option value="Montserrat" ${el.props.font==='Montserrat'?'selected':''}>Montserrat</option>
-                <option value="Urbanist" ${el.props.font==='Urbanist'?'selected':''}>Urbanist</option>
-                <option value="Figtree" ${el.props.font==='Figtree'?'selected':''}>Figtree</option>
-                <option value="Onest" ${el.props.font==='Onest'?'selected':''}>Onest</option>
-              </optgroup>
-              <optgroup label="Serif">
-                <option value="Playfair Display" ${el.props.font==='Playfair Display'?'selected':''}>Playfair Display</option>
-                <option value="Lora" ${el.props.font==='Lora'?'selected':''}>Lora</option>
-                <option value="Merriweather" ${el.props.font==='Merriweather'?'selected':''}>Merriweather</option>
-                <option value="Cormorant Garamond" ${el.props.font==='Cormorant Garamond'?'selected':''}>Cormorant</option>
-                <option value="DM Serif Display" ${el.props.font==='DM Serif Display'?'selected':''}>DM Serif</option>
-                <option value="Fraunces" ${el.props.font==='Fraunces'?'selected':''}>Fraunces</option>
-              </optgroup>
-              <optgroup label="Monospace">
-                <option value="JetBrains Mono" ${el.props.font==='JetBrains Mono'?'selected':''}>JetBrains Mono</option>
-                <option value="Fira Code" ${el.props.font==='Fira Code'?'selected':''}>Fira Code</option>
-                <option value="Space Mono" ${el.props.font==='Space Mono'?'selected':''}>Space Mono</option>
-                <option value="IBM Plex Mono" ${el.props.font==='IBM Plex Mono'?'selected':''}>IBM Plex Mono</option>
-              </optgroup>
-              <optgroup label="Display">
-                <option value="Clash Display" ${el.props.font==='Clash Display'?'selected':''}>Clash Display</option>
-                <option value="Cabinet Grotesk" ${el.props.font==='Cabinet Grotesk'?'selected':''}>Cabinet Grotesk</option>
-                <option value="Satoshi" ${el.props.font==='Satoshi'?'selected':''}>Satoshi</option>
-                <option value="General Sans" ${el.props.font==='General Sans'?'selected':''}>General Sans</option>
-                <option value="Bebas Neue" ${el.props.font==='Bebas Neue'?'selected':''}>Bebas Neue</option>
-                <option value="Righteous" ${el.props.font==='Righteous'?'selected':''}>Righteous</option>
-              </optgroup>
+    if (state.activeTab === 'element') {
+      content.innerHTML = `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Name</div>
+          <input type="text" class="field-input" id="elName" value="${el.name.replace(/"/g, '&quot;')}">
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Arrange</div>
+          <div class="preset-grid" style="grid-template-columns: 1fr 1fr;">
+            <button class="preset-btn" id="bringForward"><div class="preset-name">Bring Forward</div></button>
+            <button class="preset-btn" id="sendBackward"><div class="preset-name">Send Backward</div></button>
+            <button class="preset-btn" id="bringToFront"><div class="preset-name">Bring to Front</div></button>
+            <button class="preset-btn" id="sendToBack"><div class="preset-name">Send to Back</div></button>
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Position & Size</div>
+          <div class="field-row">
+            <div class="field"><label class="field-label">X</label><input type="number" class="field-input" id="posX" value="${el.x}"></div>
+            <div class="field"><label class="field-label">Y</label><input type="number" class="field-input" id="posY" value="${el.y}"></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label class="field-label">Width</label><input type="number" class="field-input" id="sizeW" value="${el.width}" min="10"></div>
+            <div class="field"><label class="field-label">Height</label><input type="number" class="field-input" id="sizeH" value="${el.height}" min="10"></div>
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Appearance</div>
+          ${(el.type !== 'image' && el.type !== 'video') ? `
+            <div class="field" style="margin-bottom: 12px;">
+              <label class="field-label">Color</label>
+              <div class="color-swatch" id="colorSwatch">
+                <div class="color-preview" style="background: ${el.color};"></div>
+                <span class="color-text">${el.color}</span>
+              </div>
+              <input type="color" id="colorInput" value="${el.color}" style="position:absolute; opacity:0; pointer-events:none;">
+            </div>
+          ` : ''}
+          <div class="toggle-row">
+            <span class="slider-label">Flip Horizontal</span>
+            <div class="toggle-switch ${el.flipH ? 'active' : ''}" id="flipHToggle"></div>
+          </div>
+          <div class="toggle-row">
+            <span class="slider-label">Flip Vertical</span>
+            <div class="toggle-switch ${el.flipV ? 'active' : ''}" id="flipVToggle"></div>
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Opacity</span><span class="slider-value">${el.opacity}%</span></div>
+            <input type="range" class="slider" id="opacitySlider" min="0" max="100" step="1" value="${el.opacity}" style="--p: ${el.opacity}%">
+          </div>
+          ${el.type !== 'text' && el.type !== 'circle' ? `
+            <div class="slider-row">
+              <div class="slider-header"><span class="slider-label">Corner Radius</span><span class="slider-value">${el.borderRadius}px</span></div>
+              <input type="range" class="slider" id="radiusSlider" min="0" max="40" step="1" value="${el.borderRadius}" style="--p: ${(el.borderRadius/40)*100}%">
+            </div>
+          ` : ''}
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Rotation</span><span class="slider-value">${el.rotation}°</span></div>
+            <input type="range" class="slider" id="rotationSlider" min="-180" max="180" step="1" value="${el.rotation}" style="--p: ${((el.rotation+180)/360)*100}%">
+          </div>
+          <div class="field" style="margin-bottom: 12px;">
+            <label class="field-label">Transform Origin</label>
+            <select class="field-input" id="originSelect">
+              <option value="center center" ${el.transformOrigin === 'center center' ? 'selected' : ''}>Center</option>
+              <option value="top center" ${el.transformOrigin === 'top center' ? 'selected' : ''}>Top</option>
+              <option value="bottom center" ${el.transformOrigin === 'bottom center' ? 'selected' : ''}>Bottom</option>
+              <option value="left center" ${el.transformOrigin === 'left center' ? 'selected' : ''}>Left</option>
+              <option value="right center" ${el.transformOrigin === 'right center' ? 'selected' : ''}>Right</option>
+              <option value="top left" ${el.transformOrigin === 'top left' ? 'selected' : ''}>Top Left</option>
+              <option value="top right" ${el.transformOrigin === 'top right' ? 'selected' : ''}>Top Right</option>
+              <option value="bottom left" ${el.transformOrigin === 'bottom left' ? 'selected' : ''}>Bottom Left</option>
+              <option value="bottom right" ${el.transformOrigin === 'bottom right' ? 'selected' : ''}>Bottom Right</option>
             </select>
           </div>
-          <div class="prop-row"><span class="prop-label">Weight</span><input type="number" class="prop-input" id="prop-weight" step="100" min="100" max="900" value="${el.props.weight || 600}"></div>
-          <div class="prop-row"><span class="prop-label">Size</span><input type="number" class="prop-input" id="prop-size" value="${el.props.size || 24}"></div>
-          <div class="prop-row"><span class="prop-label">Color</span>
-            <div class="color-picker-wrap">
-              <input type="color" class="color-preview" id="prop-color-picker" value="${el.props.color}">
-              <input type="text" class="color-hex" id="prop-color" value="${el.props.color}">
-            </div>
+          <div class="toggle-row">
+            <span class="slider-label">Drop Shadow</span>
+            <div class="toggle-switch ${el.shadow ? 'active' : ''}" id="shadowToggle"></div>
           </div>
-          <div class="prop-row"><span class="prop-label">Letter Spac.</span><input type="number" class="prop-input" id="prop-letter-spacing" step="0.5" value="${el.props.letterSpacing || 0}"></div>
-          <div class="prop-row"><span class="prop-label">Gradient Fill</span><input type="text" class="prop-input" id="prop-text-gradient" placeholder="e.g. linear-gradient(90deg, red, blue)" value="${el.props.textGradient || ''}"></div>
+          <div class="toggle-row">
+            <span class="slider-label">Motion Blur</span>
+            <div class="toggle-switch ${el.motionBlur ? 'active' : ''}" id="motionBlurToggle"></div>
+          </div>
+          <div class="toggle-row">
+            <span class="slider-label">Locked</span>
+            <div class="toggle-switch ${el.locked ? 'active' : ''}" id="lockToggle"></div>
+          </div>
         </div>
       `;
-    }
 
-    if (['card', 'button', 'circle'].includes(el.type)) {
-      html += `
-        <div class="inspector-group">
-          <div class="inspector-group-title">Appearance</div>
-          <div class="prop-row"><span class="prop-label">Color</span>
-            <div class="color-picker-wrap">
-              <input type="color" class="color-preview" id="prop-color-picker" value="${el.props.color}">
-              <input type="text" class="color-hex" id="prop-color" value="${el.props.color}">
-            </div>
+      const nameInput = document.getElementById('elName');
+      nameInput.addEventListener('input', e => { el.name = e.target.value; renderLayers(); renderTimeline(); });
+      nameInput.addEventListener('change', pushHistory);
+
+      document.getElementById('bringForward').addEventListener('click', () => bringForward(el.id));
+      document.getElementById('sendBackward').addEventListener('click', () => sendBackward(el.id));
+      document.getElementById('bringToFront').addEventListener('click', () => bringToFront(el.id));
+      document.getElementById('sendToBack').addEventListener('click', () => sendToBack(el.id));
+
+      document.getElementById('posX').addEventListener('input', e => { el.x = +e.target.value; renderCanvas(); });
+      document.getElementById('posX').addEventListener('change', pushHistory);
+      document.getElementById('posY').addEventListener('input', e => { el.y = +e.target.value; renderCanvas(); });
+      document.getElementById('posY').addEventListener('change', pushHistory);
+      document.getElementById('sizeW').addEventListener('input', e => { el.width = Math.max(10, +e.target.value); renderCanvas(); });
+      document.getElementById('sizeW').addEventListener('change', pushHistory);
+      document.getElementById('sizeH').addEventListener('input', e => { el.height = Math.max(10, +e.target.value); renderCanvas(); });
+      document.getElementById('sizeH').addEventListener('change', pushHistory);
+
+      const colorSwatch = document.getElementById('colorSwatch');
+      if (colorSwatch) {
+        colorSwatch.addEventListener('click', () => document.getElementById('colorInput').click());
+        document.getElementById('colorInput').addEventListener('input', e => { el.color = e.target.value; renderCanvas(); renderInspector(); renderLayers(); });
+        document.getElementById('colorInput').addEventListener('change', pushHistory);
+      }
+
+      document.getElementById('flipHToggle').addEventListener('click', e => {
+        pushHistory();
+        el.flipH = !el.flipH;
+        e.currentTarget.classList.toggle('active');
+        renderCanvas();
+      });
+      document.getElementById('flipVToggle').addEventListener('click', e => {
+        pushHistory();
+        el.flipV = !el.flipV;
+        e.currentTarget.classList.toggle('active');
+        renderCanvas();
+      });
+
+      const opSlider = document.getElementById('opacitySlider');
+      opSlider.addEventListener('input', e => { el.opacity = +e.target.value; e.target.style.setProperty('--p', el.opacity + '%'); renderCanvas(); });
+      opSlider.addEventListener('change', pushHistory);
+
+      const radSlider = document.getElementById('radiusSlider');
+      if (radSlider) {
+        radSlider.addEventListener('input', e => { el.borderRadius = +e.target.value; e.target.style.setProperty('--p', (el.borderRadius/40)*100 + '%'); renderCanvas(); });
+        radSlider.addEventListener('change', pushHistory);
+      }
+      const rotSlider = document.getElementById('rotationSlider');
+      rotSlider.addEventListener('input', e => { el.rotation = +e.target.value; e.target.style.setProperty('--p', ((el.rotation+180)/360)*100 + '%'); renderCanvas(); });
+      rotSlider.addEventListener('change', pushHistory);
+
+      document.getElementById('originSelect').addEventListener('change', e => { pushHistory(); el.transformOrigin = e.target.value; renderCanvas(); });
+
+      document.getElementById('shadowToggle').addEventListener('click', (e) => {
+        pushHistory();
+        el.shadow = !el.shadow;
+        e.currentTarget.classList.toggle('active');
+        renderCanvas();
+      });
+      document.getElementById('motionBlurToggle').addEventListener('click', (e) => {
+        pushHistory();
+        el.motionBlur = !el.motionBlur;
+        e.currentTarget.classList.toggle('active');
+      });
+      document.getElementById('lockToggle').addEventListener('click', (e) => {
+        pushHistory();
+        el.locked = !el.locked;
+        e.currentTarget.classList.toggle('active');
+        renderCanvas();
+        renderLayers();
+      });
+    } else {
+      const anim = el.animation;
+      const exit = el.exit;
+      content.innerHTML = `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Entrance Preset</div>
+          <div class="preset-grid">
+            ${Object.entries(PRESETS).map(([key, p]) => `<button class="preset-btn ${anim.type === p.type ? 'active' : ''}" data-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
           </div>
-          <div class="prop-row"><span class="prop-label">Radius</span><input type="number" class="prop-input" id="prop-radius" value="${el.props.borderRadius !== undefined ? el.props.borderRadius : 16}"></div>
         </div>
+        ${anim.type !== 'none' ? `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Entrance Timing</div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Duration</span><span class="slider-value">${(anim.duration/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="durationSlider" min="100" max="2000" step="50" value="${anim.duration}" style="--p: ${(anim.duration/2000)*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Delay</span><span class="slider-value">${(anim.delay/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="delaySlider" min="0" max="${Math.max(3000, state.totalDuration)}" step="50" value="${anim.delay}" style="--p: ${(anim.delay/Math.max(3000, state.totalDuration))*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Intensity</span><span class="slider-value">${anim.intensity}%</span></div>
+            <input type="range" class="slider" id="intensitySlider" min="0" max="100" step="5" value="${anim.intensity}" style="--p: ${anim.intensity}%">
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Entrance Easing</div>
+          <div class="easing-grid">
+            ${Object.entries(EASINGS_CSS).map(([key]) => `<button class="easing-btn ${anim.easing === key ? 'active' : ''}" data-easing="${key}"><svg class="easing-curve" viewBox="0 0 28 20"><path d="${EASING_CURVES_PATH[key]}"/></svg><span class="easing-name">${key}</span></button>`).join('')}
+          </div>
+        </div>
+        ` : ''}
+        <div class="inspector-section">
+          <div class="inspector-section-title">Keyframes <span style="font-weight:400;color:var(--text-tertiary);font-size:12px;">(replaces entrance/exit)</span></div>
+          <div class="toggle-row" style="margin-bottom:8px;">
+            <span class="slider-label">Enable Keyframes</span>
+            <div class="toggle-switch ${el.keyframes && el.keyframes.length >= 2 ? 'active' : ''}" id="keyframeToggle"></div>
+          </div>
+          ${el.keyframes && el.keyframes.length >= 2 ? `
+          <button class="btn-ghost" id="addKeyframeBtn" style="width:100%;margin-bottom:8px;">+ Add Keyframe at ${(state.currentTime/1000).toFixed(2)}s</button>
+          <div style="max-height:160px;overflow-y:auto;font-size:12px;">
+            ${el.keyframes.slice().sort((a,b)=>a.time-b.time).map((kf, i) => `
+              <div style="display:flex;align-items:center;gap:6px;padding:4px 6px;background:rgba(255,255,255,0.03);border-radius:6px;margin-bottom:4px;">
+                <span style="color:var(--accent);font-weight:600;min-width:50px;">${(kf.time/1000).toFixed(2)}s</span>
+                <span style="color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                  x:${(kf.props.x??el.x).toFixed(0)} y:${(kf.props.y??el.y).toFixed(0)} s:${(kf.props.scale??1).toFixed(2)} r:${(kf.props.rotation??el.rotation).toFixed(0)}° o:${(kf.props.opacity??el.opacity/100).toFixed(2)}
+                </span>
+                <button class="delete-keyframe" data-kf-index="${i}" style="background:none;border:none;color:var(--red);cursor:pointer;padding:2px;">✕</button>
+              </div>
+            `).join('')}
+          </div>
+          ` : '<p style="color:var(--text-tertiary);font-size:12px;">Add at least 2 keyframes to enable interpolation.</p>'}
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Preset</div>
+          <div class="preset-grid">
+            ${Object.entries(EXIT_PRESETS).map(([key, p]) => `<button class="preset-btn ${exit.type === p.type ? 'active' : ''}" data-exit-preset="${key}"><div class="preset-name">${p.name}</div><div class="preset-desc">${p.desc}</div></button>`).join('')}
+          </div>
+        </div>
+        ${exit.type !== 'none' ? `
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Timing</div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Duration</span><span class="slider-value">${(exit.duration/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="exitDurationSlider" min="100" max="2000" step="50" value="${exit.duration}" style="--p: ${(exit.duration/2000)*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Start Time</span><span class="slider-value">${(exit.start/1000).toFixed(2)}s</span></div>
+            <input type="range" class="slider" id="exitStartSlider" min="0" max="${state.totalDuration}" step="50" value="${exit.start}" style="--p: ${(exit.start/state.totalDuration)*100}%">
+          </div>
+          <div class="slider-row">
+            <div class="slider-header"><span class="slider-label">Intensity</span><span class="slider-value">${exit.intensity}%</span></div>
+            <input type="range" class="slider" id="exitIntensitySlider" min="0" max="100" step="5" value="${exit.intensity}" style="--p: ${exit.intensity}%">
+          </div>
+        </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Exit Easing</div>
+          <div class="easing-grid">
+            ${Object.entries(EASINGS_CSS).map(([key]) => `<button class="easing-btn ${exit.easing === key ? 'active' : ''}" data-exit-easing="${key}"><svg class="easing-curve" viewBox="0 0 28 20"><path d="${EASING_CURVES_PATH[key]}"/></svg><span class="easing-name">${key}</span></button>`).join('')}
+          </div>
+        </div>
+        ` : ''}
       `;
+
+      content.querySelectorAll('.preset-btn[data-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          pushHistory();
+          const preset = PRESETS[btn.dataset.preset];
+          anim.type = preset.type; anim.duration = preset.duration; anim.easing = preset.easing;
+          renderAll(); renderTimeline();
+        });
+      });
+      const durSlider = document.getElementById('durationSlider');
+      if (durSlider) {
+        durSlider.addEventListener('input', e => { anim.duration = +e.target.value; e.target.style.setProperty('--p', (anim.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
+        durSlider.addEventListener('change', pushHistory);
+      }
+      const delSlider = document.getElementById('delaySlider');
+      if (delSlider) {
+        delSlider.addEventListener('input', e => { anim.delay = +e.target.value; e.target.style.setProperty('--p', (anim.delay/Math.max(3000, state.totalDuration))*100 + '%'); renderInspector(); renderTimeline(); });
+        delSlider.addEventListener('change', pushHistory);
+      }
+      const intSlider = document.getElementById('intensitySlider');
+      if (intSlider) {
+        intSlider.addEventListener('input', e => { anim.intensity = +e.target.value; e.target.style.setProperty('--p', anim.intensity + '%'); renderInspector(); });
+        intSlider.addEventListener('change', pushHistory);
+      }
+      content.querySelectorAll('.easing-btn[data-easing]').forEach(btn => {
+        btn.addEventListener('click', () => { pushHistory(); anim.easing = btn.dataset.easing; renderInspector(); });
+      });
+
+      content.querySelectorAll('.preset-btn[data-exit-preset]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          pushHistory();
+          const preset = EXIT_PRESETS[btn.dataset.exitPreset];
+          exit.type = preset.type; exit.duration = preset.duration; exit.easing = preset.easing;
+          if (exit.type !== 'none' && exit.start === 0) {
+            exit.start = state.totalDuration - exit.duration;
+          }
+          renderAll(); renderTimeline();
+        });
+      });
+      const exDurSlider = document.getElementById('exitDurationSlider');
+      if (exDurSlider) {
+        exDurSlider.addEventListener('input', e => { exit.duration = +e.target.value; e.target.style.setProperty('--p', (exit.duration/2000)*100 + '%'); renderInspector(); renderTimeline(); });
+        exDurSlider.addEventListener('change', pushHistory);
+      }
+      const exStartSlider = document.getElementById('exitStartSlider');
+      if (exStartSlider) {
+        exStartSlider.addEventListener('input', e => { exit.start = +e.target.value; e.target.style.setProperty('--p', (exit.start/state.totalDuration)*100 + '%'); renderInspector(); renderTimeline(); });
+        exStartSlider.addEventListener('change', pushHistory);
+      }
+      const exIntSlider = document.getElementById('exitIntensitySlider');
+      if (exIntSlider) {
+        exIntSlider.addEventListener('input', e => { exit.intensity = +e.target.value; e.target.style.setProperty('--p', exit.intensity + '%'); renderInspector(); });
+        exIntSlider.addEventListener('change', pushHistory);
+      }
+      content.querySelectorAll('.easing-btn[data-exit-easing]').forEach(btn => {
+        btn.addEventListener('click', () => { pushHistory(); exit.easing = btn.dataset.exitEasing; renderInspector(); });
+      });
+
+      const kfToggle = document.getElementById('keyframeToggle');
+      if (kfToggle) {
+        kfToggle.addEventListener('click', () => {
+          pushHistory();
+          if (el.keyframes && el.keyframes.length >= 2) { el.keyframes = null; }
+          else {
+            const curTime = state.currentTime;
+            el.keyframes = [
+              { time: Math.max(0, curTime - 500), props: { x: el.x, y: el.y, scale: 1, rotation: el.rotation, opacity: el.opacity / 100 }, easing: 'linear' },
+              { time: curTime, props: { x: el.x + 50, y: el.y, scale: 1.2, rotation: el.rotation + 15, opacity: el.opacity / 100 }, easing: 'ease-out' }
+            ];
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
+      }
+      const addKfBtn = document.getElementById('addKeyframeBtn');
+      if (addKfBtn) {
+        addKfBtn.addEventListener('click', () => {
+          pushHistory();
+          if (!el.keyframes) el.keyframes = [];
+          const exists = el.keyframes.find(k => Math.abs(k.time - state.currentTime) < 50);
+          if (!exists) {
+            el.keyframes.push({
+              time: state.currentTime,
+              props: {
+                x: el.x, y: el.y,
+                scale: 1, rotation: el.rotation,
+                opacity: el.opacity / 100
+              },
+              easing: 'linear'
+            });
+            el.keyframes.sort((a, b) => a.time - b.time);
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
+      }
+      content.querySelectorAll('.delete-keyframe').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          pushHistory();
+          const idx = parseInt(btn.dataset.kfIndex);
+          if (el.keyframes && idx >= 0 && idx < el.keyframes.length) {
+            el.keyframes.splice(idx, 1);
+            if (el.keyframes.length < 2) el.keyframes = null;
+          }
+          renderInspector(); renderAll(); renderTimeline();
+        });
+      });
     }
-
-    // Add Advanced Effects to all element types
-    html += `
-      <div class="inspector-group">
-        <div class="inspector-group-title">Advanced Effects</div>
-        <div class="prop-row"><span class="prop-label">Effect Style</span>
-          <select class="prop-select" id="prop-effect">
-            <option value="none" ${el.props.effect==='none'?'selected':''}>None</option>
-            <option value="glassmorphism" ${el.props.effect==='glassmorphism'?'selected':''}>Glassmorphism</option>
-            <option value="neumorphism" ${el.props.effect==='neumorphism'?'selected':''}>Neumorphism</option>
-            <option value="neon" ${el.props.effect==='neon'?'selected':''}>Neon Glow</option>
-            <option value="glitch" ${el.props.effect==='glitch'?'selected':''}>Glitch Split</option>
-          </select>
-        </div>
-      </div>
-    `;
-
-    // Animations section
-    html += `
-      <div class="inspector-group">
-        <div class="inspector-group-title">Animations</div>
-        <div class="prop-row"><span class="prop-label">In</span>
-          <select class="prop-select" id="prop-anim-in">
-            <option value="none" ${el.animIn==='none'?'selected':''}>None</option>
-            <option value="fade" ${el.animIn==='fade'?'selected':''}>Fade</option>
-            <option value="slide-up" ${el.animIn==='slide-up'?'selected':''}>Slide Up</option>
-            <option value="scale-spring" ${el.animIn==='scale-spring'?'selected':''}>Scale Spring</option>
-            <option value="swirl" ${el.animIn==='swirl'?'selected':''}>Swirl In</option>
-            <option value="glitch" ${el.animIn==='glitch'?'selected':''}>Glitch Reveal</option>
-          </select>
-        </div>
-        <div class="prop-row"><span class="prop-label">Out</span>
-          <select class="prop-select" id="prop-anim-out">
-            <option value="none" ${el.animOut==='none'?'selected':''}>None</option>
-            <option value="fade" ${el.animOut==='fade'?'selected':''}>Fade</option>
-            <option value="slide-down" ${el.animOut==='slide-down'?'selected':''}>Slide Down</option>
-            <option value="scale-down" ${el.animOut==='scale-down'?'selected':''}>Scale Down</option>
-            <option value="swirl" ${el.animOut==='swirl'?'selected':''}>Swirl Out</option>
-            <option value="shatter" ${el.animOut==='shatter'?'selected':''}>Shatter</option>
-          </select>
-        </div>
-      </div>
-    `;
-
-    p.innerHTML = html;
-
-    // Bind events
-    const updateProp = (key, val, isNumeric) => {
-      pushHistory();
-      if (isNumeric) val = parseFloat(val) || 0;
-      el.props[key] = val;
-      renderAll();
-    };
-
-    ['x','y','w','h','rot','scale','opacity'].forEach(k => {
-      const elNode = document.getElementById('prop-'+k);
-      if(elNode) elNode.addEventListener('change', e => {
-        let keyMap = {x:'x',y:'y',w:'width',h:'height',rot:'rotation',scale:'scale',opacity:'opacity'};
-        updateProp(keyMap[k], e.target.value, true);
-      });
-    });
-
-    if (document.getElementById('prop-text')) document.getElementById('prop-text').addEventListener('input', e => { el.props.text = e.target.value; renderAll(); });
-    if (document.getElementById('prop-font')) document.getElementById('prop-font').addEventListener('change', e => updateProp('font', e.target.value, false));
-    if (document.getElementById('prop-weight')) document.getElementById('prop-weight').addEventListener('change', e => updateProp('weight', e.target.value, true));
-    if (document.getElementById('prop-size')) document.getElementById('prop-size').addEventListener('change', e => updateProp('size', e.target.value, true));
-    if (document.getElementById('prop-letter-spacing')) document.getElementById('prop-letter-spacing').addEventListener('change', e => updateProp('letterSpacing', e.target.value, true));
-    if (document.getElementById('prop-text-gradient')) document.getElementById('prop-text-gradient').addEventListener('change', e => updateProp('textGradient', e.target.value, false));
-    if (document.getElementById('prop-radius')) document.getElementById('prop-radius').addEventListener('change', e => updateProp('borderRadius', e.target.value, true));
-    if (document.getElementById('prop-effect')) document.getElementById('prop-effect').addEventListener('change', e => updateProp('effect', e.target.value, false));
-
-    if (document.getElementById('prop-color-picker')) {
-      document.getElementById('prop-color-picker').addEventListener('input', e => {
-        document.getElementById('prop-color').value = e.target.value;
-        el.props.color = e.target.value; renderAll();
-      });
-      document.getElementById('prop-color-picker').addEventListener('change', pushHistory);
-      document.getElementById('prop-color').addEventListener('change', e => {
-        document.getElementById('prop-color-picker').value = e.target.value;
-        updateProp('color', e.target.value, false);
-      });
-    }
-
-    if (document.getElementById('prop-anim-in')) document.getElementById('prop-anim-in').addEventListener('change', e => { pushHistory(); el.animIn = e.target.value; renderTimeline(); });
-    if (document.getElementById('prop-anim-out')) document.getElementById('prop-anim-out').addEventListener('change', e => { pushHistory(); el.animOut = e.target.value; renderTimeline(); });
   }
-function renderChapterList() {
+
+  function renderChapterList() {
     const list = document.getElementById('chapterList');
     if (!list) return;
     if (!state.chapters || state.chapters.length === 0) {
@@ -1896,11 +2097,11 @@ function renderChapterList() {
     const ruler = document.getElementById('timelineRuler');
     const tracksContainer = document.getElementById('timelineTracks');
     const content = document.getElementById('timelineContent');
-    
+
     const totalSec = state.totalDuration / 1000;
     const pxPerSec = 100 * state.timelineZoom;
     const rulerWidth = totalSec * pxPerSec;
-    
+
     content.style.width = `calc(140px + ${rulerWidth}px)`;
     ruler.style.width = `calc(140px + ${rulerWidth}px)`;
 
@@ -1917,7 +2118,7 @@ function renderChapterList() {
       else label = sec.toFixed(step < 1 ? 1 : 0) + 's';
       rulerHtml += `<div class="ruler-mark ${isMajor ? 'major' : ''}" style="left: ${left}px;">${isMajor ? label : ''}</div>`;
     }
-    
+
     if (state.chapters && state.chapters.length > 0) {
       state.chapters.forEach(ch => {
         const left = 140 + (ch.time / 1000) * pxPerSec;
@@ -1934,14 +2135,13 @@ function renderChapterList() {
         const anim = el.animation;
         const exit = el.exit;
         const left = 140 + (anim.delay / 1000) * pxPerSec;
-        const totalW = Math.max(24, ((exit ? exit.start + exit.duration : state.totalDuration) - anim.delay) / 1000 * pxPerSec);
-        const color = el.type === 'video' ? '#0a84ff' : el.type === 'audio' ? '#30d158' : el.type === 'image' ? '#bf5af2' : el.type === 'text' ? '#ff9f0a' : '#ff453a';
-
+        const width = Math.max(24, (anim.duration / 1000) * pxPerSec);
+        const color = TYPE_COLORS[el.type];
         const presetName = Object.values(PRESETS).find(p => p.type === anim.type)?.name || anim.type;
         let iconHTML = getLayerIcon(el.type);
         if (el.type === 'image' && el.src) iconHTML = `<img src="${el.src}" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">`;
         if (el.type === 'video' && el.src) iconHTML = `<video src="${el.src}" muted style="width:100%;height:100%;object-fit:cover;border-radius:4px;"></video>`;
-        
+
         let exitBarHtml = '';
         if (exit && exit.type !== 'none') {
           const exitLeft = 140 + (exit.start / 1000) * pxPerSec;
@@ -1954,7 +2154,7 @@ function renderChapterList() {
             </div>
           `;
         }
-        
+
         tracksHtml += `
           <div class="timeline-track" data-track-id="${el.id}">
             <div class="track-label">
@@ -2017,9 +2217,9 @@ function renderChapterList() {
       });
       const trimHandle = bar.querySelector('.trim-handle');
       if (trimHandle) {
-        trimHandle.addEventListener('mousedown', (e) => { 
-          e.stopPropagation(); 
-          startBarDrag(e, elId, 'trim', bar.dataset.mode); 
+        trimHandle.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          startBarDrag(e, elId, 'trim', bar.dataset.mode);
         });
       }
     });
@@ -2040,16 +2240,10 @@ function renderChapterList() {
     updatePlayhead();
 
     tracksContainer.querySelectorAll('[data-vis]').forEach(btn => {
-      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.vis); if (el) { pushHistory(); el.visible = !(el.visible === false); renderAll(); renderTimeline(); renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
- } });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.vis); if (el) { pushHistory(); el.visible = !(el.visible === false); renderAll(); renderTimeline(); renderLayers(); } });
     });
     tracksContainer.querySelectorAll('[data-lock]').forEach(btn => {
-      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.lock); if (el) { pushHistory(); el.locked = !el.locked; renderAll(); renderTimeline(); renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
- } });
+      btn.addEventListener('click', (e) => { e.stopPropagation(); const el = state.elements.find(x => x.id === +btn.dataset.lock); if (el) { pushHistory(); el.locked = !el.locked; renderAll(); renderTimeline(); renderLayers(); } });
     });
 
     let dragTrackId = null, dragTrackStartY = 0, dragTrackOrigIdx = 0;
@@ -2078,33 +2272,12 @@ function renderChapterList() {
             }
           }
         };
-        const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); const t = document.querySelector(`.timeline-track[data-track-id="${dragTrackId}"]`); if (t) t.style.opacity = ''; renderAll(); renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
- };
+        const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); const t = document.querySelector(`.timeline-track[data-track-id="${dragTrackId}"]`); if (t) t.style.opacity = ''; renderAll(); renderLayers(); };
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
       });
     });
   }
-
-
-    document.getElementById('timelineRuler').addEventListener('mousedown', e => {
-      const updateTime = (ex) => {
-        const rect = document.getElementById('timelineContent').getBoundingClientRect();
-        const pxPerSec = 100 * state.timelineZoom;
-        const x = ex - rect.left - 140; // 140 is header width
-        const time = Math.max(0, Math.min(state.totalDuration, (x / pxPerSec) * 1000));
-        state.currentTime = time;
-        updatePlayhead();
-      };
-      updateTime(e.clientX);
-
-      const onMove = e => updateTime(e.clientX);
-      const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
 
   function startBarDrag(e, elId, mode, animMode) {
     e.preventDefault();
@@ -2126,7 +2299,7 @@ function renderChapterList() {
       const dx = e.clientX - startX;
       if (Math.abs(dx) > 3) bar._hasMoved = true;
       const dMs = dx * msPerPx;
-      
+
       if (animMode === 'exit') {
         if (mode === 'move') {
           let newStart = startStart + dMs;
@@ -2140,22 +2313,20 @@ function renderChapterList() {
       } else {
         if (mode === 'move') {
           let newDelay = startDelay + dMs;
-          newDelay = Math.max(0, newDelay);
-          el.animation.delay = newDelay;
-          if (el.exit) el.exit.start += dMs; // move exit sync
-           Math.round(newDelay);
+          newDelay = Math.max(0, Math.min(state.totalDuration - el.animation.duration, newDelay));
+          el.animation.delay = Math.round(newDelay);
         } else if (mode === 'trim') {
           let newDuration = startDuration + dMs;
           newDuration = Math.max(100, Math.min(state.totalDuration - el.animation.delay, newDuration));
           el.animation.duration = Math.round(newDuration);
         }
       }
-      
-      const left = animMode === 'exit' 
+
+      const left = animMode === 'exit'
         ? 140 + (el.exit.start / 1000) * pxPerSec
         : 140 + (el.animation.delay / 1000) * pxPerSec;
       const width = Math.max(24, ((animMode === 'exit' ? el.exit.duration : el.animation.duration) / 1000) * pxPerSec);
-      bar.style.left = (left - 140) + 'px'; 
+      bar.style.left = (left - 140) + 'px';
       bar.style.width = width + 'px';
     }
     function onUp() {
@@ -2193,10 +2364,7 @@ function renderChapterList() {
     updateCanvasTime();
   }
 
-  function renderAll() { renderLayers();
-
-      if (state.multiSelectIds.length < 2) document.getElementById('alignToolbar').classList.remove('visible');
- renderCanvas(); renderInspector(); }
+  function renderAll() { renderLayers(); renderCanvas(); renderInspector(); }
 
   // ===== ARRANGE =====
   function bringForward(id) {
@@ -2277,7 +2445,7 @@ function renderChapterList() {
     }
     renderCanvas();
     renderInspector();
-    
+
   }
 
   function splitElement() {
@@ -2338,7 +2506,7 @@ function renderChapterList() {
     state.multiSelectIds = [];
     renderAll();
     renderTimeline();
-    
+
   }
 
   let _pendingDeleteId = null;
@@ -2359,7 +2527,7 @@ function renderChapterList() {
     renderAll();
     renderTimeline();
     showToast('Element deleted', '#ff453a');
-    
+
   }
 
   function duplicateElement(id) {
@@ -2378,7 +2546,7 @@ function renderChapterList() {
     renderAll();
     renderTimeline();
     showToast('Element duplicated');
-    
+
   }
 
   function copyElement(id) {
@@ -2402,7 +2570,7 @@ function renderChapterList() {
     renderAll();
     renderTimeline();
     showToast('Pasted');
-    
+
   }
 
   function selectAll() {
@@ -2595,7 +2763,7 @@ function renderChapterList() {
   function generateStory() {
     const text = document.getElementById('storyInput').value;
     if (!text.trim()) return;
-    
+
     pushHistory();
     state.elements = [];
     idCounter = 1;
@@ -2604,18 +2772,18 @@ function renderChapterList() {
     state.chapters = [];
     state.scene = { bgType: 'gradient', bgColor0: '#000000', bgColor1: '#1a1a1a', bgAngle: 180 };
     state.canvasSize = { w: 360, h: 640 }; // Fixed to 9:16 ratio
-    
+
     const blocks = text.split('\n').filter(b => b.trim() && !b.trim().startsWith('---'));
     let currentTime = 0;
-    
+
     blocks.forEach((block, i) => {
       const isTitle = block.trim().startsWith('## ');
       const textContent = isTitle ? block.replace('## ', '') : block;
       const textLength = textContent.length;
       const duration = Math.min(8000, Math.max(3000, textLength * 50));
-      
+
       if (isTitle) state.chapters.push({ time: currentTime, label: textContent.substring(0, 20) });
-      
+
       const el = {
         id: nextId(),
         type: 'text',
@@ -2646,17 +2814,17 @@ function renderChapterList() {
       state.elements.push(el);
       currentTime += duration;
     });
-    
+
     state.totalDuration = currentTime + 1000;
     updateDurationUI();
-    
+
     document.getElementById('storyModal').classList.remove('active');
     applyCanvasSize();
     renderScene();
     renderAll();
     renderTimeline();
     showToast('Story sequence generated!');
-    
+
   }
 
   // ===== FILE UPLOADS =====
@@ -2696,7 +2864,7 @@ function renderChapterList() {
       reader.readAsDataURL(file);
     });
     showToast(`${files.length} image${files.length > 1 ? 's' : ''} uploaded`);
-    
+
   }
 
   function handleVideoUpload(files) {
@@ -2735,7 +2903,7 @@ function renderChapterList() {
       reader.readAsDataURL(file);
     });
     showToast(`${files.length} video${files.length > 1 ? 's' : ''} uploaded`);
-    
+
   }
 
   function handleAudioUpload(file) {
@@ -2746,7 +2914,7 @@ function renderChapterList() {
       state.audio = { src: e.target.result, name: file.name, waveform: null };
       renderAudio();
       showToast('Audio uploaded');
-      
+
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       fetch(e.target.result).then(r => r.arrayBuffer()).then(buf => audioCtx.decodeAudioData(buf)).then(audioBuf => {
         const raw = audioBuf.getChannelData(0);
@@ -2795,7 +2963,7 @@ function renderChapterList() {
       try {
         const data = JSON.parse(e.target.result);
         if (!data.elements || !Array.isArray(data.elements)) throw new Error("Invalid JSON");
-        
+
         state.elements = data.elements.map(el => {
           if (!el.exit) el.exit = { type: 'none', duration: 400, start: 0, easing: 'ease-in', intensity: 50 };
           if (!el.transformOrigin) el.transformOrigin = 'center center';
@@ -2814,25 +2982,25 @@ function renderChapterList() {
           if (!el.letterSpacing) el.letterSpacing = 0;
           return el;
         });
-        
+
         state.scene = data.scene || { bgType: 'solid', bgColor0: '#000000', bgColor1: '#000000', bgAngle: 180 };
         state.totalDuration = data.totalDuration || 3000;
         state.canvasSize = data.canvasSize || { w: 360, h: 640 };
         state.audio = data.audio || { src: null, name: '' };
         state.chapters = data.chapters || [];
-        
+
         let maxId = 0;
         state.elements.forEach(el => {
           const idNum = parseInt(el.id.replace('el-', '')) || 0;
           if (idNum > maxId) maxId = idNum;
         });
         idCounter = maxId + 1;
-        
+
         state.selectedId = null;
         state.multiSelectIds = [];
         state.undoStack = [];
         state.redoStack = [];
-        
+
         updateDurationUI();
         applyCanvasSize();
         renderScene();
@@ -2897,12 +3065,9 @@ function renderChapterList() {
       const progress = Math.min(1, Math.max(0, (time - exit.start) / exit.duration));
       const eased = EASING_FN[exit.easing] ? EASING_FN[exit.easing](progress) : progress;
       const intensity = exit.intensity / 100;
-      
+
       switch(exit.type) {
         case 'fade-out': st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
-        case 'swirl-out': st.rotation = el.rotation - (360 * intensity) * eased; st.scale = 1 - eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
-        case 'shatter': st.y = el.y + (100 * intensity) * eased; st.rotation = el.rotation + (45 * intensity) * eased; st.opacity = (el.opacity / 100) * (1 - eased); st.filter = `drop-shadow(10px 10px 0px rgba(0,0,0,0.5))`; break;
-        case 'genie': st.y = el.y + 200 * eased; st.scale = 1 - 0.8 * eased; st.x = el.x + (cw/2 - el.x) * eased; st.opacity = (el.opacity / 100) * (1 - eased); break;
         case 'slide-down-out': st.y = el.y + (60 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
         case 'slide-up-out': st.y = el.y - (60 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; if(el.motionBlur) st.blur = 4 * intensity * eased; break;
         case 'scale-out': st.scale = 1 - (0.6 * intensity) * eased; st.opacity = (el.opacity / 100) - (el.opacity / 100) * eased; break;
@@ -2950,7 +3115,7 @@ function renderChapterList() {
 
     const w = el.width * scale;
     const h = el.height * scale;
-    
+
     let originX = st.x * scale + (el.width * scale) / 2;
     let originY = st.y * scale + (el.height * scale) / 2;
     if (el.transformOrigin.includes('left')) originX = st.x * scale;
@@ -2969,7 +3134,7 @@ function renderChapterList() {
       ctx.shadowBlur = 20 * scale;
       ctx.shadowOffsetY = 8 * scale;
     }
-    
+
     if (el.flipH) ctx.scale(-1, 1);
     if (el.flipV) ctx.scale(1, -1);
 
@@ -2992,9 +3157,9 @@ function renderChapterList() {
     } else if (el.type === 'text') {
       ctx.fillStyle = el.color;
       ctx.font = `${el.fontWeight} ${(el.fontSize || 24) * scale}px ${el.fontFamily}`;
-      ctx.textAlign = el.textAlign || 'center'; 
+      ctx.textAlign = el.textAlign || 'center';
       ctx.textBaseline = 'middle';
-      
+
       let displayText = el.text || 'Text';
       if (el.textAnimation === 'typewriter') {
         const typeStart = el.animation.type !== 'none' ? el.animation.delay + el.animation.duration : 0;
@@ -3003,16 +3168,16 @@ function renderChapterList() {
         const chars = Math.min(displayText.length, Math.floor(progress * displayText.length));
         displayText = displayText.substring(0, chars);
       }
-      
+
       let textX = 4 * scale;
       if (ctx.textAlign === 'center') textX = (el.width * scale) / 2;
       if (ctx.textAlign === 'right') textX = (el.width * scale) - (4 * scale);
-      
+
       const lines = displayText.split('\n');
       const lineHeight = (el.fontSize || 24) * scale * 1.2;
       const totalTextHeight = lines.length * lineHeight;
       const startY = (h / 2) - (totalTextHeight / 2) + (lineHeight / 2);
-      
+
       lines.forEach((line, i) => {
         ctx.fillText(line, textX, startY + i * lineHeight);
       });
@@ -3129,7 +3294,7 @@ function renderChapterList() {
 
     // FIXED: Use captureStream(fps) for reliable auto-capture instead of captureStream(0)+requestFrame
     const stream = canvas.captureStream(fps);
-    
+
     // Audio mixing
     let expAudioCtx, expAudioDest, expAudioEl;
     if (state.audio.src) {
@@ -3167,7 +3332,7 @@ function renderChapterList() {
         el._vid.play().catch(() => {});
       }
     });
-    
+
     recorder.start();
     const exportStart = performance.now();
 
@@ -3215,7 +3380,7 @@ function renderChapterList() {
           if (expAudioEl) expAudioEl.pause();
           if (expAudioCtx) expAudioCtx.close();
           state.elements.forEach(el => { if (el._vid) { el._vid.pause(); delete el._vid; } });
-          
+
           recorder.onstop = () => {
             const blob = new Blob(chunks, { type: mimeType.split(';')[0] });
             const url = URL.createObjectURL(blob);
@@ -3247,7 +3412,7 @@ function renderChapterList() {
     const outW = Math.round(state.canvasSize.w * scale), outH = Math.round(state.canvasSize.h * scale);
     canvas.width = outW; canvas.height = outH;
     const ctx = canvas.getContext('2d');
-    
+
     const imgPromises = state.elements.filter(e => e.type === 'image' && e.src).map(el => new Promise(res => {
       const img = new Image();
       img.onload = () => { el._img = img; res(); };
@@ -3255,17 +3420,17 @@ function renderChapterList() {
       img.src = el.src;
     }));
     await Promise.all(imgPromises);
-    
+
     const gifFps = 15;
     const frameDelay = 1000 / gifFps;
     const totalFrames = Math.min(300, Math.ceil((state.totalDuration / gifFps / 1000) * gifFps));
     const frames = [];
-    
+
     document.getElementById('gifProgressText').textContent = 'Capturing frames...';
     for (let i = 0; i < totalFrames; i++) {
       const time = (i / totalFrames) * state.totalDuration;
       state.currentTime = time;
-      
+
       if (state.scene.bgType === 'gradient') {
         const g = ctx.createLinearGradient(0, 0, 0, outH);
         g.addColorStop(0, state.scene.bgColor0);
@@ -3275,19 +3440,19 @@ function renderChapterList() {
         ctx.fillStyle = state.scene.bgColor0;
       }
       ctx.fillRect(0, 0, outW, outH);
-      
+
       state.elements.forEach(el => {
         if (el.visible === false) return;
         const st = getElementStateAtTime(el, time);
         drawElementOnCanvas(ctx, el, st, scale);
       });
-      
+
       frames.push(canvas.toDataURL('image/png'));
       document.getElementById('gifProgressFill').style.width = ((i + 1) / totalFrames * 100) + '%';
       document.getElementById('gifProgressText').textContent = `Capturing frame ${i + 1}/${totalFrames}`;
       await new Promise(r => setTimeout(r, 10));
     }
-    
+
     document.getElementById('gifProgressText').textContent = 'Encoding GIF...';
     const encoder = new GIFEncoder();
     encoder.setRepeat(0);
@@ -3303,7 +3468,7 @@ function renderChapterList() {
       document.getElementById('gifProgressFill').style.width = ((i + 1) / frames.length * 100) + '%';
     }
     encoder.finish();
-    
+
     const blob = new Blob([new Uint8Array(encoder.stream())], { type: 'image/gif' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -3311,7 +3476,7 @@ function renderChapterList() {
     a.download = 'transition-studio.gif';
     a.click();
     URL.revokeObjectURL(url);
-    
+
     document.getElementById('gifExportModal').classList.remove('active');
     document.getElementById('gifProgressText').textContent = 'Ready to export';
     document.getElementById('gifProgressFill').style.width = '0%';
@@ -3335,20 +3500,20 @@ function renderChapterList() {
       const addStr = s => { for (let i = 0; i < s.length; i++) bytes.push(s.charCodeAt(i) & 0xff); };
       const addByte = b => bytes.push(b & 0xff);
       const addWord = w => { bytes.push(w & 0xff); bytes.push((w >> 8) & 0xff); };
-      
+
       addStr('GIF89a');
       addWord(w); addWord(h);
       addByte(0xf7); addByte(0); addByte(0);
       for (let i = 0; i < 256; i++) { addByte(i); addByte(i); addByte(i); }
-      
+
       if (this.repeat !== 0) {
         addStr('!'); addByte(255); addByte(11); addStr('NETSCAPE2.0'); addByte(3); addByte(1); addWord(this.repeat); addByte(0);
       }
-      
+
       for (let f = 0; f < this.frames.length; f++) {
         addStr('!'); addByte(249); addByte(4); addByte(0); addWord(this.delay); addByte(0); addByte(0);
         addStr(','); addWord(0); addWord(0); addWord(w); addWord(h); addByte(0);
-        
+
         const data = this.frames[f].data;
         const pixels = [];
         for (let i = 0; i < data.length; i += 4) {
@@ -3378,7 +3543,7 @@ function renderChapterList() {
 
     let elementsCSS = '', keyframes = '', elementsHTML = '';
     const cw = state.canvasSize.w, ch = state.canvasSize.h;
-    
+
     state.elements.forEach(el => {
       const anim = el.animation;
       const exit = el.exit;
@@ -3403,7 +3568,7 @@ function renderChapterList() {
         if (el.shadow) elStyles += `\n  box-shadow: 0 10px 30px rgba(0,0,0,0.35);`;
       }
       if (el.flipH) elStyles += `\n  transform: scaleX(-1);`;
-      
+
       const easing = EASINGS_CSS[anim.easing] || 'ease';
       if (anim.type !== 'none') {
         elementsCSS += `.${className} {${elStyles}\n  animation: ${animName} ${totalDur}ms ${easing} both;\n}\n\n`;
@@ -3422,7 +3587,7 @@ function renderChapterList() {
         let exitBlurStr = el.motionBlur ? `blur(${4 * exitIntensity}px)` : 'none';
 
         let kf = `@keyframes ${animName} {\n`;
-        
+
         switch(anim.type) {
           case 'fade-in': kf += `  0% { opacity: 0; transform: ${baseTransform}; filter: none; }\n`; break;
           case 'slide-up': kf += `  0% { opacity: 0; transform: translateY(${60 * intensity}px) ${baseTransform}; filter: ${blurStr}; }\n`; break;
@@ -3475,7 +3640,7 @@ function renderChapterList() {
       } else if (el.type === 'video' && el.src) {
         innerContent = `<video src="${el.src}" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"></video>`;
       }
-      
+
       elementsHTML += `    <div class="${className}">${innerContent}</div>\n`;
     });
 
@@ -3542,26 +3707,6 @@ function renderChapterList() {
   }
   window.addEventListener('load', () => { setTimeout(replay, 100); });
 <\/script>
-
-<div id="codeExportModal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="panel-title">Export Code</div>
-      <button class="icon-btn" id="closeCodeExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="export-options" style="margin-bottom: 12px; display: flex; gap: 8px;">
-        <button class="opt-btn active" id="btnExportCSS">CSS Keyframes</button>
-        <button class="opt-btn" id="btnExportReact">React / Framer</button>
-      </div>
-      <textarea id="codeExportArea" style="width: 100%; height: 300px; background: rgba(0,0,0,0.5); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; resize: none;" readonly></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-primary" id="copyCodeBtn">Copy to Clipboard</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>`;
 
@@ -3607,7 +3752,7 @@ function renderChapterList() {
     state.canvasSize = { w: 360, h: 640 };
     state.totalDuration = 3000;
     state.audio = { src: null, name: '' };
-    
+
     updateDurationUI();
     applyCanvasSize();
     renderScene();
@@ -3626,115 +3771,10 @@ function renderChapterList() {
   }
 
   // ===== INIT =====
-  // ===== MEDIA LIBRARY =====
-  function initMediaLibrary() {
-    document.querySelectorAll('.sidebar-tab').forEach(tab => {
-      tab.addEventListener('click', (e) => {
-        document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.sidebar-pane').forEach(p => p.classList.remove('active'));
-        e.target.classList.add('active');
-        document.getElementById('pane-' + e.target.dataset.tab).classList.add('active');
-      });
-    });
-
-    const uploadArea = document.getElementById('mediaUploadArea');
-    const fileInput = document.getElementById('mediaFileInput');
-
-    uploadArea.addEventListener('click', () => fileInput.click());
-    uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
-    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
-    uploadArea.addEventListener('drop', e => {
-      e.preventDefault();
-      uploadArea.classList.remove('drag-over');
-      handleMediaFiles(e.dataTransfer.files);
-    });
-
-    fileInput.addEventListener('change', e => {
-      handleMediaFiles(e.target.files);
-      fileInput.value = ''; // Reset
-    });
-  }
-
-  function handleMediaFiles(files) {
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      let type = '';
-      if (file.type.startsWith('image/')) type = 'image';
-      else if (file.type.startsWith('video/')) type = 'video';
-      else if (file.type.startsWith('audio/')) type = 'audio';
-      else continue;
-
-      const url = URL.createObjectURL(file);
-      const mediaItem = { id: 'media_' + Date.now() + '_' + i, type, url, file, name: file.name };
-      state.mediaLibrary.push(mediaItem);
-    }
-    renderMediaLibrary();
-  }
-
-  function renderMediaLibrary() {
-    const grid = document.getElementById('mediaGrid');
-    grid.innerHTML = '';
-    state.mediaLibrary.forEach(media => {
-      const el = document.createElement('div');
-      el.className = 'media-item';
-      el.draggable = true;
-      el.dataset.mediaId = media.id;
-
-      if (media.type === 'image') {
-        el.innerHTML = `<img src="${media.url}" alt="${media.name}"><div class="media-type">IMG</div>`;
-      } else if (media.type === 'video') {
-        el.innerHTML = `<video src="${media.url}" muted></video><div class="media-type">VID</div>`;
-        el.addEventListener('mouseenter', () => el.querySelector('video').play().catch(()=>{}));
-        el.addEventListener('mouseleave', () => { el.querySelector('video').pause(); el.querySelector('video').currentTime = 0; });
-      } else if (media.type === 'audio') {
-        el.innerHTML = `<div style="text-align:center;color:var(--accent);"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg></div><div class="media-type">AUD</div>`;
-      }
-
-      el.innerHTML += `<div class="media-name">${media.name}</div>`;
-
-      el.addEventListener('dragstart', e => {
-        e.dataTransfer.setData('application/json', JSON.stringify({ source: 'mediaLibrary', mediaId: media.id }));
-      });
-
-      grid.appendChild(el);
-    });
-  }
-
-  // Canvas drop handling for media
-  function setupCanvasDrop() {
-    const canvasStage = document.getElementById('canvasStage');
-    canvasStage.addEventListener('dragover', e => e.preventDefault());
-    canvasStage.addEventListener('drop', e => {
-      e.preventDefault();
-      try {
-        const data = JSON.parse(e.dataTransfer.getData('application/json'));
-        if (data.source === 'mediaLibrary') {
-          const media = state.mediaLibrary.find(m => m.id === data.mediaId);
-          if (media) {
-            pushHistory();
-            const rect = canvasStage.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / state.zoom;
-            const y = (e.clientY - rect.top) / state.zoom;
-
-            if (media.type === 'image') {
-                addElement('image', { x, y, url: media.url, width: 200, height: 200 });
-            } else if (media.type === 'video') {
-                addElement('video', { x, y, url: media.url, width: 320, height: 180 });
-            } else if (media.type === 'audio') {
-                state.audio = { src: media.url, name: media.name };
-                renderAudio();
-            }
-          }
-        }
-      } catch (err) {}
-    });
-  }
-
-
   function init() {
     document.getElementById('newProjectModal').classList.add('active');
     applyCanvasSize(); renderScene(); renderAll(); renderTimeline();
-    
+
     updateUndoRedoButtons();
     updateTimelineZoomUI();
     updateDurationUI();
@@ -3882,12 +3922,6 @@ function renderChapterList() {
       e.currentTarget.classList.toggle('active', state.snapEnabled);
       showToast(`Snap ${state.snapEnabled ? 'enabled' : 'disabled'}`);
     });
-
-    document.getElementById('safeZoneBtn').addEventListener('click', (e) => {
-      e.currentTarget.classList.toggle('active');
-      document.getElementById('canvasSafeZone').classList.toggle('visible');
-    });
-
     document.getElementById('gridBtn').addEventListener('click', (e) => {
       state.gridVisible = !state.gridVisible;
       e.currentTarget.classList.toggle('active', state.gridVisible);
@@ -3937,103 +3971,6 @@ function renderChapterList() {
     document.getElementById('tlZoomInBtn').addEventListener('click', () => { state.timelineZoom = Math.min(4, state.timelineZoom * 1.5); updateTimelineZoomUI(); renderTimeline(); });
     document.getElementById('tlZoomOutBtn').addEventListener('click', () => { state.timelineZoom = Math.max(0.25, state.timelineZoom / 1.5); updateTimelineZoomUI(); renderTimeline(); });
 
-
-    const marquee = document.getElementById('marquee');
-    let isMarquee = false;
-    let startX, startY;
-
-    document.getElementById('canvasWrap').addEventListener('mousedown', e => {
-      if (e.target.id === 'canvasWrap' || e.target.id === 'canvasStage' || e.target.classList.contains('canvas-bg')) {
-        isMarquee = true;
-        const rect = document.getElementById('canvasWrap').getBoundingClientRect();
-        startX = e.clientX - rect.left;
-        startY = e.clientY - rect.top;
-        marquee.style.left = startX + 'px';
-        marquee.style.top = startY + 'px';
-        marquee.style.width = '0px';
-        marquee.style.height = '0px';
-        marquee.style.display = 'block';
-        if (!e.shiftKey) { state.multiSelectIds = []; state.selectedId = null; renderAll(); }
-      }
-    });
-
-    document.addEventListener('mousemove', e => {
-      if (isMarquee) {
-        const rect = document.getElementById('canvasWrap').getBoundingClientRect();
-        const curX = e.clientX - rect.left;
-        const curY = e.clientY - rect.top;
-
-        const x = Math.min(startX, curX);
-        const y = Math.min(startY, curY);
-        const w = Math.abs(curX - startX);
-        const h = Math.abs(curY - startY);
-
-        marquee.style.left = x + 'px';
-        marquee.style.top = y + 'px';
-        marquee.style.width = w + 'px';
-        marquee.style.height = h + 'px';
-
-        // Select elements
-        const stageRect = document.getElementById('canvasStage').getBoundingClientRect();
-        const rx = (x - (stageRect.left - rect.left)) / state.zoom;
-        const ry = (y - (stageRect.top - rect.top)) / state.zoom;
-        const rw = w / state.zoom;
-        const rh = h / state.zoom;
-
-        state.multiSelectIds = state.elements.filter(el => {
-            return (el.props.x < rx + rw && el.props.x + el.props.width > rx &&
-                    el.props.y < ry + rh && el.props.y + el.props.height > ry);
-        }).map(el => el.id);
-
-        renderCanvas();
-      }
-    });
-
-    document.addEventListener('mouseup', () => {
-      if (isMarquee) {
-        isMarquee = false;
-        marquee.style.display = 'none';
-        if (state.multiSelectIds.length > 0) {
-            state.selectedId = null; // Use multi-select
-            document.getElementById('alignToolbar').classList.add('visible');
-        } else {
-            document.getElementById('alignToolbar').classList.remove('visible');
-        }
-        renderAll();
-      }
-    });
-
-    // Alignment logic
-    document.querySelectorAll('.align-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (state.multiSelectIds.length < 2) return;
-            pushHistory();
-            const els = state.multiSelectIds.map(id => state.elements.find(e => e.id === id)).filter(Boolean);
-            const mode = btn.dataset.align;
-
-            if (mode === 'left') {
-                const minX = Math.min(...els.map(e => e.props.x));
-                els.forEach(e => e.props.x = minX);
-            } else if (mode === 'right') {
-                const maxX = Math.max(...els.map(e => e.props.x + e.props.width));
-                els.forEach(e => e.props.x = maxX - e.props.width);
-            } else if (mode === 'center') {
-                const midX = (Math.min(...els.map(e => e.props.x)) + Math.max(...els.map(e => e.props.x + e.props.width))) / 2;
-                els.forEach(e => e.props.x = midX - e.props.width / 2);
-            } else if (mode === 'top') {
-                const minY = Math.min(...els.map(e => e.props.y));
-                els.forEach(e => e.props.y = minY);
-            } else if (mode === 'bottom') {
-                const maxY = Math.max(...els.map(e => e.props.y + e.props.height));
-                els.forEach(e => e.props.y = maxY - e.props.height);
-            } else if (mode === 'middle') {
-                const midY = (Math.min(...els.map(e => e.props.y)) + Math.max(...els.map(e => e.props.y + e.props.height))) / 2;
-                els.forEach(e => e.props.y = midY - e.props.height / 2);
-            }
-            renderAll();
-        });
-    });
-
     document.getElementById('canvasStage').addEventListener('mousedown', (e) => {
       if (state.isPlaying) return;
       if (e.target.id === 'canvasStage' || e.target.classList.contains('canvas-bg')) {
@@ -4045,49 +3982,10 @@ function renderChapterList() {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if ((e.metaKey || e.ctrlKey) && e.code === 'KeyZ') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
       else if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.code === 'KeyD') { e.preventDefault(); splitElement(); }
-      else if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.code === 'KeyD') {
-          e.preventDefault();
-          if (state.selectedId) {
-              const el = state.elements.find(x => x.id === state.selectedId);
-              if (el) {
-                  pushHistory();
-                  const dup = JSON.parse(JSON.stringify(el));
-                  dup.id = 'el_' + Date.now();
-                  dup.props.x += 20; dup.props.y += 20;
-                  state.elements.push(dup);
-                  state.selectedId = dup.id;
-                  renderAll();
-              }
-          }
-      }
-      else if ((e.metaKey || e.ctrlKey) && e.code === 'KeyA') { e.preventDefault(); state.multiSelectIds = state.elements.map(x=>x.id); renderAll(); }
-      else if ((e.metaKey || e.ctrlKey) && e.code === 'KeyY') { e.preventDefault(); redo(); }
       else if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
       else if (e.code === 'KeyR') { restart(); }
       else if (e.code === 'KeyG') { document.getElementById('gridBtn').click(); }
-      else if (e.code === 'Delete' || e.code === 'Backspace') {
-          if (state.selectedId || state.multiSelectIds.length > 0) {
-              e.preventDefault(); pushHistory();
-              if (state.selectedId) { state.elements = state.elements.filter(x => x.id !== state.selectedId); state.selectedId = null; }
-              if (state.multiSelectIds.length > 0) { state.elements = state.elements.filter(x => !state.multiSelectIds.includes(x.id)); state.multiSelectIds = []; }
-              renderAll();
-          }
-      }
-      else if (e.code === 'BracketLeft') {
-          e.preventDefault();
-          if (state.selectedId) {
-              const el = state.elements.find(x => x.id === state.selectedId);
-              if (el) { pushHistory(); el.animation.delay = Math.max(0, el.animation.delay - 33); renderTimeline(); }
-          }
-      }
-      else if (e.code === 'BracketRight') {
-          e.preventDefault();
-          if (state.selectedId) {
-              const el = state.elements.find(x => x.id === state.selectedId);
-              if (el) { pushHistory(); el.animation.delay += 33; renderTimeline(); }
-          }
-      }
-      else if (e.key === '?') { e.preventDefault(); document.getElementById('shortcutsBtn').click(); }
+      else if (e.code === 'Delete' || e.code === 'Backspace') { if (state.selectedId) { e.preventDefault(); deleteElement(state.selectedId); } }
       else if (e.code === 'ArrowLeft') { e.preventDefault(); stepTime(-1); }
       else if (e.code === 'ArrowRight') { e.preventDefault(); stepTime(1); }
       else if (e.code === 'Home') { e.preventDefault(); state.currentTime = 0; updatePlayhead(); }
@@ -4127,32 +4025,12 @@ function renderChapterList() {
     });
 
     let resizeTimer;
-    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { requestAnimationFrame(() => { renderTimeline(); initEditorCanvas(); renderAll(); }); }, 100); });
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderTimeline(); initEditorCanvas(); }, 100); });
 
     window.addEventListener('beforeunload', (e) => { e.preventDefault(); e.returnValue = ''; });
   }
 
   init();
 </script>
-
-<div id="codeExportModal" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="panel-title">Export Code</div>
-      <button class="icon-btn" id="closeCodeExport"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div class="export-options" style="margin-bottom: 12px; display: flex; gap: 8px;">
-        <button class="opt-btn active" id="btnExportCSS">CSS Keyframes</button>
-        <button class="opt-btn" id="btnExportReact">React / Framer</button>
-      </div>
-      <textarea id="codeExportArea" style="width: 100%; height: 300px; background: rgba(0,0,0,0.5); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-family: monospace; font-size: 12px; resize: none;" readonly></textarea>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-primary" id="copyCodeBtn">Copy to Clipboard</button>
-    </div>
-  </div>
-</div>
-
 </body>
 </html>
