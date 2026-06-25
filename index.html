@@ -242,20 +242,22 @@
   :root.light .align-btn:hover { background: rgba(0, 0, 0, 0.08); }
   .align-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  .canvas-wrapper { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; background: 
+  .canvas-wrapper { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 60px; position: relative; background: 
     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%);
   }
 
-  .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0,0,0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 32px; overflow: hidden; }
-  .canvas-bg { position: absolute; inset: 0; border-radius: 32px; pointer-events: none; z-index: 0; }
+  /* Enterprise Grade: Overflow visible to allow off-canvas editing */
+  .canvas-stage { position: relative; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 0 8px rgba(0,0,0, 0.4), 0 0 0 9px rgba(255, 255, 255, 0.04), 0 30px 80px rgba(0, 0, 0, 0.6); transition: width 0.3s ease, height 0.3s ease, transform 0.2s ease; transform-origin: center center; border-radius: 32px; overflow: visible; }
+  .canvas-bg { position: absolute; inset: 0; border-radius: 32px; pointer-events: none; z-index: 0; overflow: hidden; }
   #editorCanvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; border-radius: 32px; }
-  .canvas-grid-overlay { position: absolute; inset: 0; border-radius: 32px; pointer-events: none; z-index: 2; display: none; background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 20px 20px; }
+  .canvas-grid-overlay { position: absolute; inset: 0; border-radius: 32px; pointer-events: none; z-index: 2; display: none; background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px); background-size: 20px 20px; overflow: hidden; }
   .canvas-grid-overlay.visible { display: block; }
   
-  /* Playback Lock Overlay */
-  .playback-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 100; cursor: pointer; }
+  /* Playback Lock Overlay (Transparent) */
+  .playback-overlay { position: absolute; width: 360px; height: 640px; background: transparent; display: none; align-items: center; justify-content: center; z-index: 100; cursor: pointer; border-radius: 32px; }
   .is-playing .playback-overlay { display: flex; }
-  .playback-overlay svg { width: 60px; height: 60px; opacity: 0.6; fill: white; }
+  .playback-overlay svg { width: 60px; height: 60px; opacity: 0; fill: white; transition: opacity 0.2s; pointer-events: none; }
+  .playback-overlay:hover svg { opacity: 0.6; }
 
   .canvas-element { position: absolute; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: move; user-select: none; z-index: 3; will-change: transform, opacity, filter; }
   .is-playing .canvas-element { cursor: default; pointer-events: none; }
@@ -350,7 +352,8 @@
   .timeline-scroll { flex: 1; overflow: auto; position: relative; }
   .timeline-content { position: relative; min-width: 100%; display: flex; flex-direction: column; }
 
-  .timeline-ruler { height: 26px; position: sticky; top: 0; z-index: 10; background: var(--bg-glass-strong); border-bottom: 1px solid var(--border); }
+  .timeline-ruler { height: 26px; position: sticky; top: 0; z-index: 10; background: var(--bg-glass-strong); border-bottom: 1px solid var(--border); cursor: grab; }
+  .timeline-ruler:active { cursor: grabbing; }
   .ruler-mark { position: absolute; top: 0; bottom: 0; border-left: 1px solid rgba(255, 255, 255, 0.06); font-size: 9px; color: var(--text-tertiary); padding-left: 5px; padding-top: 7px; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
   :root.light .ruler-mark { border-left-color: rgba(0, 0, 0, 0.1); }
   .ruler-mark.major { border-left-color: rgba(255, 255, 255, 0.12); }
@@ -373,7 +376,6 @@
 
   .track-area { position: absolute; top: 0; height: 100%; }
   
-  /* Draggable Media Clip Bar */
   .track-bar-clip {
     position: absolute; height: 28px; top: 4px; border-radius: 6px;
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
@@ -594,6 +596,7 @@
     <div class="canvas-toolbar">
       <div class="canvas-info">
         <span id="canvasSizeLabel">360 × 640</span>
+        <span id="cursorPosLabel" style="display: none; color: var(--accent); font-family: 'SF Mono', monospace;">X: 0, Y: 0</span>
         <span id="audioLabel" style="color: var(--purple); display: none;">♪ <span id="audioName"></span></span>
         <span id="multiSelectInfo" style="color: var(--purple); display: none;">Multiple selected</span>
       </div>
@@ -925,7 +928,6 @@
     'smooth': 'M0,18 C6,16 21,4 28,2'
   };
 
-  // Expanded Fonts List
   const TEXT_FONTS = [
     { value: '-apple-system, BlinkMacSystemFont, sans-serif', label: 'System (SF Pro)' },
     { value: 'Arial, sans-serif', label: 'Arial' },
@@ -939,7 +941,6 @@
     { value: 'Verdana, sans-serif', label: 'Verdana' }
   ];
 
-  // Expanded Transitions List
   const PRESETS = {
     'none': { name: 'None', desc: 'Static', type: 'none', duration: 0, easing: 'linear' },
     'fade-in': { name: 'Fade In', desc: 'Opacity 0→1', type: 'fade-in', duration: 600, easing: 'ease-out' },
@@ -1429,20 +1430,25 @@
     const origX = el.x, origY = el.y;
     let hasMoved = false;
     const snap = JSON.parse(JSON.stringify(state.elements));
+    const cursorLabel = document.getElementById('cursorPosLabel');
+    cursorLabel.style.display = 'inline';
+    
     function onMove(e) {
       hasMoved = true;
-      let newX = origX + (e.clientX - startX);
-      let newY = origY + (e.clientY - startY);
+      let newX = origX + (e.clientX - startX) / state.zoom;
+      let newY = origY + (e.clientY - startY) / state.zoom;
       if (state.snapEnabled) { newX = Math.round(newX / state.snapGrid) * state.snapGrid; newY = Math.round(newY / state.snapGrid) * state.snapGrid; }
       el.x = newX; el.y = newY;
       const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
       if (dom) { dom.style.left = el.x + 'px'; dom.style.top = el.y + 'px'; }
+      cursorLabel.textContent = `X: ${Math.round(el.x)}, Y: ${Math.round(el.y)}`;
       const posX = document.getElementById('posX'), posY = document.getElementById('posY');
-      if (posX) posX.value = el.x;
-      if (posY) posY.value = el.y;
+      if (posX) posX.value = Math.round(el.x);
+      if (posY) posY.value = Math.round(el.y);
     }
     function onUp() {
       if (hasMoved) { state.undoStack.push(snap); if (state.undoStack.length > 50) state.undoStack.shift(); state.redoStack = []; updateUndoRedoButtons(); }
+      cursorLabel.style.display = 'none';
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
     }
@@ -1458,9 +1464,12 @@
     const origPositions = selectedEls.map(el => ({ id: el.id, x: el.x, y: el.y }));
     let hasMoved = false;
     const snap = JSON.parse(JSON.stringify(state.elements));
+    const cursorLabel = document.getElementById('cursorPosLabel');
+    cursorLabel.style.display = 'inline';
+
     function onMove(e) {
       hasMoved = true;
-      const dx = e.clientX - startX, dy = e.clientY - startY;
+      const dx = (e.clientX - startX) / state.zoom, dy = (e.clientY - startY) / state.zoom;
       selectedEls.forEach(el => {
         const orig = origPositions.find(p => p.id === el.id);
         let newX = orig.x + dx, newY = orig.y + dy;
@@ -1469,9 +1478,12 @@
         const dom = document.querySelector(`.canvas-element[data-id="${el.id}"]`);
         if (dom) { dom.style.left = el.x + 'px'; dom.style.top = el.y + 'px'; }
       });
+      const firstEl = selectedEls[0];
+      if (firstEl) cursorLabel.textContent = `X: ${Math.round(firstEl.x)}, Y: ${Math.round(firstEl.y)}`;
     }
     function onUp() {
       if (hasMoved) { state.undoStack.push(snap); if (state.undoStack.length > 50) state.undoStack.shift(); state.redoStack = []; updateUndoRedoButtons(); }
+      cursorLabel.style.display = 'none';
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
     }
@@ -1584,8 +1596,8 @@
         <div class="inspector-section">
           <div class="inspector-section-title">Position & Size</div>
           <div class="field-row">
-            <div class="field"><label class="field-label">X</label><input type="number" class="field-input" id="posX" value="${el.x}"></div>
-            <div class="field"><label class="field-label">Y</label><input type="number" class="field-input" id="posY" value="${el.y}"></div>
+            <div class="field"><label class="field-label">X</label><input type="number" class="field-input" id="posX" value="${Math.round(el.x)}"></div>
+            <div class="field"><label class="field-label">Y</label><input type="number" class="field-input" id="posY" value="${Math.round(el.y)}"></div>
           </div>
           <div class="field-row">
             <div class="field"><label class="field-label">Width</label><input type="number" class="field-input" id="sizeW" value="${el.width}" min="10"></div>
@@ -1833,7 +1845,6 @@
           exitBarHtml = `<div class="track-bar exit-bar" data-id="${el.id}" data-mode="exit" style="left: ${exitLeft - 130}px; width: ${exitWidth}px; background: ${color}88;"><span class="bar-label">${exitPresetName}</span><div class="trim-handle" data-id="${el.id}" data-mode="exit"></div></div>`;
         }
 
-        // Draggable Media Clip Bar (Background)
         const clipStart = anim.delay;
         const clipEnd = (exit && exit.type !== 'none') ? exit.start + exit.duration : state.totalDuration;
         const clipLeft = 130 + (clipStart / 1000) * pxPerSec;
@@ -1870,7 +1881,26 @@
     }
     tracksContainer.innerHTML = tracksHtml;
 
-    // Media Clip Dragging Logic
+    // Ruler Scrubbing
+    ruler.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('chapter-marker')) return;
+      const scrub = (ev) => {
+        const rect = ruler.getBoundingClientRect();
+        const scrollLeft = document.getElementById('timelineScroll').scrollLeft;
+        const x = ev.clientX - rect.left - 130 + scrollLeft;
+        if (x > 0) {
+          state.currentTime = Math.max(0, Math.min(state.totalDuration, (x / pxPerSec) * 1000));
+          updatePlayhead();
+          document.getElementById('timeJumpInput').value = (state.currentTime / 1000).toFixed(2);
+        }
+      };
+      scrub(e);
+      const onMove = (ev) => scrub(ev);
+      const onUp = () => { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); };
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+
     tracksContainer.querySelectorAll('.track-bar-clip').forEach(clip => {
       clip.addEventListener('mousedown', (e) => {
         e.stopPropagation();
@@ -1943,6 +1973,16 @@
     });
   }
 
+  function snapTime(time, threshold = 100) {
+    if (Math.abs(time - state.currentTime) < threshold) return state.currentTime;
+    if (Math.abs(time) < threshold) return 0;
+    if (Math.abs(time - state.totalDuration) < threshold) return state.totalDuration;
+    for (let ch of state.chapters) {
+      if (Math.abs(time - ch.time) < threshold) return ch.time;
+    }
+    return time;
+  }
+
   function startClipDrag(e, elId) {
     e.preventDefault();
     const el = state.elements.find(x => x.id === elId);
@@ -1960,15 +2000,14 @@
       const dx = e.clientX - startX;
       const dMs = dx * msPerPx;
       
-      const newDelay = Math.max(0, startDelay + dMs);
+      let newDelay = Math.max(0, startDelay + dMs);
       const shift = newDelay - startDelay;
       
-      el.animation.delay = Math.round(newDelay);
+      el.animation.delay = snapTime(Math.round(newDelay));
       if (el.exit.type !== 'none') {
         el.exit.start = Math.max(el.animation.delay + el.animation.duration, Math.min(state.totalDuration - el.exit.duration, startExit + shift));
       }
       
-      const pxPerSec = 100 * state.timelineZoom;
       const clipStart = el.animation.delay;
       const clipEnd = (el.exit && el.exit.type !== 'none') ? el.exit.start + el.exit.duration : state.totalDuration;
       const clipLeft = 130 + (clipStart / 1000) * pxPerSec;
@@ -1977,7 +2016,6 @@
       clip.style.left = (clipLeft - 130) + 'px';
       clip.style.width = clipWidth + 'px';
       
-      // Update inner bars if they exist
       const enterBar = document.querySelector(`.track-bar[data-id="${el.id}"][data-mode="enter"]`);
       if (enterBar) {
         const left = 130 + (el.animation.delay / 1000) * pxPerSec;
@@ -2028,10 +2066,10 @@
       if (Math.abs(dx) > 3) bar._hasMoved = true;
       const dMs = dx * msPerPx;
       if (animMode === 'exit') {
-        if (mode === 'move') { let n = startStart + dMs; n = Math.max(0, Math.min(state.totalDuration - el.exit.duration, n)); el.exit.start = Math.round(n); }
+        if (mode === 'move') { let n = snapTime(startStart + dMs); n = Math.max(0, Math.min(state.totalDuration - el.exit.duration, n)); el.exit.start = Math.round(n); }
         else if (mode === 'trim') { let n = startDuration + dMs; n = Math.max(100, Math.min(state.totalDuration - el.exit.start, n)); el.exit.duration = Math.round(n); }
       } else {
-        if (mode === 'move') { let n = startDelay + dMs; n = Math.max(0, Math.min(state.totalDuration - el.animation.duration, n)); el.animation.delay = Math.round(n); }
+        if (mode === 'move') { let n = snapTime(startDelay + dMs); n = Math.max(0, Math.min(state.totalDuration - el.animation.duration, n)); el.animation.delay = Math.round(n); }
         else if (mode === 'trim') { let n = startDuration + dMs; n = Math.max(100, Math.min(state.totalDuration - el.animation.delay, n)); el.animation.duration = Math.round(n); }
       }
       const left = animMode === 'exit' ? 130 + (el.exit.start / 1000) * pxPerSec : 130 + (el.animation.delay / 1000) * pxPerSec;
@@ -2039,7 +2077,6 @@
       bar.style.left = (left - 130) + 'px';
       bar.style.width = width + 'px';
       
-      // Update background clip bar width/left if dragging the inner bars
       const clipBar = document.querySelector(`.track-bar-clip[data-id="${el.id}"]`);
       if (clipBar) {
         const clipStart = el.animation.delay;
@@ -2674,11 +2711,19 @@
         } else ctx.fillStyle = state.scene.bgColor0;
         ctx.fillRect(0, 0, outW, outH);
 
+        // Clip to canvas bounds to prevent off-screen elements from bleeding
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, outW, outH);
+        ctx.clip();
+
         state.elements.forEach(el => {
           if (el.visible === false) return;
           const st = getElementStateAtTime(el, time);
           drawElementOnCanvas(ctx, el, st, scale);
         });
+
+        ctx.restore();
 
         const progress = Math.min(100, (elapsed / exportDuration) * 100);
         document.getElementById('progressFill').style.width = progress + '%';
@@ -2732,7 +2777,12 @@
       state.currentTime = time;
       if (state.scene.bgType === 'gradient') { const g = ctx.createLinearGradient(0, 0, 0, outH); g.addColorStop(0, state.scene.bgColor0); g.addColorStop(1, state.scene.bgColor1); ctx.fillStyle = g; } else ctx.fillStyle = state.scene.bgColor0;
       ctx.fillRect(0, 0, outW, outH);
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 0, outW, outH);
+      ctx.clip();
       state.elements.forEach(el => { if (el.visible === false) return; const st = getElementStateAtTime(el, time); drawElementOnCanvas(ctx, el, st, scale); });
+      ctx.restore();
       frames.push(ctx.getImageData(0, 0, outW, outH));
       document.getElementById('gifProgressFill').style.width = ((i + 1) / totalFrames * 50) + '%';
       document.getElementById('gifProgressText').textContent = `Frame ${i + 1}/${totalFrames}`;
@@ -2948,8 +2998,6 @@ window.addEventListener('load',()=>setTimeout(replay,100));
     document.getElementById('audioInput').addEventListener('change', e => { if (e.target.files.length > 0) handleAudioUpload(e.target.files[0]); e.target.value = ''; });
 
     document.getElementById('playBtn').addEventListener('click', togglePlay);
-    
-    // Playback Lock Overlay
     document.getElementById('playbackOverlay').addEventListener('click', stopPlayback);
 
     document.getElementById('restartBtn').addEventListener('click', restart);
